@@ -13,8 +13,8 @@ const opts = {
     // 使用淺色主題，設定他的配色
     themes: {
       light: { 
-        primary: '07132D',
-        secondary: '#0072E3',
+        primary: '#FF6602',
+        secondary: '#ff9854',
         accent: '#0066CC',
         // error: '#f44336',
         // warning: '#ff5722',
