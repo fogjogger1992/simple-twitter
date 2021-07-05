@@ -3,11 +3,11 @@ import VueRouter from 'vue-router'
 import NotFound from '../views/NotFound.vue'
 import SignIn from '../views/SignIn.vue'
 import Home from '@/views/Home.vue'
+import Admin from '@/views/Admin.vue'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
     path: '/signin',
     name: 'sign-in',
     component: SignIn,
@@ -28,14 +28,21 @@ const routes = [
     component: () => import('../views/AdminSignIn.vue'),
   },
   {
-    path: '/admin/tweets',
-    name: 'admin-tweets',
-    component: () => import('../views/AdminTweets.vue'),
-  },
-  {
-    path: '/admin/users',
-    name: 'admin-users',
-    component: () => import('../views/AdminUsers.vue'),
+    path: '/admin/',
+    name: 'admin',
+    component: Admin,
+    children: [
+      {
+        name: "admin-tweets",
+        path: 'tweets',
+        component: () => import("@/views/AdminTweets.vue"),
+      },
+      {
+        name: "admin-users",
+        path: 'users',
+        component: () => import("@/views/AdminUsers.vue"),
+      },
+    ]
   },
   {
     path: '/home',
