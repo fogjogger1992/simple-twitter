@@ -12,5 +12,5 @@ export default {
 };
 </script>
 <style>
-    @import "https://use.fontawesome.com/releases/v5.15.1/css/all.css";
+@import "https://use.fontawesome.com/releases/v5.15.1/css/all.css";
 </style>

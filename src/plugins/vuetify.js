@@ -16,6 +16,7 @@ const opts = {
         primary: '#FF6602',
         secondary: '#ff9854',
         accent: '#0066CC',
+        white: '#ffffff'
         // error: '#f44336',
         // warning: '#ff5722',
         // info: '#607d8b',
