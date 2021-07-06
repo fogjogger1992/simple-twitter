@@ -17,20 +17,21 @@
       <v-divider></v-divider>
 
       <v-list dense nav>
-        <v-list-item v-for="item in items" :key="item.title" link>
+        <v-list-item color="secondary"
+         v-for="item in items" :key="item.title" link :to="item.link">
           <v-list-item-icon>
             <v-icon small>{{ item.icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title class="font-weight-bold">{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
 
     </v-navigation-drawer>
 
-    <v-main>
+    <v-main class="pl-0">
       <v-container>
         <router-view></router-view>
       </v-container>
@@ -44,8 +45,8 @@ export default {
     return {
       drawer: true,
       items: [
-        { title: "推文清單", icon: "fab fa-twitter" },
-        { title: "使用者列表", icon: "fas fa-user-friends" },
+        { title: "推文清單", icon: "fab fa-twitter", link: '/admin/tweets' },
+        { title: "使用者列表", icon: "fas fa-user-friends", link: '/admin/users'  },
         { title: "登出", icon: "fas fa-sign-out-alt" },
       ],
       mini: true,

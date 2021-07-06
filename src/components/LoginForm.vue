@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-form class="mt-4 mb-5" ref="form" v-model="valid" lazy-validation>
-      <v-text-field single-line solo v-model="account" :rules="[rules.required]" maxlength="20" label="帳號"></v-text-field>
-      <v-text-field single-line solo v-model="password" maxlength="20" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required]" :type="showPassword ? 'text' : 'password'" label="密碼" @click:append="showPassword = !showPassword"></v-text-field>
+      <v-text-field single-line solo v-model.trim="account" :rules="[rules.required]" maxlength="20" label="帳號"></v-text-field>
+      <v-text-field single-line solo v-model.trim="password" maxlength="20" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required]" :type="showPassword ? 'text' : 'password'" label="密碼" @click:append="showPassword = !showPassword"></v-text-field>
       <v-btn rounded :disabled="!valid" color="primary" class="" @click="signIn">
         登入
       </v-btn>
