@@ -1,6 +1,6 @@
 <template>
   <v-container class="sidenav d-flex flex-column py-0 my-0">
-    <v-row cols="1" class="flex-grow-1 flex-shrink-0 py-0 my-0 px-5">
+    <v-row cols="1" class="flex-grow-1 flex-shrink-0 py-0 my-0 px-8">
       <!-- ac logo svg -->
       <v-col cols="12">
         <div class="mt-5">
@@ -58,7 +58,7 @@
     </v-row>
     <UserSelfEditModal :isProfileDialogOpened.sync="isProfileDialogOpened" />
     <NewTweetModal :isTweetDialogOpened.sync="isTweetDialogOpened" />
-    <v-row cols="1" class="flex-grow-0 flex-shrink-0 py-0 my-0 px-5">
+    <v-row cols="1" class="flex-grow-0 flex-shrink-0 py-0 my-0 px-8">
       <v-col cols="12" class="py-5 my-0">
         <v-btn block rounded color="white" class="btnsignout">
           <v-icon>mdi-logout-variant</v-icon> 登出
@@ -75,7 +75,7 @@
 }
 @media screen and (min-width: 600px) {
   .sidenav {
-    height: calc(97.5vh);
+    height: calc(100vh);
   }
 }
 </style>
