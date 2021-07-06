@@ -51,7 +51,7 @@
 
               <v-col cols="12" class="mt-7">
                 <v-form class="" ref="form" v-model="valid" lazy-validation>
-                  <v-text-field v-model="name" :rules="[rules.required, rules.nameRules]" label="姓名" counter="50" maxlength="50" required></v-text-field>
+                  <v-text-field v-model.trim="name" :rules="[rules.required, rules.nameRules]" label="姓名" counter="50" maxlength="50" required></v-text-field>
                   <v-textarea label="自我介紹" counter="160" maxlength="160" required>{{introduction}}</v-textarea>
                 </v-form>
               </v-col>

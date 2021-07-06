@@ -12,10 +12,10 @@
         <v-form class="my-4 text-right" ref="form" v-model="valid" lazy-validation>
           <UserInfoForm />
           <!-- <v-text-field v-model="password" maxlength="20" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.passwordRules]" :type="showPassword ? 'text' : 'password'" label="密碼" @click:append="showPassword = !showPassword"></v-text-field>
-          <v-text-field v-model="confirmPassword" maxlength="20" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="confirmPasswordRules" :type="showPassword ? 'text' : 'password'" label="確認密碼" @click:append="showPassword = !showPassword"></v-text-field>
-          <v-text-field v-model="email" :rules="[rules.required, rules.emailRules]" label="Email" required></v-text-field>
-          <v-text-field v-model="name" :rules="[rules.required, rules.nameRules]" maxlength="50" label="姓名"></v-text-field>
-          <v-text-field v-model="account" :rules="[rules.required, rules.accountRules]" maxlength="20" label="帳號"></v-text-field> -->
+          <v-text-field v-model.trim="confirmPassword" maxlength="20" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="confirmPasswordRules" :type="showPassword ? 'text' : 'password'" label="確認密碼" @click:append="showPassword = !showPassword"></v-text-field>
+          <v-text-field v-model.trim="email" :rules="[rules.required, rules.emailRules]" label="Email" required></v-text-field>
+          <v-text-field v-model.trim="name" :rules="[rules.required, rules.nameRules]" maxlength="50" label="姓名"></v-text-field>
+          <v-text-field v-model.trim="account" :rules="[rules.required, rules.accountRules]" maxlength="20" label="帳號"></v-text-field> -->
           <v-btn rounded :disabled="!valid" color="primary" class="" @click="save">
             儲存
           </v-btn>
