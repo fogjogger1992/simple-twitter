@@ -8,44 +8,8 @@
         <!-- top nav -->
         <v-card outlined tile class="pa-3">首頁</v-card>
         <!-- add tweet -->
-        <v-card outlined tile class="pa-3">
-          <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
-            <v-col class="flex-grow-1">
-              <v-avatar class="mt-1">
-                <img :src="user.image" :alt="user.name" />
-              </v-avatar>
-            </v-col>
-            <v-col cols="11" class="flex-shrink-1">
-              <v-container fluid class="pa-0 ma-0">
-                <form @submit.stop.prevent="postTweet">
-                  <v-textarea
-                    v-model="text.value"
-                    class="pa-0 ma-0"
-                    flat
-                    solo
-                    no-resize
-                    auto-grow
-                    counter="140"
-                    maxlength="140"
-                    rows="2"
-                    label="有什麼新鮮事？"
-                    :rules="[
-                      text.rules.required,
-                      text.rules.tweetRules,
-                      text.rules.spaceRules,
-                    ]"
-                    :value="text.value"
-                    required
-                  ></v-textarea>
-                  <v-card-actions class="pa-0 ma-0">
-                    <v-spacer></v-spacer>
-                    <v-btn type="submit" rounded color="primary"> 推文 </v-btn>
-                  </v-card-actions>
-                </form>
-              </v-container>
-            </v-col>
-          </v-row>
-        </v-card>
+        <NewTweetCard :user="user" @after-create-tweet="afterCreateTweet" />
+        <!-- tweet list -->
       </v-col>
       <v-col cols="12" sm="3" class="black"></v-col>
     </v-row>
@@ -61,6 +25,7 @@
 
 <script>
 import SideNavBar from "./../components/SideNavBar.vue";
+import NewTweetCard from "./../components/NewTweetCard.vue";
 // remove this after integrating API
 const dummyData = {
   currentUser: {
@@ -74,6 +39,7 @@ export default {
   name: "Home",
   components: {
     SideNavBar,
+    NewTweetCard,
   },
   data() {
     return {
@@ -82,16 +48,7 @@ export default {
         name: "",
         image: "",
       },
-      text: {
-        rules: {
-          required: (value) => !!value || "填寫您的推文",
-          tweetRules: (value) =>
-            (value && value.length <= 140) || "推文字數限制(140)",
-          spaceRules: (v) =>
-            /[^\s\d]/.test(v) || "填寫您的推文，輸入空格外的文字",
-        },
-        value: "",
-      },
+      tweets: [],
     };
   },
   created() {
@@ -106,8 +63,18 @@ export default {
       this.user.image = image;
     },
     // TODO: 新增推文
-    postTweet() {
-      console.log(this.text.value);
+    afterCreateTweet(payload) {
+      const { tweetId, text } = payload;
+      this.tweets.push({
+        id: tweetId,
+        text: text,
+        User: {
+          account: this.user.account,
+          name: this.user.name,
+          image: this.user.image,
+        },
+        createdAt: new Date(),
+      });
     },
   },
 };
