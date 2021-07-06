@@ -48,14 +48,12 @@ const routes = [
     component: Home,
   },
   {
-    // path: '/:userAccount/status/:tweetId'
-    path: '/tweet',
+    path: '/tweet/:id',
     name: 'tweet',
     component: () => import('../views/Tweet.vue'),
   },
   {
-    // path: '/users/:id'
-    path: '/user',
+    path: '/users/:id',
     name: 'user',
     component: () => import('../views/User.vue'),
   },
