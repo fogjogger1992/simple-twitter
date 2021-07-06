@@ -1,7 +1,8 @@
 <template>
-  <v-container>
+  <v-container class="fill-height">
     <v-row justify="center">
       <v-col cols="10" sm="8" md="6" lg="5" class="text-center">
+        <img src="../assets/img/logo.svg">
         <p class="text--h6 font-weight-bold mt-4">登入Alphitter</p>
 
         <LoginForm />

@@ -37,6 +37,7 @@ const routes = [
     path: '/admin/',
     name: 'admin',
     component: Admin,
+    redirect: '/admin/tweets',
     children: [
       {
         name: "admin-tweets",
