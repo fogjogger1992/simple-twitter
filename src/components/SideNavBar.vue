@@ -28,7 +28,7 @@
           </v-list-item-group>
         </v-list>
         <!-- btn add new tweet -->
-        <v-btn block rounded color="primary" dark class="mt-2"> 推文 </v-btn>
+        <v-btn block rounded color="primary" dark class="mt-2" @click="()=> { isTweetDialogOpened = true }"> 推文 </v-btn>
       </v-col>
     </v-row>
     <v-row cols="1" class="flex-grow-0 flex-shrink-0 py-0 my-0">
@@ -40,6 +40,7 @@
     </v-row>
 
     <UserSelfEditModal :isProfileDialogOpened.sync="isProfileDialogOpened" />
+    <NewTweetModal :isTweetDialogOpened.sync="isTweetDialogOpened" />
   </v-container>
 </template>
 
@@ -57,10 +58,11 @@
 
 <script>
 import UserSelfEditModal from "@/components/UserSelfEditModal.vue";
+import NewTweetModal from './NewTweetModal.vue';
 
 export default {
   name: "SideNavBar",
-  components: { UserSelfEditModal },
+  components: { UserSelfEditModal, NewTweetModal },
   props: {
     user: {
       type: Object,
@@ -71,6 +73,7 @@ export default {
     return {
       // 個人資料編輯視窗
       isProfileDialogOpened: false,
+      isTweetDialogOpened: false,
 
       selectedItem: 0,
       items: [
