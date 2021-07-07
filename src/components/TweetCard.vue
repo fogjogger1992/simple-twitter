@@ -1,5 +1,10 @@
 <template>
-  <v-card outlined tile class="pa-3">
+  <v-card
+    flat
+    tile
+    class="pa-3"
+    style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
+  >
     <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
       <v-col class="flex-grow-1">
         <v-avatar class="mt-1">

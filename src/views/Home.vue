@@ -6,7 +6,13 @@
       </v-col>
       <v-col cols="12" sm="6" class="pa-0">
         <!-- top nav -->
-        <v-card outlined tile class="pa-3">首頁</v-card>
+        <v-card
+          tile
+          flat
+          class="pa-3"
+          style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
+          >首頁</v-card
+        >
         <!-- add tweet -->
         <NewTweetCard :user="user" @after-create-tweet="afterCreateTweet" />
         <v-system-bar style="height: 10px"></v-system-bar>
@@ -18,8 +24,9 @@
           :user="user"
         />
       </v-col>
-
-      <v-col cols="12" sm="3" class="black"> </v-col>
+      <v-col cols="12" sm="3" class="topuserscol">
+        <TopUsers />
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -29,12 +36,19 @@
   font-weight: 900;
   font-size: 18px;
 }
+.sidenavcol {
+  border-right: thin solid rgba(0, 0, 0, 0.12);
+}
+.topuserscol {
+  border-left: thin solid rgba(0, 0, 0, 0.12);
+}
 </style>
 
 <script>
 import SideNavBar from "./../components/SideNavBar.vue";
 import NewTweetCard from "./../components/NewTweetCard.vue";
 import TweetCard from "./../components/TweetCard.vue";
+import TopUsers from "./../components/TopUsers.vue";
 
 // remove this after integrating API
 const dummyData = {
@@ -79,6 +93,7 @@ export default {
     SideNavBar,
     NewTweetCard,
     TweetCard,
+    TopUsers,
   },
   data() {
     return {
