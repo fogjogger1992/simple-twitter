@@ -73,7 +73,7 @@
   font-weight: 900;
   font-size: 18px;
 }
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 960px) {
   .sidenav {
     height: calc(100vh);
   }

@@ -1,68 +1,91 @@
 <template>
   <v-row class="justify-center ma-0 pa-0">
-    <v-col cols="10" class="mt-5 pa-0">
+    <v-col cols="12" md="10" class="mt-5 pa-0">
       <v-card flat class="mx-auto grey lighten-3 rounded-lg">
         <v-card-title class="py-2">
           <span class="font-weight-bold" style="font-size: 18px">跟隨誰</span>
         </v-card-title>
         <v-divider></v-divider>
+        <!-- users list -->
         <v-card-actions
           v-for="userIndex in usersToShow"
           :key="topUsers[userIndex - 1].account"
           style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
         >
-          <v-list-item class="grow">
-            <v-list-item-avatar color="grey darken-3">
-              <v-img
-                class="elevation-6"
-                alt=""
-                :src="topUsers[userIndex - 1].image"
-              ></v-img>
-            </v-list-item-avatar>
-
-            <v-list-item-content class="flex-shrink-1">
-              <v-list-item-title class="py-0 my-0"
-                ><p subtitle-2 font-weight-bold class="py-0 my-0">
-                  {{ topUsers[userIndex - 1].name }}
-                </p></v-list-item-title
+          <v-list-item>
+            <v-row no-gutters class="pa-0 ma-0 d-flex flex-wrap">
+              <!-- img -->
+              <v-col
+                cols="auto"
+                class="pa-0 ma-0 flex-shrink-1"
+                style="min-width: 40px"
               >
-              <v-list-item-title class="py-0 my-0"
-                ><p subtitle-2 font-weight-bold class="grey--text py-0 my-0">
-                  @{{ topUsers[userIndex - 1].account }}
-                </p></v-list-item-title
-              >
-            </v-list-item-content>
-
-            <v-row align="center" justify="end">
-              <v-btn
-                v-if="!topUsers[userIndex - 1].isFollowed"
-                @click.stop.prevent="
-                  addFollowed(topUsers[userIndex - 1].account)
-                "
-                rounded
-                outlined
-                small
-                color="primary"
-                class="mr-3"
-              >
-                跟隨
-              </v-btn>
-              <v-btn
-                v-else
-                @click.stop.prevent="
-                  removeFollowed(topUsers[userIndex - 1].account)
-                "
-                rounded
-                small
-                elevation="0"
-                color="primary"
-                class="mr-3"
-              >
-                正在跟隨
-              </v-btn>
+                <v-list-item-avatar color="grey darken-3">
+                  <v-img
+                    class="elevation-6"
+                    alt=""
+                    :src="topUsers[userIndex - 1].image"
+                  ></v-img>
+                </v-list-item-avatar>
+              </v-col>
+              <!-- account and btn -->
+              <v-col cols="auto" class="flex-grow-1 pa-0 ma-0">
+                <v-row class="d-flex flex-wrap align-center ma-0 pa-0">
+                  <!-- account -->
+                  <v-col cols="auto" class="pa-0 ma-0">
+                    <v-list-item-content>
+                      <v-list-item-title class="py-0 my-0"
+                        ><p subtitle-2 font-weight-bold class="py-0 my-0">
+                          {{ topUsers[userIndex - 1].name }}
+                        </p></v-list-item-title
+                      >
+                      <v-list-item-title class="py-0 my-0"
+                        ><p
+                          subtitle-2
+                          font-weight-bold
+                          class="grey--text py-0 my-0"
+                        >
+                          @{{ topUsers[userIndex - 1].account }}
+                        </p></v-list-item-title
+                      >
+                    </v-list-item-content>
+                  </v-col>
+                  <v-spacer></v-spacer>
+                  <!-- btn -->
+                  <v-col cols="auto" class="pa-0 ma-0 d-flex justify-end">
+                    <v-btn
+                      v-if="!topUsers[userIndex - 1].isFollowed"
+                      @click.stop.prevent="
+                        addFollowed(topUsers[userIndex - 1].account)
+                      "
+                      rounded
+                      outlined
+                      small
+                      color="primary"
+                      class="justify-end"
+                    >
+                      跟隨
+                    </v-btn>
+                    <v-btn
+                      v-else
+                      @click.stop.prevent="
+                        removeFollowed(topUsers[userIndex - 1].account)
+                      "
+                      rounded
+                      small
+                      elevation="0"
+                      color="primary"
+                      class="justify-end"
+                    >
+                      正在跟隨
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
             </v-row>
           </v-list-item>
         </v-card-actions>
+        <!-- load more... -->
         <v-list-item
           v-if="usersToShow < topUsers.length || topUsers.length > usersToShow"
         >

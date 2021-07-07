@@ -1,10 +1,10 @@
 <template>
   <v-container style="max-width: 1440px">
     <v-row>
-      <v-col cols="12" sm="3" class="sidenavcol pa-0">
+      <v-col cols="12" md="3" class="sidenavcol pa-0">
         <SideNavBar :user="user" />
       </v-col>
-      <v-col cols="12" sm="6" class="pa-0">
+      <v-col cols="12" md="6" class="pa-0">
         <!-- top nav -->
         <v-card
           tile
@@ -24,7 +24,7 @@
           :user="user"
         />
       </v-col>
-      <v-col cols="12" sm="3" class="topuserscol">
+      <v-col cols="12" md="3" class="topuserscol">
         <TopUsers />
       </v-col>
     </v-row>
