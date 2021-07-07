@@ -40,6 +40,7 @@
           </v-col>
           <v-col cols="1" class="d-flex justify-space-between ml-5">
             <v-icon
+              :disabled="tweet.User.account === user.account"
               @click.stop.prevent="addLiked(user)"
               class="body-2 grey--text"
               >mdi-heart-outline</v-icon

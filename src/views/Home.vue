@@ -118,6 +118,9 @@ export default {
           image: this.user.image,
         },
         createdAt: new Date(),
+        LikedUsers: [],
+        Replies: [],
+        isLiked: false,
       });
     },
   },
