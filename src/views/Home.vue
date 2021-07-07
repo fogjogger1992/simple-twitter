@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="max-width: 1440px">
     <v-row>
       <v-col cols="12" sm="3" class="sidenavcol pa-0">
         <SideNavBar :user="user" />
