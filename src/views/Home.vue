@@ -5,14 +5,6 @@
         <SideNavBar :user="user" />
       </v-col>
       <v-col cols="12" md="6" class="pa-0">
-        <!-- top nav -->
-        <v-card
-          tile
-          flat
-          class="pa-3"
-          style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
-          >首頁</v-card
-        >
         <v-container class="ma-0 pa-0">
           <router-view></router-view>
         </v-container>

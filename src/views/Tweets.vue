@@ -1,5 +1,13 @@
 <template>
   <v-container class="ma-0 pa-0">
+    <!-- top nav -->
+    <v-card
+      tile
+      flat
+      class="pa-3 align-center"
+      style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
+      >首頁</v-card
+    >
     <!-- add tweet -->
     <NewTweetCard :user="user" @after-create-tweet="afterCreateTweet" />
     <v-system-bar style="height: 10px"></v-system-bar>
