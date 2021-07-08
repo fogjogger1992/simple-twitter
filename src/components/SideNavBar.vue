@@ -4,7 +4,7 @@
       <!-- ac logo svg -->
       <v-col cols="12">
         <div class="mt-5">
-          <router-link to="/home">
+          <router-link to="/tweets">
             <img src="../assets/img/logo.svg" />
           </router-link>
         </div>
@@ -101,7 +101,7 @@ export default {
 
       selectedItem: 0,
       items: [
-        { text: "首頁", icon: "mdi-home-variant-outline", link: "/home" },
+        { text: "首頁", icon: "mdi-home-variant-outline", link: "/tweets" },
         {
           text: "個人資料",
           icon: "mdi-account-outline",

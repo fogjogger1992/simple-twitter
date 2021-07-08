@@ -45,10 +45,10 @@
 </style>
 
 <script>
-import SideNavBar from "./../components/SideNavBar.vue";
-import NewTweetCard from "./../components/NewTweetCard.vue";
-import TweetCard from "./../components/TweetCard.vue";
-import TopUsers from "./../components/TopUsers.vue";
+import SideNavBar from "../components/SideNavBar.vue";
+import NewTweetCard from "../components/NewTweetCard.vue";
+import TweetCard from "../components/TweetCard.vue";
+import TopUsers from "../components/TopUsers.vue";
 
 // remove this after integrating API
 const dummyData = {
@@ -88,7 +88,7 @@ const dummyData = {
 };
 
 export default {
-  name: "Home",
+  name: "Tweets",
   components: {
     SideNavBar,
     NewTweetCard,
