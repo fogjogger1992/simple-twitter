@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import NotFound from '../views/NotFound.vue'
 import SignIn from '../views/SignIn.vue'
-import Tweets from '@/views/Tweets.vue'
+import Home from '@/views/Home.vue'
 import Admin from '@/views/Admin.vue'
 
 Vue.use(VueRouter)
@@ -52,14 +52,22 @@ const routes = [
     ]
   },
   {
-    path: '/Tweets',
-    name: 'tweets',
-    component: Tweets,
-  },
-  {
-    path: '/tweet/:id',
-    name: 'tweet',
-    component: () => import('../views/Tweet.vue'),
+    path: '/tweets',
+    name: 'home',
+    component: Home,
+    
+    children: [
+      {
+        name: "tweets",
+        path: '/',
+        component: () => import("../views/Tweets.vue"),
+      },
+      {
+        name: "tweet",
+        path: ':id',
+        component: () => import('../views/Tweet.vue'),
+      },
+    ]
   },
   {
     path: '/users/:id',

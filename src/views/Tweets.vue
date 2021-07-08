@@ -1,54 +1,21 @@
 <template>
-  <v-container style="max-width: 1440px">
-    <v-row>
-      <v-col cols="12" md="3" class="sidenavcol pa-0">
-        <SideNavBar :user="user" />
-      </v-col>
-      <v-col cols="12" md="6" class="pa-0">
-        <!-- top nav -->
-        <v-card
-          tile
-          flat
-          class="pa-3"
-          style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
-          >首頁</v-card
-        >
-        <!-- add tweet -->
-        <NewTweetCard :user="user" @after-create-tweet="afterCreateTweet" />
-        <v-system-bar style="height: 10px"></v-system-bar>
-        <!-- tweets list -->
-        <TweetCard
-          v-for="tweet in tweets"
-          :key="tweet.id"
-          :initial-tweet="tweet"
-          :user="user"
-        />
-      </v-col>
-      <v-col cols="12" md="3" class="topuserscol">
-        <TopUsers />
-      </v-col>
-    </v-row>
+  <v-container class="ma-0 pa-0">
+    <!-- add tweet -->
+    <NewTweetCard :user="user" @after-create-tweet="afterCreateTweet" />
+    <v-system-bar style="height: 10px"></v-system-bar>
+    <!-- tweets list -->
+    <TweetCard
+      v-for="tweet in tweets"
+      :key="tweet.id"
+      :initial-tweet="tweet"
+      :user="user"
+    />
   </v-container>
 </template>
 
-<style scoped>
-* {
-  font-weight: 900;
-  font-size: 18px;
-}
-.sidenavcol {
-  border-right: thin solid rgba(0, 0, 0, 0.12);
-}
-.topuserscol {
-  border-left: thin solid rgba(0, 0, 0, 0.12);
-}
-</style>
-
 <script>
-import SideNavBar from "../components/SideNavBar.vue";
 import NewTweetCard from "../components/NewTweetCard.vue";
 import TweetCard from "../components/TweetCard.vue";
-import TopUsers from "../components/TopUsers.vue";
 
 // remove this after integrating API
 const dummyData = {
@@ -88,12 +55,10 @@ const dummyData = {
 };
 
 export default {
-  name: "Tweets",
+  name: "Feeds",
   components: {
-    SideNavBar,
     NewTweetCard,
     TweetCard,
-    TopUsers,
   },
   data() {
     return {
