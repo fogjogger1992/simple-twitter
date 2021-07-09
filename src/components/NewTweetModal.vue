@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-dialog v-model="isTweetDialogOpened" persistent max-width="550px">
       <v-card>
-        <v-card-title class="pa-1">
+        <v-card-title class="pa-2">
           <v-btn icon color="primary" @click="$emit('update:isTweetDialogOpened', false)">
             <v-icon>mdi-close</v-icon>
           </v-btn>
