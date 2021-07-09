@@ -54,30 +54,47 @@ const routes = [
         path: 'admin_users',
         component: () => import("@/views/AdminUsers.vue"),
       },
-    ]
+    ],
   },
   {
     path: '/tweets',
     name: 'home',
     component: Home,
-    
     children: [
       {
-        name: "tweets",
+        name: 'tweets',
         path: '/',
-        component: () => import("../views/Tweets.vue"),
+        component: () => import('../views/Tweets.vue'),
       },
       {
-        name: "tweet",
+        name: 'tweet',
         path: ':id',
         component: () => import('../views/Tweet.vue'),
       },
-    ]
-  },
-  {
-    path: '/users/:id',
-    name: 'user',
-    component: () => import('../views/User.vue'),
+      {
+        path: '/users',
+        name: 'user',
+        redirect: '/users/:id',
+        component: () => import('../views/User.vue'),
+        children: [
+          {
+            name: 'user-tweets',
+            path: ':id',
+            component: () => import('../views/UserTweets.vue'),
+          },
+          {
+            name: 'user-follower',
+            path: ':id/follower',
+            component: () => import('../views/UserFollower.vue'),
+          },
+          {
+            name: 'user-following',
+            path: ':id/following',
+            component: () => import('../views/UserFollowing.vue'),
+          },
+        ],
+      },
+    ],
   },
   {
     path: '*',
