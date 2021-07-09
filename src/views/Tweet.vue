@@ -84,17 +84,17 @@
       tile
       flat
       class="pa-3 align-center grey--text"
-      style="font-size: 16px; border-bottom: thin solid rgba(0, 0, 0, 0.12)"
+      style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
     >
       <v-row class="pa-0 ma-0">
         <v-col cols="2" class="pa-0 ma-0"
-          ><v-icon @click.stop.prevent="replyTweet"
-            >mdi-message-reply-outline</v-icon
+          ><v-icon @click.stop.prevent="replyTweet" style="font-size: 20px"
+            >far fa-comment</v-icon
           ></v-col
         >
         <v-col cols="10" class="pa-0 ma-0"
-          ><v-icon @click.stop.prevent="addLiked"
-            >mdi-heart-outline</v-icon
+          ><v-icon @click.stop.prevent="addLiked" style="font-size: 20px"
+            >far fa-heart</v-icon
           ></v-col
         >
       </v-row>
