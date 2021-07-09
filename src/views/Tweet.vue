@@ -6,8 +6,14 @@
       flat
       class="pa-3 align-center"
       style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
-      ><v-icon @click="$router.back()">mdi-arrow-left</v-icon> 推文</v-card
     >
+      <v-row no-gutters class="ma-0 pa-0 align-center">
+        <v-col cols="1" class="ma-0 pa-0">
+          <v-icon @click="$router.back()">mdi-arrow-left</v-icon>
+        </v-col>
+        <v-col cols="auto" class="ma-0 pa-0"> 推文 </v-col>
+      </v-row>
+    </v-card>
     <!-- tweet detail -->
     <v-card flat tile class="pa-3">
       <v-row no-gutters class="pa-0 flex-column">

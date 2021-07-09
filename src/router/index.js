@@ -40,39 +40,38 @@ const routes = [
     redirect: '/admin/tweets',
     children: [
       {
-        name: "admin-tweets",
+        name: 'admin-tweets',
         path: 'tweets',
-        component: () => import("@/views/AdminTweets.vue"),
+        component: () => import('@/views/AdminTweets.vue'),
       },
       {
-        name: "admin-users",
+        name: 'admin-users',
         path: 'users',
-        component: () => import("@/views/AdminUsers.vue"),
+        component: () => import('@/views/AdminUsers.vue'),
       },
-    ]
+    ],
   },
   {
     path: '/tweets',
     name: 'home',
     component: Home,
-    
     children: [
       {
-        name: "tweets",
+        name: 'tweets',
         path: '/',
-        component: () => import("../views/Tweets.vue"),
+        component: () => import('../views/Tweets.vue'),
       },
       {
-        name: "tweet",
+        name: 'tweet',
         path: ':id',
         component: () => import('../views/Tweet.vue'),
       },
-    ]
-  },
-  {
-    path: '/users/:id',
-    name: 'user',
-    component: () => import('../views/User.vue'),
+      {
+        path: '/users/:id',
+        name: 'user',
+        component: () => import('../views/User.vue'),
+      },
+    ],
   },
   {
     path: '*',
