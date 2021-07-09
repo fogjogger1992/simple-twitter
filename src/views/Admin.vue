@@ -45,8 +45,8 @@ export default {
     return {
       drawer: true,
       items: [
-        { title: "推文清單", icon: "fab fa-twitter", link: '/admin/tweets' },
-        { title: "使用者列表", icon: "fas fa-user-friends", link: '/admin/users'  },
+        { title: "推文清單", icon: "fab fa-twitter", link: './admin_main' },
+        { title: "使用者列表", icon: "fas fa-user-friends", link: './admin_users'  },
         { title: "登出", icon: "fas fa-sign-out-alt" },
       ],
       mini: true,

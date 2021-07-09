@@ -34,19 +34,24 @@ const routes = [
     component: () => import('../views/AdminSignIn.vue'),
   },
   {
-    path: '/admin/',
+    path: '/admin',
+    name: 'admin-signin',
+    component: () => import('../views/AdminSignIn.vue'),
+  },
+  {
+    path: '/admin',
     name: 'admin',
     component: Admin,
-    redirect: '/admin/tweets',
+    // redirect: '/admin_main',
     children: [
       {
         name: "admin-tweets",
-        path: 'tweets',
+        path: 'admin_main',
         component: () => import("@/views/AdminTweets.vue"),
       },
       {
         name: "admin-users",
-        path: 'users',
+        path: 'admin_users',
         component: () => import("@/views/AdminUsers.vue"),
       },
     ]
