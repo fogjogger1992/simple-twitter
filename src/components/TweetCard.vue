@@ -1,10 +1,5 @@
 <template>
-  <v-card
-    flat
-    tile
-    class="pa-3"
-    style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
-  >
+  <v-card flat tile class="pa-3" style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">
     <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
       <v-col class="flex-grow-1">
         <v-avatar class="mt-1">
@@ -16,17 +11,13 @@
           <p class="subtitle-2 font-weight-bold mr-1 my-0 pa-0">
             {{ tweet.User.name }}
           </p>
-          <router-link
-            :to="{ name: 'user', params: { id: tweet.User.account } }"
-            class="subtitle-2 grey--text font-weight-normal pa-0"
-            style="text-decoration: none"
-          >
+          <router-link :to="{ name: 'user', params: { id: tweet.User.account } }" class="subtitle-2 grey--text font-weight-normal pa-0" style="text-decoration: none">
             @{{ tweet.User.account }}
           </router-link>
           <p class="subtitle-2 font-weight-normal grey--text pa-0 my-0 ml-1">
             ‧ {{ tweet.createdAt | fromNow }}
-          </p></v-row
-        >
+          </p>
+        </v-row>
         <v-row no-gutters align="center" class="font-weight-normal px-2">
           <p class="body-2 font-weight-normal text-justify my-0">
             {{ tweet.text }}
@@ -58,15 +49,19 @@
           </v-col>
         </v-row>
       </v-col>
+
+      <NewTweetReplyModal :isTweetReplyDialogOpened.sync="isTweetReplyDialogOpened" />
     </v-row>
   </v-card>
 </template>
 
 <script>
 import { fromNowFilter } from "./../utils/mixins";
+import NewTweetReplyModal from "@/components/NewTweetReplyModal";
 
 export default {
   name: "TweetCard",
+  components: { NewTweetReplyModal },
   props: {
     initialTweet: {
       type: Object,
@@ -81,11 +76,13 @@ export default {
   data() {
     return {
       tweet: this.initialTweet,
+      isTweetReplyDialogOpened: false,
     };
   },
   methods: {
     replyTweet() {
       console.log("replyTweet");
+      this.isTweetReplyDialogOpened = true;
     },
     addLiked(user) {
       console.log("addLiked");

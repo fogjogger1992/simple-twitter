@@ -4,7 +4,7 @@
     <v-navigation-drawer app v-model="drawer" :mini-variant.sync="mini" permanent>
       <v-list-item class="px-2">
         <v-list-item-avatar>
-          <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+          <v-img src="../assets/img/logo.svg"></v-img>
         </v-list-item-avatar>
 
         <v-list-item-title>管理員</v-list-item-title>
@@ -45,8 +45,8 @@ export default {
     return {
       drawer: true,
       items: [
-        { title: "推文清單", icon: "fab fa-twitter", link: '/admin/tweets' },
-        { title: "使用者列表", icon: "fas fa-user-friends", link: '/admin/users'  },
+        { title: "推文清單", icon: "fab fa-twitter", link: './admin_main' },
+        { title: "使用者列表", icon: "fas fa-user-friends", link: './admin_users'  },
         { title: "登出", icon: "fas fa-sign-out-alt" },
       ],
       mini: true,
