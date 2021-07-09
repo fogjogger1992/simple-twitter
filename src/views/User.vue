@@ -1,12 +1,7 @@
 <template>
   <v-container class="ma-0 pa-0">
     <!-- top nav -->
-    <v-card
-      tile
-      flat
-      class="px-3 py-1 align-center"
-      style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
-    >
+    <v-card tile flat class="px-3 py-1 align-center">
       <v-row no-gutters class="ma-0 pa-0 align-center">
         <v-col cols="1" class="ma-0 pa-0">
           <v-icon @click="$router.back()">mdi-arrow-left</v-icon>
@@ -19,7 +14,7 @@
         </v-col>
       </v-row>
     </v-card>
-
+    <!-- user profile / following / follower -->
     <v-container class="ma-0 pa-0">
       <router-view></router-view>
     </v-container>

@@ -1,7 +1,12 @@
 <template>
   <v-container class="ma-0 pa-0">
     <!-- profile card -->
-    <v-card tile flat class="pa-0 profilecard">
+    <v-card
+      tile
+      flat
+      class="pa-0 profilecard"
+      style="border-top: thin solid rgba(0, 0, 0, 0.12)"
+    >
       <!-- bg -->
       <v-row height="200px" class="ma-0 pa-0">
         <v-img height="200px" :src="user.background"></v-img>

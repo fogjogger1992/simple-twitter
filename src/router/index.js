@@ -67,14 +67,25 @@ const routes = [
         component: () => import('../views/Tweet.vue'),
       },
       {
-        path: '/users/:id',
+        path: '/users',
         name: 'user',
+        redirect: '/users/:id',
         component: () => import('../views/User.vue'),
         children: [
           {
             name: 'user-tweets',
-            path: '/',
+            path: ':id',
             component: () => import('../views/UserTweets.vue'),
+          },
+          {
+            name: 'user-follower',
+            path: ':id/follower',
+            component: () => import('../views/UserFollower.vue'),
+          },
+          {
+            name: 'user-following',
+            path: ':id/following',
+            component: () => import('../views/UserFollowing.vue'),
           },
         ],
       },
