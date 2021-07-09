@@ -36,8 +36,9 @@
           <v-col cols="1" class="d-flex justify-space-between">
             <v-icon
               @click.stop.prevent="replyTweet"
-              class="body-2 font-weight-normal grey--text"
-              >mdi-message-reply-outline</v-icon
+              class="grey--text"
+              style="font-size: 18px"
+              >far fa-comment</v-icon
             >
             <p class="body-2 font-weight-normal grey--text pa-0 my-0 ml-1">
               {{ tweet.Replies.length }}
@@ -47,8 +48,9 @@
             <v-icon
               :disabled="tweet.User.account === user.account"
               @click.stop.prevent="addLiked(user)"
-              class="body-2 grey--text"
-              >mdi-heart-outline</v-icon
+              class="grey--text"
+              style="font-size: 18px"
+              >far fa-heart</v-icon
             >
             <p class="body-2 grey--text pa-0 my-0 ml-1">
               {{ tweet.LikedUsers.length }}
