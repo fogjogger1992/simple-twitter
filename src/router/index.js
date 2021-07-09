@@ -70,6 +70,13 @@ const routes = [
         path: '/users/:id',
         name: 'user',
         component: () => import('../views/User.vue'),
+        children: [
+          {
+            name: 'user-tweets',
+            path: '/',
+            component: () => import('../views/UserTweets.vue'),
+          },
+        ],
       },
     ],
   },
