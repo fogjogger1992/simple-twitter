@@ -27,6 +27,7 @@
         <!-- btn -->
         <v-col cols="6" class="d-flex ma-0 px-0 py-4 align-self-end">
           <v-spacer></v-spacer>
+          <!-- if currentUserId === userId -->
           <v-btn
             @click.stop.prevent="openUserSelfEditModal"
             outlined
@@ -37,6 +38,37 @@
           >
             編輯個人資料
           </v-btn>
+          <!-- else -->
+          <div>
+            <v-btn fab small outlined color="primary" class="mr-2">
+              <v-icon color="primary"> far fa-envelope </v-icon>
+            </v-btn>
+            <v-btn fab small outlined color="primary" class="mr-2">
+              <v-icon color="primary"> far fa-bell </v-icon>
+            </v-btn>
+            <!-- if !isFollowed -->
+            <v-btn
+              @click.stop.prevent="openUserSelfEditModal"
+              outlined
+              rounded
+              large
+              color="primary"
+              class="font-weight-bold"
+            >
+              跟隨
+            </v-btn>
+            <!-- else -->
+            <v-btn
+              @click.stop.prevent="openUserSelfEditModal"
+              elevation="0"
+              rounded
+              large
+              color="primary"
+              class="font-weight-bold"
+            >
+              正在跟隨
+            </v-btn>
+          </div>
         </v-col>
       </v-row>
     </v-card>

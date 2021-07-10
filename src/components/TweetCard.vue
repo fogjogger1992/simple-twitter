@@ -1,5 +1,10 @@
 <template>
-  <v-card flat tile class="pa-3" style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">
+  <v-card
+    flat
+    tile
+    class="pa-3"
+    style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
+  >
     <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
       <v-col class="flex-grow-1">
         <v-avatar class="mt-1">
@@ -11,7 +16,11 @@
           <p class="subtitle-2 font-weight-bold mr-1 my-0 pa-0">
             {{ tweet.User.name }}
           </p>
-          <router-link :to="{ name: 'user', params: { id: tweet.User.account } }" class="subtitle-2 grey--text font-weight-normal pa-0" style="text-decoration: none">
+          <router-link
+            :to="{ name: 'user', params: { id: tweet.User.account } }"
+            class="subtitle-2 grey--text font-weight-normal pa-0"
+            style="text-decoration: none"
+          >
             @{{ tweet.User.account }}
           </router-link>
           <p class="subtitle-2 font-weight-normal grey--text pa-0 my-0 ml-1">
@@ -24,7 +33,7 @@
           </p>
         </v-row>
         <v-row no-gutters align="center" class="font-weight-normal pa-2">
-          <v-col cols="1" class="d-flex justify-space-between">
+          <v-col cols="1" class="d-flex justify-space-between mr-5">
             <v-icon
               @click.stop.prevent="replyTweet"
               class="grey--text"
@@ -50,7 +59,9 @@
         </v-row>
       </v-col>
 
-      <NewTweetReplyModal :isTweetReplyDialogOpened.sync="isTweetReplyDialogOpened" />
+      <NewTweetReplyModal
+        :isTweetReplyDialogOpened.sync="isTweetReplyDialogOpened"
+      />
     </v-row>
   </v-card>
 </template>
