@@ -1,39 +1,74 @@
 <template>
-  <v-row justify="center">
-    <v-col class="text-center">
+  <v-row>
+    <v-col>
       <p class="text-subtitle-1 font-weight-bold">使用者列表</p>
 
-      <v-card class="mx-auto" max-width="210">
-        <v-img class="align-end" height="110px" src="https://cdn.vuetifyjs.com/images/cards/docks.jpg">
-        </v-img>
-        <div class="avatar">
-          <v-avatar size="80" class="avatar-border">
-            <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
-          </v-avatar>
-        </div>
+      <v-row>
+        <v-col cols="6" sm="4" md="3" lg="2" class="d-flex ma-0 py-3 justify-center" v-for="user in users" :key="user.id">
+          <v-hover v-slot="{ hover }">
+            <v-card class="mx-auto text-center" :elevation="hover ? 4 : 1" :class="{ 'on-hover': hover }">
+              <v-img class="align-end" height="110px" :src="user.cover">
+              </v-img>
+              <div class="avatar">
+                <v-avatar size="80" class="avatar-border">
+                  <img :src="user.avatar" :alt="user.name">
+                </v-avatar>
+              </div>
 
-        <v-card-subtitle class="pb-0 black--text">
-          User1
-        </v-card-subtitle>
-        <v-card-text class="text--primary">
-          <div class="grey--text text--darken-2 mb-2">@user1</div>
-          <div class="mb-2">
-            <v-icon small>far fa-comment</v-icon> 10k <v-icon small class="pl-3">far fa-heart</v-icon> 20k
-          </div>
-          <div>34位跟隨中 <span class="pl-2">35位跟隨者</span></div>
-        </v-card-text>
+              <v-card-subtitle class="pb-0 black--text">
+                {{user.name}}
+              </v-card-subtitle>
+              <v-card-text class="text--primary">
+                <div class="grey--text text--darken-2 mb-2">@{{user.account}}</div>
+                <div class="mb-2">
+                  <v-icon small>far fa-comment</v-icon> {{user.TweetCounts}}
+                  <v-icon small class="pl-3">far fa-heart</v-icon> {{user.BeLikedCounts}}
+                </div>
+                <div>{{user.followingCounts}}位跟隨中 <span class="pl-2">{{user.followerCounts}}位跟隨者</span></div>
 
-      </v-card>
-
+              </v-card-text>
+            </v-card>
+          </v-hover>
+        </v-col>
+      </v-row>
+      <Loading />
     </v-col>
   </v-row>
 </template>
 <script>
+import Loading from "@/components/Loading";
+import adminAPI from "../apis/admin";
+import { mapMutations } from "vuex";
+
 export default {
   name: "AdminUsers",
-
+  components: { Loading },
   data() {
-    return {};
+    return {
+      users: [],
+    };
+  },
+  async mounted() {
+    this.setShowOverlayLoading(null, { root: true });
+    try {
+      // 取使用者名單
+      const { data } = await adminAPI.getUsers();
+      this.setShowOverlayLoading(null, { root: true });
+      // 失誤
+      if (data.message) {
+        throw new Error(data.message);
+      }
+      // 成功
+      this.users = data;
+    } catch (err) {
+      this.setShowOverlayLoading(null, { root: true });
+      console.log(err);
+    }
+  },
+  methods: {
+    ...mapMutations({
+      setShowOverlayLoading: "setShowOverlayLoading",
+    }),
   },
 };
 </script>
