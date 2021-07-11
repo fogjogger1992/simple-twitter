@@ -22,19 +22,7 @@
                 <v-icon v-text="item.icon"></v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title
-                  v-text="item.text"
-                  v-if="item.text === '個人資料'"
-                  @click="
-                    () => {
-                      isProfileDialogOpened = true;
-                    }
-                  "
-                ></v-list-item-title>
-                <v-list-item-title
-                  v-text="item.text"
-                  v-else
-                ></v-list-item-title>
+                <v-list-item-title v-text="item.text"></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list-item-group>
@@ -88,7 +76,7 @@ export default {
   name: "SideNavBar",
   components: { UserSelfEditModal, NewTweetModal },
   props: {
-    user: {
+    currentUser: {
       type: Object,
       required: true,
     },
@@ -105,13 +93,11 @@ export default {
         {
           text: "個人資料",
           icon: "mdi-account-outline",
-          // TODO: Fix this
-          link: "",
+          link: "/users/" + this.currentUser.id,
         },
         { text: "設定", icon: "mdi-cog-outline", link: "/setting" },
       ],
     };
   },
-  methods: {},
 };
 </script>
