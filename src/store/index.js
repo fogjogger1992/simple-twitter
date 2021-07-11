@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import admin from './modules/admin'
-import authorizationAPI from '../apis/authorization'
+import usersAPI from '../apis/users'
 
 Vue.use(Vuex)
 
@@ -42,7 +42,7 @@ export default new Vuex.Store({
     async fetchCurrentUser({ commit }) {
       try {
         // 取登入使用者資訊
-        const { data } = await authorizationAPI.getCurrentUser()
+        const { data } = await usersAPI.getCurrentUser()
         const { account, name, avatar, email } = data
 
         commit('setCurrentUser', {

@@ -4,7 +4,7 @@
       <v-col cols="12" md="3" class="sidenavcol pa-0">
         <SideNavBar :user="user" />
       </v-col>
-      <v-col cols="12" md="6" class="pa-0">
+      <v-col cols="12" md="6" class="pa-0 maincol">
         <v-container class="ma-0 pa-0">
           <router-view></router-view>
         </v-container>
@@ -23,6 +23,9 @@
 }
 .sidenavcol {
   border-right: thin solid rgba(0, 0, 0, 0.12);
+}
+.maincol {
+  height: 100vh;
 }
 .topuserscol {
   border-left: thin solid rgba(0, 0, 0, 0.12);

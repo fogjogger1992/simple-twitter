@@ -8,7 +8,7 @@
     <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
       <v-col class="flex-grow-1">
         <v-avatar class="mt-1">
-          <img :src="tweet.User.image" :alt="tweet.User.name" />
+          <img :src="tweet.User.avatar" :alt="tweet.User.name" />
         </v-avatar>
       </v-col>
       <v-col cols="11" class="flex-shrink-1">
@@ -17,7 +17,7 @@
             {{ tweet.User.name }}
           </p>
           <router-link
-            :to="{ name: 'user', params: { id: tweet.User.account } }"
+            :to="{ name: 'user', params: { id: tweet.User.id } }"
             class="subtitle-2 grey--text font-weight-normal pa-0"
             style="text-decoration: none"
           >
@@ -29,7 +29,7 @@
         </v-row>
         <v-row no-gutters align="center" class="font-weight-normal px-2">
           <p class="body-2 font-weight-normal text-justify my-0">
-            {{ tweet.text }}
+            {{ tweet.description }}
           </p>
         </v-row>
         <v-row no-gutters align="center" class="font-weight-normal pa-2">
@@ -41,7 +41,7 @@
               >far fa-comment</v-icon
             >
             <p class="body-2 font-weight-normal grey--text pa-0 my-0 ml-1">
-              {{ tweet.Replies.length }}
+              {{ tweet.replyCounts }}
             </p>
           </v-col>
           <v-col cols="1" class="d-flex justify-space-between ml-5">
@@ -53,7 +53,7 @@
               >far fa-heart</v-icon
             >
             <p class="body-2 grey--text pa-0 my-0 ml-1">
-              {{ tweet.LikedUsers.length }}
+              {{ tweet.likeCounts }}
             </p>
           </v-col>
         </v-row>
