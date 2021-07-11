@@ -4,7 +4,7 @@ export default {
   getTweets() {
     return apiHelper.get('/tweets')
   },
-  postTweet({ tweetData }) {
+  createTweet({ tweetData }) {
     return apiHelper.post('/tweets', tweetData)
   }
 }

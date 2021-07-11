@@ -103,7 +103,7 @@ export default {
           userId: this.currentUser.id,
           comment: this.comment,
         };
-        const { data } = await repliesAPI.postReply({
+        const { data } = await repliesAPI.createReply({
           tweetId: this.tweetInfo.id,
           replyData,
         });

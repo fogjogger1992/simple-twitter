@@ -69,7 +69,7 @@ export default {
           userId: this.currentUser.id,
           description: this.description,
         };
-        const { data } = await tweetsAPI.postTweet({ tweetData });
+        const { data } = await tweetsAPI.createTweet({ tweetData });
 
         console.log("新增結果： ", data);
         if (data.status !== "success") {
