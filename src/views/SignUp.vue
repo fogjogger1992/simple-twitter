@@ -85,7 +85,7 @@ export default {
           { popupColor: "green", popupMsg: "註冊成功" },
           { root: true }
         );
-        setTimeout(() => ( this.$router.push("/signin") ), 1800)
+        setTimeout(() => ( this.$router.push("/signin") ), 1500)
       } catch (err) {
         this.btnLoading = false;
         console.log(err);

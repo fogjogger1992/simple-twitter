@@ -75,9 +75,7 @@ export default {
         if (data.status !== "success") {
           Toast.fire({
             icon: "error",
-            title: `推文失敗，${data.message}`,
-            showConfirmButton: false,
-            timer: 1500,
+            title: `推文失敗，${data.message}`
           });
           throw new Error(data.message);
         }
@@ -85,9 +83,7 @@ export default {
         this.$emit("update:isTweetDialogOpened", false);
         Toast.fire({
           icon: "success",
-          title: "推文成功",
-          showConfirmButton: false,
-          timer: 1500,
+          title: "推文成功"
         });
       } catch (err) {
         this.btnLoading = false;

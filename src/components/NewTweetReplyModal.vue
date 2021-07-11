@@ -23,17 +23,15 @@
                 <span class="ml-2 text-body-2 grey--text text--darken-1"> @user1 • 3hr </span>
                 <v-spacer></v-spacer>
                 <div class="text-body-2 grey--text text--darken-3 mt-3">
-                  "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
-                  "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
-                  "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
+                test
                 </div>
               </v-col>
             </v-row>
           </v-container>
         </v-card-text>
-       
+
         <v-card-text>
-         <v-divider inset></v-divider>
+          <v-divider inset></v-divider>
           <v-container class="pa-0 mt-4">
             <!-- <v-divider inset></v-divider> -->
             <v-row>
@@ -47,7 +45,7 @@
               <v-col cols="10">
                 <div class="mt-2">回覆給 <span class="primary--text"> @User1 </span></div>
                 <v-form ref="form" v-model="valid">
-                  <v-textarea label="推你的回覆" counter="140" maxlength="140" :rules="[rules.required, rules.tweetRules, rules.spaceRules]" required>{{comment}}</v-textarea>
+                  <v-textarea label="推你的回覆" v-model="comment" counter="140" maxlength="140" :rules="[rules.required, rules.tweetRules, rules.spaceRules]" required></v-textarea>
                 </v-form>
               </v-col>
             </v-row>
@@ -64,6 +62,7 @@
   </v-row>
 </template>
 <script>
+// import { mapState } from 'vuex';
 export default {
   props: {
     isTweetReplyDialogOpened: {
@@ -82,10 +81,21 @@ export default {
       spaceRules: (v) => /[^\s\d]/.test(v) || "必填，不能只輸入空格",
     },
   }),
+  mounted() {
+    console.log("tweetData ", this.tweet);
+    console.log("user資料： ", this.user);
+  },
   methods: {
     replyTweet() {
+      // 取得推文user跟回文user的資料
       this.$emit("update:isTweetReplyDialogOpened", false);
     },
+  },
+  computed: {
+    // ...mapState({
+    //   tweetData: (state) => state.tweets.tweetData,
+    //   isTweetReplyDialogOpened: (state) => state.tweets.isTweetReplyDialogOpened
+    // })
   },
 };
 </script>

@@ -22,7 +22,7 @@
                     <v-img :src="cover" aspect-ratio="2" max-height="170px">
                       <v-fade-transition>
                         <v-overlay v-if="hover" absolute color="grey">
-                          <v-file-input class="d-inline-flex mr-2" prepend-icon="mdi-camera-outline" hide-input accept="image/png, image/jpeg"></v-file-input>
+                          <v-file-input v-model="newCover" class="d-inline-flex mr-2" prepend-icon="mdi-camera-outline" hide-input accept="image/png, image/jpeg"></v-file-input>
                           <v-btn icon color="white" class="mb-3 ml-2">
                             <v-icon>mdi-trash-can-outline</v-icon>
                           </v-btn>
@@ -39,7 +39,7 @@
                         <v-img :src="avatar" alt="Avatar">
                           <v-fade-transition>
                             <v-overlay v-if="hover" absolute color="grey">
-                              <v-file-input class="d-inline-flex ml-3 mb-2" prepend-icon="mdi-camera-outline" hide-input accept="image/png, image/jpeg"></v-file-input>
+                              <v-file-input v-model="newAvatar" class="d-inline-flex ml-3 mb-2" prepend-icon="mdi-camera-outline" hide-input accept="image/png, image/jpeg"></v-file-input>
                             </v-overlay>
                           </v-fade-transition>
                         </v-img>
@@ -52,7 +52,7 @@
               <v-col cols="12" class="mt-7">
                 <v-form class="" ref="form" v-model="valid" lazy-validation>
                   <v-text-field v-model.trim="name" :rules="[rules.required, rules.nameRules]" label="姓名" counter="50" maxlength="50" required></v-text-field>
-                  <v-textarea label="自我介紹" counter="160" maxlength="160" required>{{introduction}}</v-textarea>
+                  <v-textarea label="自我介紹" v-model="introduction" counter="160" maxlength="160" required></v-textarea>
                 </v-form>
               </v-col>
 
@@ -64,8 +64,9 @@
   </v-row>
 </template>
 <script>
-import usersAPI from "../apis/users";
+// import usersAPI from "../apis/users";
 import { mapState, mapActions } from "vuex";
+// import { Toast } from "../utils/helpers";
 
 export default {
   name: "UserSelfEditModal",
@@ -81,6 +82,8 @@ export default {
     introduction: "",
     avatar: "",
     cover: "",
+    newAvatar: "",
+    newCover: '',
 
     btnLoading: false,
 
@@ -115,34 +118,29 @@ export default {
         const userData = {
           name: this.name,
           introduction: this.introduction,
-          cover: this.cover,
-          // avatar: this.avatar,
+          cover: this.newCover,
+          avatar: this.newAvatar,
         };
         console.log("要更新的個人資料： ", userData);
-        const { data } = await usersAPI.updateInfo({
-          userId: this.id,
-          userData,
-        });
-        console.log("更新結果： ", data);
-        this.btnLoading = false;
-        if (data.status !== "success") {
-          this.setShowPopup(true, { root: true });
-          this.setPopupDetails(
-            {
-              popupColor: "red",
-              popupMsg: `個人資料更新失敗，${data.message}`,
-            },
-            { root: true }
-          );
-          throw new Error(data.message);
-        }
+        // const { data } = await usersAPI.updateInfo({
+        //   userId: this.id,
+        //   userData,
+        // });
+        // console.log("更新結果： ", data);
+        // this.btnLoading = false;
+        // // if (data.status !== "success") {
+        //   Toast.fire({
+        //     icon: "error",
+        //     title: `個人資料更新失敗，${data.message}`,
+        //   });
+        //   throw new Error(data.message);
+        // }
 
-        this.$emit("update:isProfileDialogOpened", false);
-        this.setShowPopup(true, { root: true });
-        this.setPopupDetails(
-          { popupColor: "green", popupMsg: "個人資料更新成功" },
-          { root: true }
-        );
+        // this.$emit("update:isProfileDialogOpened", false);
+        // Toast.fire({
+        //   icon: "success",
+        //   title: "個人資料更新成功",
+        // });
       } catch (err) {
         this.btnLoading = false;
         console.log(err);

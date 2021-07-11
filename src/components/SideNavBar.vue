@@ -21,7 +21,7 @@
               <v-list-item-icon class="mr-4">
                 <v-icon v-text="item.icon"></v-icon>
               </v-list-item-icon>
-              <v-list-item-content @click="item.action()">
+              <v-list-item-content @click="item.action&&item.action()">
                 <v-list-item-title
                   v-text="item.text"
                 ></v-list-item-title>
