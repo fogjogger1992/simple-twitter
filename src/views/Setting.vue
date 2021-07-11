@@ -9,38 +9,38 @@
         <v-card tile flat class="pa-3 font-weight-bold text-subtitle-1" style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">帳戶設定</v-card>
         <v-col cols="12" md="7" class="ma-auto pa-4 align-self-center">
           <v-form class="my-4 text-right" ref="form" v-model="valid" lazy-validation>
-            <!-- <UserInfoForm /> -->
             <v-text-field v-model.trim="account" :rules="[rules.required, rules.accountRules]" maxlength="50" label="帳號"></v-text-field>
             <v-text-field v-model.trim="name" :rules="[rules.required, rules.nameRules]" maxlength="50" label="姓名"></v-text-field>
             <v-text-field v-model.trim="email" :rules="[rules.required, rules.emailRules]" label="Email" required></v-text-field>
             <v-text-field v-model.trim="password" maxlength="20" type='password' :rules="[rules.required, rules.passwordRules]" label="密碼"></v-text-field>
             <v-text-field v-model.trim="confirmPassword" maxlength="20" type='password' :rules="confirmPasswordRules" label="確認密碼"></v-text-field>
-            <v-btn rounded :disabled="!valid || btnLoading" color="primary" @click="save">
+            <v-btn rounded :disabled="!valid" color="primary" :loading="btnLoading" @click="updateSetting">
               儲存
             </v-btn>
           </v-form>
         </v-col>
       </v-col>
-      <Popup />
+      <!-- <Popup /> -->
     </v-row>
   </v-container>
 </template>
 <script>
 import SideNavBar from "@/components/SideNavBar";
-import Popup from "@/components/Popup";
-import userAPI from "../apis/users";
-import { mapState, mapMutations } from "vuex";
+// import Popup from "@/components/Popup";
+import usersAPI from "../apis/users";
+import { mapMutations, mapActions, mapState } from "vuex";
 
 export default {
   name: "Setting",
-  components: { SideNavBar, Popup },
+  components: { SideNavBar },
   data: () => ({
     valid: true,
+    id: 0,
     name: "",
     account: "",
     email: "",
     password: "",
-    checkPassword: "",
+    confirmPassword: "",
 
     btnLoading: false,
 
@@ -57,13 +57,22 @@ export default {
         (value && value.length <= 20) || "密碼不得超過20個字",
     },
   }),
-  created() {
-    this.name = this.currentUser.name;
-    this.account = this.currentUser.account;
-    this.email = this.currentUser.email;
+  async created() {
+    try {
+      // 取登入使用者資訊
+      await this.fetchCurrentUser();
+      this.id = this.currentUser.id;
+      this.name = this.currentUser.name;
+      this.account = this.currentUser.account;
+      this.email = this.currentUser.email;
+    } catch (error) {
+      console.log("error", error);
+      console.error("can not fetch user information");
+    }
   },
   methods: {
-    async save() {
+    async updateSetting() {
+      // 表單驗證
       this.$refs.form.validate();
 
       try {
@@ -75,16 +84,15 @@ export default {
           password: this.password,
           checkPassword: this.confirmPassword,
         };
-        const { data } = await userAPI.updateSetting({
-          userId: this.currentUser.id,
+        const { data } = await usersAPI.updateSetting({
+          userId: this.id,
           userData,
         });
-        console.log("data: ", data);
         this.btnLoading = false;
         if (data.status !== "success") {
           this.setShowPopup(true, { root: true });
           this.setPopupDetails(
-            { popupColor: "red", popupMsg: "資料更新失敗" },
+            { popupColor: "red", popupMsg: `資料更新失敗，${data.message}` },
             { root: true }
           );
           throw new Error(data.message);
@@ -102,7 +110,10 @@ export default {
     },
     ...mapMutations({
       setShowPopup: "setShowPopup",
-      setPopupDetails: "setPopupDetails"
+      setPopupDetails: "setPopupDetails",
+    }),
+    ...mapActions({
+      fetchCurrentUser: "fetchCurrentUser",
     }),
   },
   computed: {

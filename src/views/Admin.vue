@@ -7,7 +7,7 @@
           <v-img src="../assets/img/logo.svg"></v-img>
         </v-list-item-avatar>
 
-        <v-list-item-title>管理員 {{ currentUser.name }}</v-list-item-title>
+        <v-list-item-title>管理員 {{ name }}</v-list-item-title>
 
         <v-btn icon @click.stop="mini = !mini">
           <v-icon>mdi-chevron-left</v-icon>
@@ -39,18 +39,18 @@
   </v-app>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
     return {
       drawer: true,
       items: [
-        { title: "推文清單", icon: "fab fa-twitter", link: "./admin_main" },
+        { title: "推文清單", icon: "fab fa-twitter", link: "./main" },
         {
           title: "使用者列表",
           icon: "fas fa-user-friends",
-          link: "./admin_users",
+          link: "./users",
         },
         {
           title: "登出",
@@ -59,13 +59,28 @@ export default {
         },
       ],
       mini: true,
+
+      name: "",
     };
+  },
+  async created() {
+    try {
+      // 取登入使用者資訊
+      await this.fetchCurrentUser()
+      this.name = this.currentUser.name;
+    } catch (error) {
+      console.log("error", error);
+      console.error("can not fetch user information");
+    }
   },
   methods: {
     logout() {
       this.$store.commit("revokeAuthentication");
       this.$router.push("/admin");
     },
+    ...mapActions({
+      fetchCurrentUser: "fetchCurrentUser",
+    }),
   },
   computed: {
     ...mapState({

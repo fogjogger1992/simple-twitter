@@ -43,16 +43,16 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: Admin,
-    // redirect: '/admin_main',
+    // redirect: '/main',
     children: [
       {
         name: "admin-tweets",
-        path: 'admin_main',
+        path: 'main',
         component: () => import("@/views/AdminTweets.vue"),
       },
       {
         name: "admin-users",
-        path: 'admin_users',
+        path: 'users',
         component: () => import("@/views/AdminUsers.vue"),
       },
     ],
