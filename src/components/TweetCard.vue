@@ -5,64 +5,69 @@
     class="pa-3"
     style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
   >
-    <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
-      <v-col class="flex-grow-1">
-        <v-avatar class="mt-1">
-          <img :src="tweet.User.avatar" :alt="tweet.User.name" />
-        </v-avatar>
-      </v-col>
-      <v-col cols="11" class="flex-shrink-1">
-        <v-row no-gutters align="center" class="pa-2">
-          <p class="subtitle-2 font-weight-bold mr-1 my-0 pa-0">
-            {{ tweet.User.name }}
-          </p>
-          <router-link
-            :to="{ name: 'user', params: { id: tweet.User.id } }"
-            class="subtitle-2 grey--text font-weight-normal pa-0"
-            style="text-decoration: none"
-          >
-            @{{ tweet.User.account }}
+    <router-link
+      :to="{ name: 'tweet', params: { id: tweet.id } }"
+      style="text-decoration: none"
+    >
+      <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
+        <v-col class="flex-grow-1">
+          <router-link :to="{ name: 'user', params: { id: tweet.User.id } }">
+            <v-avatar class="mt-1">
+              <img :src="tweet.User.avatar" :alt="tweet.User.name" />
+            </v-avatar>
           </router-link>
-          <p class="subtitle-2 font-weight-normal grey--text pa-0 my-0 ml-1">
-            ‧ {{ tweet.createdAt | fromNow }}
-          </p>
-        </v-row>
-        <v-row no-gutters align="center" class="font-weight-normal px-2">
-          <p class="body-2 font-weight-normal text-justify my-0">
-            {{ tweet.description }}
-          </p>
-        </v-row>
-        <v-row no-gutters align="center" class="font-weight-normal pa-2">
-          <v-col cols="1" class="d-flex justify-space-between mr-5">
-            <v-icon
-              @click.stop.prevent="replyTweet"
-              class="grey--text"
-              style="font-size: 18px"
-              >far fa-comment</v-icon
-            >
-            <p class="body-2 font-weight-normal grey--text pa-0 my-0 ml-1">
-              {{ tweet.replyCounts }}
+        </v-col>
+        <v-col cols="11" class="flex-shrink-1">
+          <v-row no-gutters align="center" class="pa-2">
+            <p class="subtitle-2 font-weight-bold mr-1 my-0 pa-0">
+              {{ tweet.User.name }}
             </p>
-          </v-col>
-          <v-col cols="1" class="d-flex justify-space-between ml-5">
-            <v-icon
-              :disabled="tweet.User.account === user.account"
-              @click.stop.prevent="addLiked(user)"
-              class="grey--text"
-              style="font-size: 18px"
-              >far fa-heart</v-icon
-            >
-            <p class="body-2 grey--text pa-0 my-0 ml-1">
-              {{ tweet.likeCounts }}
+            <p class="subtitle-2 grey--text font-weight-regular my-0 pa-0">
+              @{{ tweet.User.account }}
             </p>
-          </v-col>
-        </v-row>
-      </v-col>
+            <p class="subtitle-2 font-weight-regular grey--text pa-0 my-0 ml-1">
+              ‧ {{ tweet.createdAt | fromNow }}
+            </p>
+          </v-row>
+          <v-row no-gutters align="center" class="font-weight-normal px-2">
+            <p class="body-2 black--text font-weight-normal text-justify my-0">
+              {{ tweet.description }}
+            </p>
+          </v-row>
+          <v-row no-gutters align="center" class="font-weight-normal pa-2">
+            <v-col cols="1" class="d-flex justify-space-between mr-5">
+              <v-icon
+                @click.stop.prevent="replyTweet"
+                class="grey--text"
+                style="font-size: 18px"
+                >far fa-comment</v-icon
+              >
+              <p
+                class="subtitle-2 font-weight-normal grey--text pa-0 my-0 ml-1"
+              >
+                {{ tweet.replyCounts }}
+              </p>
+            </v-col>
+            <v-col cols="1" class="d-flex justify-space-between ml-5">
+              <!-- isLiked / !isLiked -->
+              <v-icon
+                class="grey--text"
+                @click.stop.prevent="addLike(tweet.id)"
+                style="font-size: 18px"
+                >far fa-heart</v-icon
+              >
+              <p class="subtitle-2 grey--text pa-0 my-0 ml-1">
+                {{ tweet.likeCounts }}
+              </p>
+            </v-col>
+          </v-row>
+        </v-col>
 
-      <NewTweetReplyModal
-        :isTweetReplyDialogOpened.sync="isTweetReplyDialogOpened"
-      />
-    </v-row>
+        <NewTweetReplyModal
+          :isTweetReplyDialogOpened.sync="isTweetReplyDialogOpened"
+        />
+      </v-row>
+    </router-link>
   </v-card>
 </template>
 
@@ -95,13 +100,8 @@ export default {
       console.log("replyTweet");
       this.isTweetReplyDialogOpened = true;
     },
-    addLiked(user) {
-      console.log("addLiked");
-      if (!this.tweet.isLiked) {
-        this.tweet.LikedUsers.push({ user });
-        this.tweet.isLiked = true;
-      }
-    },
+    // TODO: addLike
+    // TODO: deleteLike
   },
 };
 </script>
