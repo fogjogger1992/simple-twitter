@@ -9,7 +9,7 @@
     >
       <!-- bg -->
       <v-row height="200px" class="ma-0 pa-0">
-        <v-img height="200px" :src="user.background"></v-img>
+        <v-img height="200px" :src="user.cover | emptyImage"></v-img>
       </v-row>
       <!-- avatar & btn -->
       <v-row height="140px" class="ma-0 px-3 py-0 avatarnbtn">
@@ -21,7 +21,7 @@
             width="140px"
             style="border: 5px solid white"
           >
-            <v-img :src="user.image"></v-img>
+            <v-img :src="user.avatar | emptyImage"></v-img>
           </v-avatar>
         </v-col>
         <!-- btn -->
@@ -29,6 +29,7 @@
           <v-spacer></v-spacer>
           <!-- if currentUserId === userId -->
           <v-btn
+            v-if="user.id === currentUser.id"
             @click.stop.prevent="openUserSelfEditModal"
             outlined
             rounded
@@ -39,7 +40,7 @@
             編輯個人資料
           </v-btn>
           <!-- else -->
-          <div>
+          <div v-else>
             <v-btn fab small outlined color="primary" class="mr-2">
               <v-icon color="primary"> far fa-envelope </v-icon>
             </v-btn>
@@ -48,7 +49,6 @@
             </v-btn>
             <!-- if !isFollowed -->
             <v-btn
-              @click.stop.prevent="openUserSelfEditModal"
               outlined
               rounded
               large
@@ -58,8 +58,8 @@
               跟隨
             </v-btn>
             <!-- else -->
+            <!-- TODO: follow -->
             <v-btn
-              @click.stop.prevent="openUserSelfEditModal"
               elevation="0"
               rounded
               large
@@ -86,19 +86,19 @@
     </v-row>
     <v-row no-gutters align="center" class="py-0 px-3 ma-0">
       <p class="subtitle-2 font-weight-regular mr-1 my-0 pa-0">
-        {{ user.description }}
+        {{ user.introduction }}
       </p>
     </v-row>
     <!-- followings & followers -->
     <v-row no-gutters align="center" class="pa-3 ma-0">
       <p class="subtitle-2 font-weight-bold my-0 pa-0">
-        {{ followings.length }} 個
+        {{ user.followingCounts }} 個
       </p>
       <p class="subtitle-2 grey--text font-weight-bold mr-1 my-0 pa-0">
         跟隨中
       </p>
       <p class="subtitle-2 font-weight-bold my-0 pa-0">
-        {{ followers.length }} 位
+        {{ user.followerCounts }} 位
       </p>
       <p class="subtitle-2 grey--text font-weight-bold my-0 pa-0">跟隨者</p>
     </v-row>
@@ -119,25 +119,19 @@
 </style>
 
 <script>
+import { emptyImageFilter } from "./../utils/mixins";
 import UserSelfEditModal from "@/components/UserSelfEditModal.vue";
 
 export default {
   name: "UserProfileCard",
+  mixins: [emptyImageFilter],
   props: {
     user: {
       type: Object,
       required: true,
     },
-    tweets: {
-      type: Array,
-      required: true,
-    },
-    followings: {
-      type: Array,
-      required: true,
-    },
-    followers: {
-      type: Array,
+    currentUser: {
+      type: Object,
       required: true,
     },
   },
@@ -154,6 +148,8 @@ export default {
     openUserSelfEditModal() {
       this.isProfileDialogOpened = true;
     },
+    // TODO: Follow
+    // TODO: Unfollow
   },
 };
 </script>

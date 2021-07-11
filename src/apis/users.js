@@ -7,4 +7,10 @@ export default {
   getTopUsers () {
     return apiHelper.get("/users/top")
   },
+  getUser({ userId }) {
+    return apiHelper.get(`/users/${userId}`)
+  },
+  getUserTweets({ userId }) {
+    return apiHelper.get(`/users/${userId}/tweets`)
+  },
 }

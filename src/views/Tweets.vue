@@ -72,21 +72,19 @@ export default {
         });
       }
     },
-    // TODO: 新增推文
+    //TODO: fix this
     afterCreateTweet(payload) {
       const { tweetId, text } = payload;
       this.tweets.push({
         id: tweetId,
         text: text,
         User: {
-          account: this.user.account,
-          name: this.user.name,
-          image: this.user.image,
+          id: this.currentUser.id,
+          account: this.currentUser.account,
+          name: this.currentUser.name,
+          avatar: this.currentUser.avatar,
         },
         createdAt: new Date(),
-        LikedUsers: [],
-        Replies: [],
-        isLiked: false,
       });
     },
   },
