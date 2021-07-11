@@ -10,7 +10,7 @@
         </v-container>
       </v-col>
       <v-col cols="12" md="3" class="topuserscol">
-        <TopUsers />
+        <TopUsers :current-user="currentUser" />
       </v-col>
     </v-row>
   </v-container>
@@ -42,16 +42,6 @@ export default {
   components: {
     SideNavBar,
     TopUsers,
-  },
-  data() {
-    return {
-      user: {
-        account: "",
-        name: "",
-        image: "",
-      },
-      tweets: [],
-    };
   },
   computed: {
     ...mapState(["currentUser"]),

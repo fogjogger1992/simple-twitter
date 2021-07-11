@@ -9,8 +9,11 @@
         <!-- users list -->
         <v-card-actions
           v-for="userIndex in usersToShow"
-          :key="topUsers[userIndex - 1].account"
-          style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
+          :key="topUsers[userIndex - 1].id"
+          style="
+            border-bottom: thin solid rgba(0, 0, 0, 0.12);
+            font-weight: 500;
+          "
         >
           <v-list-item>
             <v-row no-gutters class="pa-0 ma-0 d-flex flex-wrap">
@@ -20,11 +23,11 @@
                 class="pa-0 ma-0 flex-shrink-1"
                 style="min-width: 40px"
               >
-                <v-list-item-avatar color="grey darken-3">
+                <v-list-item-avatar>
                   <v-img
                     class="elevation-6"
                     alt=""
-                    :src="topUsers[userIndex - 1].image"
+                    :src="topUsers[userIndex - 1].avatar | emptyImage"
                   ></v-img>
                 </v-list-item-avatar>
               </v-col>
@@ -35,16 +38,12 @@
                   <v-col cols="auto" class="pa-0 ma-0">
                     <v-list-item-content>
                       <v-list-item-title class="py-0 my-0"
-                        ><p subtitle-2 font-weight-bold class="py-0 my-0">
+                        ><p subtitle-2 class="py-0 my-0">
                           {{ topUsers[userIndex - 1].name }}
                         </p></v-list-item-title
                       >
                       <v-list-item-title class="py-0 my-0"
-                        ><p
-                          subtitle-2
-                          font-weight-bold
-                          class="grey--text py-0 my-0"
-                        >
+                        ><p subtitle-2 class="grey--text py-0 my-0">
                           @{{ topUsers[userIndex - 1].account }}
                         </p></v-list-item-title
                       >
@@ -106,72 +105,19 @@
 </template>
 
 <script>
-const dummyData = {
-  users: [
-    {
-      account: "tset1",
-      name: "Tset 1",
-      image: "https://i.pravatar.cc/300",
-      isFollowed: true,
-    },
-    {
-      account: "tset2",
-      name: "Tset 2",
-      image: "https://i.pravatar.cc/300",
-      isFollowed: false,
-    },
-    {
-      account: "tset3",
-      name: "Tset 3",
-      image: "https://i.pravatar.cc/300",
-      isFollowed: false,
-    },
-    {
-      account: "tset4",
-      name: "Tset 4",
-      image: "https://i.pravatar.cc/300",
-      isFollowed: false,
-    },
-    {
-      account: "tset5",
-      name: "Tset 5",
-      image: "https://i.pravatar.cc/300",
-      isFollowed: false,
-    },
-    {
-      account: "tset6",
-      name: "Tset 6",
-      image: "https://i.pravatar.cc/300",
-      isFollowed: false,
-    },
-    {
-      account: "tset7",
-      name: "Tset 7",
-      image: "https://i.pravatar.cc/300",
-      isFollowed: false,
-    },
-    {
-      account: "tset8",
-      name: "Tset 8",
-      image: "https://i.pravatar.cc/300",
-      isFollowed: false,
-    },
-    {
-      account: "tset9",
-      name: "Tset 9",
-      image: "https://i.pravatar.cc/300",
-      isFollowed: false,
-    },
-    {
-      account: "tset10",
-      name: "Tset 10",
-      image: "https://i.pravatar.cc/300",
-      isFollowed: false,
-    },
-  ],
-};
+import { emptyImageFilter } from "./../utils/mixins";
+import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
+
 export default {
   name: "TopUsers",
+  mixins: [emptyImageFilter],
+  props: {
+    currentUser: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       topUsers: [],
@@ -182,18 +128,25 @@ export default {
   created() {
     this.fetchUsers();
   },
-  mounted() {
-    this.totalUsers = this.topUsers.length;
-  },
   methods: {
-    fetchUsers() {
-      const { users } = dummyData;
-      this.topUsers = users;
+    async fetchUsers() {
+      try {
+        const response = await usersAPI.getTopUsers();
+        const users = response.data;
+        this.topUsers = users;
+        this.totalUsers = this.topUsers.length;
+      } catch (error) {
+        "error", error;
+        Toast.fire({
+          icon: "error",
+          title: "無法取得使用者，請稍後再試",
+        });
+      }
     },
     showMore() {
-      this.usersToShow = 10;
-      console.log(this.usersToShow);
+      this.usersToShow = this.totalUsers;
     },
+    // TODO: addFollowing
     addFollowed(userId) {
       this.topUsers = this.topUsers.map((user) => {
         if (user.account !== userId) {
@@ -205,6 +158,7 @@ export default {
         };
       });
     },
+    // TODO: deleteFollowing
     removeFollowed(userId) {
       this.topUsers = this.topUsers.map((user) => {
         if (user.account !== userId) {
