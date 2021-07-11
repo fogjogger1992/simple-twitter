@@ -77,6 +77,7 @@ export default {
         this.$router.push("/admin/admin_main");
 
       } catch (err) {
+        this.btnLoading = false;
         console.log(err);
       }
     }
