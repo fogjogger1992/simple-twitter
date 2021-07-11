@@ -12,13 +12,13 @@
             <v-row>
               <v-col cols="2">
                 <v-avatar size="60" class="avatar-border">
-                  <v-img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="Avatar">
+                  <v-img :src="currentUser.avatar" :alt="currentUser.name">
                   </v-img>
                 </v-avatar>
-                 </v-col>
-                 <v-col cols="10">
+              </v-col>
+              <v-col cols="10">
                 <v-form ref="form" v-model="valid">
-                  <v-textarea label="有什麼新鮮事？" counter="140" maxlength="140" :rules="[rules.required, rules.tweetRules, rules.spaceRules]" required>{{tweet.trim}}</v-textarea>
+                  <v-textarea v-model="description" label="有什麼新鮮事？" counter="140" maxlength="140" :rules="[rules.required, rules.tweetRules, rules.spaceRules]" required></v-textarea>
                 </v-form>
               </v-col>
             </v-row>
@@ -35,6 +35,10 @@
   </v-row>
 </template>
 <script>
+import tweetsAPI from "../apis/tweets";
+import { mapActions, mapState } from "vuex";
+import { Toast } from "../utils/helpers";
+
 export default {
   props: {
     isTweetDialogOpened: {
@@ -43,20 +47,61 @@ export default {
   },
   data: () => ({
     valid: true,
-    tweet: "",
+    description: "",
+
+    btnLoading: false,
 
     // 表單驗證條件
     rules: {
       required: (value) => !!value || "必填",
       tweetRules: (value) =>
         (value && value.length <= 140) || "推文不得超過140個字",
-      spaceRules:  (v) => /[^\s\d]/.test(v) || "必填，不能只輸入空格",
+      spaceRules: (v) => /[^\s\d]/.test(v) || "必填，不能只輸入空格",
     },
   }),
   methods: {
-    postTweet() {
-      this.$emit("update:isTweetDialogOpened", false);
+    async postTweet() {
+      try {
+        this.btnLoading = true;
+        await this.fetchCurrentUser();
+
+        const tweetData = {
+          userId: this.currentUser.id,
+          description: this.description,
+        };
+        const { data } = await tweetsAPI.postTweet({ tweetData });
+
+        console.log("新增結果： ", data);
+        if (data.status !== "success") {
+          Toast.fire({
+            icon: "error",
+            title: `推文失敗，${data.message}`,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          throw new Error(data.message);
+        }
+
+        this.$emit("update:isTweetDialogOpened", false);
+        Toast.fire({
+          icon: "success",
+          title: "推文成功",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } catch (err) {
+        this.btnLoading = false;
+        console.log(err);
+      }
     },
+    ...mapActions({
+      fetchCurrentUser: "fetchCurrentUser",
+    }),
+  },
+  computed: {
+    ...mapState({
+      currentUser: (state) => state.currentUser,
+    }),
   },
 };
 </script>
