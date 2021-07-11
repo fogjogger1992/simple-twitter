@@ -80,7 +80,7 @@ export default {
   name: "SideNavBar",
   components: { UserSelfEditModal, NewTweetModal, Popup },
   props: {
-    user: {
+    currentUser: {
       type: Object,
       required: true,
     },
@@ -97,9 +97,8 @@ export default {
         {
           text: "個人資料",
           icon: "mdi-account-outline",
-          // TODO: Fix this
-          link: "",
           action: () => this.openInfoDialog(),
+          link: "/users/" + this.currentUser.id,
         },
         { text: "設定", icon: "mdi-cog-outline", link: "/setting" },
       ],
@@ -110,5 +109,6 @@ export default {
       this.isProfileDialogOpened = true
     }
   },
+
 };
 </script>

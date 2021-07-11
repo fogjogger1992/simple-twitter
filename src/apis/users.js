@@ -12,6 +12,8 @@ export default {
   },
   updateInfo({ userId, userData }) {
     return apiHelper.put(`/users/${userId}`, userData)
+  },
+  getTopUsers () {
+    return apiHelper.get("/users/top")
   }
-
 }

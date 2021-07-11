@@ -2,7 +2,7 @@
   <v-container style="max-width: 1440px">
     <v-row>
       <v-col cols="12" md="3" class="sidenavcol pa-0">
-        <SideNavBar :user="user" />
+        <SideNavBar :current-user="currentUser" />
       </v-col>
       <v-col cols="12" md="6" class="pa-0 maincol">
         <v-container class="ma-0 pa-0">
@@ -10,7 +10,7 @@
         </v-container>
       </v-col>
       <v-col cols="12" md="3" class="topuserscol">
-        <TopUsers />
+        <TopUsers :current-user="currentUser" />
       </v-col>
     </v-row>
   </v-container>
@@ -35,15 +35,7 @@
 <script>
 import SideNavBar from "../components/SideNavBar.vue";
 import TopUsers from "../components/TopUsers.vue";
-
-// remove this after integrating API
-const dummyData = {
-  currentUser: {
-    account: "foo",
-    name: "foo",
-    image: "https://i.pravatar.cc/300",
-  },
-};
+import { mapState } from "vuex";
 
 export default {
   name: "Tweets",
@@ -51,27 +43,8 @@ export default {
     SideNavBar,
     TopUsers,
   },
-  data() {
-    return {
-      user: {
-        account: "",
-        name: "",
-        image: "",
-      },
-      tweets: [],
-    };
-  },
-  created() {
-    this.fetchUser();
-  },
-  methods: {
-    // TODO: 向後端API拉取資料
-    fetchUser() {
-      const { account, name, image } = dummyData.currentUser;
-      this.user.account = account;
-      this.user.name = name;
-      this.user.image = image;
-    },
+  computed: {
+    ...mapState(["currentUser"]),
   },
 };
 </script> 

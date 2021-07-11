@@ -1,12 +1,30 @@
 <template>
   <v-container fluid class="ma-0 pa-0">
     <v-row no-gutters>
-      <v-col cols="12" sm="12" md="3" lg="3" style="border-right: 1px solid rgba(0, 0, 0, 0.12)">
-        <SideNavBar />
+      <v-col
+        cols="12"
+        sm="12"
+        md="3"
+        lg="3"
+        style="border-right: 1px solid rgba(0, 0, 0, 0.12)"
+      >
+        <SideNavBar :current-user="currentUser" />
       </v-col>
 
-      <v-col cols="12" sm="12" md="9" lg="9" class="ma-0 px-0 d-flex flex-column">
-        <v-card tile flat class="pa-3 font-weight-bold text-subtitle-1" style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">帳戶設定</v-card>
+      <v-col
+        cols="12"
+        sm="12"
+        md="9"
+        lg="9"
+        class="ma-0 px-0 d-flex flex-column"
+      >
+        <v-card
+          tile
+          flat
+          class="pa-3 font-weight-bold text-subtitle-1"
+          style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
+          >帳戶設定</v-card
+        >
         <v-col cols="12" md="7" class="ma-auto pa-4 align-self-center">
           <v-form class="my-4 text-right" ref="form" v-model="valid" lazy-validation>
             <v-text-field v-model.trim="account" :rules="[rules.required, rules.accountRules]" maxlength="50" label="帳號"></v-text-field>
@@ -20,13 +38,11 @@
           </v-form>
         </v-col>
       </v-col>
-      <!-- <Popup /> -->
     </v-row>
   </v-container>
 </template>
 <script>
 import SideNavBar from "@/components/SideNavBar";
-// import Popup from "@/components/Popup";
 import usersAPI from "../apis/users";
 import { mapMutations, mapActions, mapState } from "vuex";
 
@@ -117,6 +133,7 @@ export default {
     }),
   },
   computed: {
+    ...mapState(["currentUser"]),
     confirmPasswordRules() {
       // 確認密碼驗證
       const rules = [
