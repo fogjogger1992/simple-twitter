@@ -22,7 +22,7 @@
             <v-icon small>{{ item.icon }}</v-icon>
           </v-list-item-icon>
 
-          <v-list-item-content>
+          <v-list-item-content @click="item.action()">
             <v-list-item-title class="font-weight-bold">{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -52,10 +52,20 @@ export default {
           icon: "fas fa-user-friends",
           link: "./admin_users",
         },
-        { title: "登出", icon: "fas fa-sign-out-alt" },
+        {
+          title: "登出",
+          icon: "fas fa-sign-out-alt",
+          action: () => this.logout(),
+        },
       ],
       mini: true,
     };
+  },
+  methods: {
+    logout() {
+      this.$store.commit("revokeAuthentication");
+      this.$router.push("/admin");
+    },
   },
   computed: {
     ...mapState({
