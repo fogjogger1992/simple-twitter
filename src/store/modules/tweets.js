@@ -1,7 +1,6 @@
 const state = () => ({
-  tweetData: {},
-  isTweetReplyDialogOpened: false
-
+  tweetInfo: {},
+  tweetReplyDialogOpen: false
 })
 
 
@@ -10,15 +9,12 @@ const actions = {
 }
 
 const mutations = {
-  setTweet(state, tweetData) {
-    console.log("tweetData: ", tweetData);
-    state.tweetData = tweetData
+  setTweet(state, tweetInfo) {
+    state.tweetInfo = tweetInfo
   },
-  setIsTweetReplyDialogOpened(state, isTweetReplyDialogOpened) {
-    console.log("isTweetReplyDialogOpened: ", isTweetReplyDialogOpened);
-    state.isTweetReplyDialogOpened = isTweetReplyDialogOpened
-  },
-
+  setTweetReplyDialogOpen(state, tweetReplyDialogOpen) {
+    state.tweetReplyDialogOpen = tweetReplyDialogOpen
+  }
 }
 
 export default {

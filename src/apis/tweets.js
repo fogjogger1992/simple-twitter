@@ -6,12 +6,6 @@ export default {
   },
   postTweet({ tweetData }) {
     return apiHelper.post('/tweets', tweetData)
-  },
-  getTweet() {
-    return apiHelper.get('/tweets/:tweet_id')
-  },
-  getReply(){
-    return apiHelper.get('tweets/:tweet_id/replies')
   }
 }
 

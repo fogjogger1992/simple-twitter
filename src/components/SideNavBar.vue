@@ -49,6 +49,7 @@
     <UserSelfEditModal :isProfileDialogOpened.sync="isProfileDialogOpened" />
     <NewTweetModal :isTweetDialogOpened.sync="isTweetDialogOpened" />
     <Popup />
+    <NewTweetReplyModal v-if="tweetReplyDialogOpen" />
     <v-row cols="1" class="flex-grow-0 flex-shrink-0 py-0 my-0 px-8">
       <v-col cols="12" class="py-5 my-0">
         <v-btn block rounded color="white" class="btnsignout">
@@ -74,11 +75,13 @@
 <script>
 import UserSelfEditModal from "@/components/UserSelfEditModal.vue";
 import NewTweetModal from "./NewTweetModal.vue";
+import NewTweetReplyModal from '@/components/NewTweetReplyModal.vue'
 import Popup from "@/components/Popup";
+import { mapState } from 'vuex'
 
 export default {
   name: "SideNavBar",
-  components: { UserSelfEditModal, NewTweetModal, Popup },
+  components: { UserSelfEditModal, NewTweetModal, Popup, NewTweetReplyModal },
   props: {
     currentUser: {
       type: Object,
@@ -108,6 +111,11 @@ export default {
     openInfoDialog(){
       this.isProfileDialogOpened = true
     }
+  },
+    computed: {
+    ...mapState({
+      tweetReplyDialogOpen: (state) => state.tweets.tweetReplyDialogOpen
+    }),
   },
 
 };
