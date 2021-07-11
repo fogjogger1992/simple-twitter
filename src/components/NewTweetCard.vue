@@ -8,7 +8,7 @@
     <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
       <v-col class="flex-grow-1">
         <v-avatar class="mt-1">
-          <img :src="user.image" :alt="user.name" />
+          <img :src="currentUser.avatar" :alt="currentUser.name" />
         </v-avatar>
       </v-col>
       <v-col cols="11" class="flex-shrink-1">
@@ -41,10 +41,13 @@
 </template>
 
 <script>
+import tweetsAPI from "./../apis/tweets";
+import { Toast } from "./../utils/helpers";
+
 export default {
   name: "NewTweetCard",
   props: {
-    user: {
+    currentUser: {
       type: Object,
       required: true,
     },
@@ -62,14 +65,44 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
-      // TODO: 向 API 發送 POST 請求
-      // 伺服器新增 Tweet 成功後...
-      this.$emit("after-create-tweet", {
-        tweetId: 22, // 尚未串接 API 暫時使用隨機的 id
-        text: this.value,
-      });
-      this.value = ""; // 將表單內的資料清空
+    // TODO: fix this
+    async handleSubmit() {
+      try {
+        // empty input
+        if (!this.value) {
+          Toast.fire({
+            icon: "warning",
+            title: "請寫下您的推文",
+          });
+          return;
+        }
+
+        const { data } = await tweetsAPI.createTweet({
+          text: this.value,
+        });
+
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+
+        // 伺服器新增推文成功後...
+        this.$emit("after-create-tweet", {
+          userId: this.currentUser.id,
+          text: this.value,
+        });
+        Toast.fire({
+          icon: "success",
+          title: "推文成功",
+        });
+
+        // 清空已送出的推文
+        this.value = "";
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法新增推文，請稍後再試",
+        });
+      }
     },
   },
 };
