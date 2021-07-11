@@ -12,18 +12,22 @@
     <NewTweetCard :user="user" @after-create-tweet="afterCreateTweet" />
     <v-system-bar style="height: 10px"></v-system-bar>
     <!-- tweets list -->
-    <TweetCard
-      v-for="tweet in tweets"
-      :key="tweet.id"
-      :initial-tweet="tweet"
-      :user="user"
-    />
+    <v-container fluid>
+      <TweetCard
+        v-for="tweet in tweets"
+        :key="tweet.id"
+        :initial-tweet="tweet"
+        :user="tweet.User"
+      />
+    </v-container>
   </v-container>
 </template>
 
 <script>
 import NewTweetCard from "../components/NewTweetCard.vue";
 import TweetCard from "../components/TweetCard.vue";
+import tweetsAPI from "../apis/tweets";
+import { Toast } from "./../utils/helpers";
 
 // remove this after integrating API
 const dummyData = {
@@ -90,9 +94,17 @@ export default {
       this.user.name = name;
       this.user.image = image;
     },
-    fetchTweets() {
-      const tweets = dummyData.tweets;
-      this.tweets = tweets;
+    async fetchTweets() {
+      try {
+        const response = await tweetsAPI.getTweets();
+        this.tweets = response.data;
+      } catch (error) {
+        "error", error;
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推文，請稍後再試",
+        });
+      }
     },
     // TODO: 新增推文
     afterCreateTweet(payload) {
