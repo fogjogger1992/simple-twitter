@@ -12,16 +12,25 @@
     <NewTweetCard :user="user" @after-create-tweet="afterCreateTweet" />
     <v-system-bar style="height: 10px"></v-system-bar>
     <!-- tweets list -->
-    <v-container fluid>
+    <div class="tweetslist">
       <TweetCard
         v-for="tweet in tweets"
         :key="tweet.id"
         :initial-tweet="tweet"
         :user="tweet.User"
       />
-    </v-container>
+    </div>
   </v-container>
 </template>
+
+<style scoped>
+.tweetslist {
+  height: calc(100vh - 211px);
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+</style>
 
 <script>
 import NewTweetCard from "../components/NewTweetCard.vue";

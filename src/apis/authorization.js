@@ -14,7 +14,4 @@ export default {
       password
     })
   },
-    getCurrentUser () {
-    return apiHelper.get(`/current_user`)
-  },
 }
