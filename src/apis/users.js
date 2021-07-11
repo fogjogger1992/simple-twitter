@@ -1,11 +1,14 @@
 import { apiHelper } from '../utils/helpers'
 
 export default {
-  getCurrentUser () {
+  getCurrentUser() {
     return apiHelper.get(`/current_user`)
   },
-  updateSetting({ userId, userData }){
+  updateSetting({ userId, userData }) {
     return apiHelper.put(`/users/${userId}/edit`, userData)
+  },
+  signup({ userData }) {
+    return apiHelper.post(`/users`, userData)
   }
 
 }

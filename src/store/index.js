@@ -36,6 +36,7 @@ export default new Vuex.Store({
       state.isAuthenticated = true
     },
     revokeAuthentication (state) {
+      // 移除token，登出
       state.currentUser = {}
       state.isAuthenticated = false
       localStorage.removeItem('token')
@@ -48,6 +49,7 @@ export default new Vuex.Store({
         // 取登入使用者資訊
         const { data } = await usersAPI.getCurrentUser()
         const { id, account, name, avatar, cover, email, introduction, password } = data
+        console.log(data);
 
         commit('setCurrentUser', {
           id,
