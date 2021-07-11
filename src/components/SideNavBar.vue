@@ -21,19 +21,9 @@
               <v-list-item-icon class="mr-4">
                 <v-icon v-text="item.icon"></v-icon>
               </v-list-item-icon>
-              <v-list-item-content>
+              <v-list-item-content @click="item.action()">
                 <v-list-item-title
                   v-text="item.text"
-                  v-if="item.text === '個人資料'"
-                  @click="
-                    () => {
-                      isProfileDialogOpened = true;
-                    }
-                  "
-                ></v-list-item-title>
-                <v-list-item-title
-                  v-text="item.text"
-                  v-else
                 ></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
@@ -58,6 +48,7 @@
     </v-row>
     <UserSelfEditModal :isProfileDialogOpened.sync="isProfileDialogOpened" />
     <NewTweetModal :isTweetDialogOpened.sync="isTweetDialogOpened" />
+    <Popup />
     <v-row cols="1" class="flex-grow-0 flex-shrink-0 py-0 my-0 px-8">
       <v-col cols="12" class="py-5 my-0">
         <v-btn block rounded color="white" class="btnsignout">
@@ -83,10 +74,11 @@
 <script>
 import UserSelfEditModal from "@/components/UserSelfEditModal.vue";
 import NewTweetModal from "./NewTweetModal.vue";
+import Popup from "@/components/Popup";
 
 export default {
   name: "SideNavBar",
-  components: { UserSelfEditModal, NewTweetModal },
+  components: { UserSelfEditModal, NewTweetModal, Popup },
   props: {
     user: {
       type: Object,
@@ -107,11 +99,16 @@ export default {
           icon: "mdi-account-outline",
           // TODO: Fix this
           link: "",
+          action: () => this.openInfoDialog(),
         },
         { text: "設定", icon: "mdi-cog-outline", link: "/setting" },
       ],
     };
   },
-  methods: {},
+  methods: {
+    openInfoDialog(){
+      this.isProfileDialogOpened = true
+    }
+  },
 };
 </script>
