@@ -7,11 +7,11 @@
         <v-col cols="6" sm="4" md="3" lg="2" class="d-flex ma-0 py-3 justify-center" v-for="user in users" :key="user.id">
           <v-hover v-slot="{ hover }">
             <v-card class="mx-auto text-center" :elevation="hover ? 4 : 1" :class="{ 'on-hover': hover }">
-              <v-img class="align-end" height="110px" :src="user.cover">
+              <v-img class="align-end" height="110px" :src="user.cover | emptyImage">
               </v-img>
               <div class="avatar">
                 <v-avatar size="80" class="avatar-border">
-                  <img :src="user.avatar" :alt="user.name">
+                  <img :src="user.avatar | emptyImage" :alt="user.name">
                 </v-avatar>
               </div>
 
@@ -22,7 +22,7 @@
                 <div class="grey--text text--darken-2 mb-2">@{{user.account}}</div>
                 <div class="mb-2">
                   <v-icon small>far fa-comment</v-icon> {{user.TweetCounts}}
-                  <v-icon small class="pl-3">far fa-heart</v-icon> {{user.BeLikedCounts}}
+                  <v-icon small class="pl-3">far fa-heart</v-icon> {{user.BeLikedCounts || 0}}
                 </div>
                 <div>{{user.followingCounts}}位跟隨中 <span class="pl-2">{{user.followerCounts}}位跟隨者</span></div>
 
@@ -39,10 +39,12 @@
 import Loading from "@/components/Loading";
 import adminAPI from "../apis/admin";
 import { mapMutations } from "vuex";
+import { emptyImageFilter } from "../utils/mixins";
 
 export default {
   name: "AdminUsers",
   components: { Loading },
+  mixins: [emptyImageFilter],
   data() {
     return {
       users: [],

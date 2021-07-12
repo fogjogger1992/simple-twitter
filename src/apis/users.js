@@ -10,10 +10,10 @@ export default {
   updateSetting({ userId, userData }) {
     return apiHelper.put(`/users/${userId}/edit`, userData)
   },
-  updateInfo({ userId, userData }) {
-    return apiHelper.put(`/users/${userId}`, userData)
+  updateInfo({ userId, formData }) {
+    return apiHelper.put(`/users/${userId}`, formData)
   },
-  getTopUsers () {
+  getTopUsers() {
     return apiHelper.get("/users/top")
   },
   getUser({ userId }) {
@@ -22,4 +22,7 @@ export default {
   getUserTweets({ userId }) {
     return apiHelper.get(`/users/${userId}/tweets`)
   },
+  removeCover({ userId }){
+    return apiHelper.delete(`/users/${userId}/cover`)
+  }
 }

@@ -9,11 +9,11 @@
 
             <v-list-item :key="tweet.id">
               <v-list-item-avatar>
-                <v-img :src="tweet.User.avatar"></v-img>
+                <v-img :src="tweet.User.avatar | emptyImage"></v-img>
               </v-list-item-avatar>
 
               <v-list-item-content>
-                <v-list-item-title>{{tweet.User.name}} <span class="text-body-2 grey--text text--darken-2">@{{tweet.User.account}} • {{tweet.createdAt}}</span></v-list-item-title>
+                <v-list-item-title>{{tweet.User.name}} <span class="text-body-2 grey--text text--darken-2">@{{tweet.User.account}} • {{tweet.createdAt | fromNow}}</span></v-list-item-title>
                 <v-list-item-subtitle>{{tweet.description}}</v-list-item-subtitle>
               </v-list-item-content>
 
@@ -38,20 +38,22 @@
 import Popup from "@/components/Popup";
 import Loading from "@/components/Loading";
 import adminAPI from "../apis/admin";
-import moment from "moment";
+// import moment from "moment";
 import { mapMutations } from "vuex";
 import { Toast } from "../utils/helpers";
+import { fromNowFilter, emptyImageFilter } from "../utils/mixins";
 
 export default {
   name: "AdminTweets",
   components: { Popup, Loading },
+  mixins: [fromNowFilter, emptyImageFilter],
   data() {
     return {
       tweets: [],
       selectedItem: null,
     };
   },
-  async mounted() {
+  async created() {
     this.setShowOverlayLoading(null, { root: true });
     try {
       // 取所有推文
@@ -62,13 +64,15 @@ export default {
         throw new Error(data.message);
       }
       // 成功
-      data.map((tweet) => {
-        tweet.createdAt = moment(tweet.createdAt).format("M月D日");
-      });
       this.tweets = data;
     } catch (err) {
-      this.setShowOverlayLoading(null, { root: true });
       console.log(err);
+      this.setShowOverlayLoading(null, { root: true });
+      this.setShowPopup(true, { root: true });
+      this.setPopupDetails(
+        { popupColor: "red", popupMsg: "無法取得推文內容，請稍後再試一次" },
+        { root: true }
+      );
     }
   },
   methods: {
@@ -77,7 +81,7 @@ export default {
         const decision = await Toast.fire({
           title: "確定要刪除此則推文嗎？",
           icon: "warning",
-          position: 'center',
+          position: "center",
           confirmButtonColor: "#FF6602",
           cancelButtonColor: "#888888",
           confirmButtonText: "確定",
@@ -98,17 +102,19 @@ export default {
               { popupColor: "green", popupMsg: "推文刪除成功" },
               { root: true }
             );
+            const { data } = await adminAPI.getTweets();
+            this.tweets = data;
           } else {
-            this.setShowPopup(true, { root: true });
-            this.setPopupDetails(
-              { popupColor: "red", popupMsg: "推文刪除失敗" },
-              { root: true }
-            );
             throw new Error(data.message);
           }
         }
       } catch (err) {
         console.log(err);
+        this.setShowPopup(true, { root: true });
+        this.setPopupDetails(
+          { popupColor: "red", popupMsg: "推文刪除失敗，請稍後再試一次" },
+          { root: true }
+        );
       }
     },
     ...mapMutations({

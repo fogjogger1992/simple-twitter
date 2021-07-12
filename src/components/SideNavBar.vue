@@ -21,7 +21,7 @@
               <v-list-item-icon class="mr-4">
                 <v-icon v-text="item.icon"></v-icon>
               </v-list-item-icon>
-              <v-list-item-content @click="item.action&&item.action()">
+              <v-list-item-content>
                 <v-list-item-title
                   v-text="item.text"
                 ></v-list-item-title>
@@ -46,7 +46,6 @@
         </v-btn>
       </v-col>
     </v-row>
-    <UserSelfEditModal :isProfileDialogOpened.sync="isProfileDialogOpened" />
     <NewTweetModal :isTweetDialogOpened.sync="isTweetDialogOpened" />
     <Popup />
     <NewTweetReplyModal v-if="tweetReplyDialogOpen" />
@@ -73,7 +72,6 @@
 </style>
 
 <script>
-import UserSelfEditModal from "@/components/UserSelfEditModal.vue";
 import NewTweetModal from "./NewTweetModal.vue";
 import NewTweetReplyModal from '@/components/NewTweetReplyModal.vue'
 import Popup from "@/components/Popup";
@@ -81,7 +79,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: "SideNavBar",
-  components: { UserSelfEditModal, NewTweetModal, Popup, NewTweetReplyModal },
+  components: { NewTweetModal, Popup, NewTweetReplyModal },
   props: {
     currentUser: {
       type: Object,
@@ -90,8 +88,6 @@ export default {
   },
   data() {
     return {
-      // 個人資料編輯視窗
-      isProfileDialogOpened: false,
       isTweetDialogOpened: false,
 
       selectedItem: 0,
@@ -100,7 +96,6 @@ export default {
         {
           text: "個人資料",
           icon: "mdi-account-outline",
-          action: () => this.openInfoDialog(),
           link: "/users/" + this.currentUser.id,
         },
         { text: "設定", icon: "mdi-cog-outline", link: "/setting" },
@@ -108,9 +103,6 @@ export default {
     };
   },
   methods: {
-    openInfoDialog(){
-      this.isProfileDialogOpened = true
-    }
   },
     computed: {
     ...mapState({

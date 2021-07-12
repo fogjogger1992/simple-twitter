@@ -22,7 +22,7 @@
             <v-icon small>{{ item.icon }}</v-icon>
           </v-list-item-icon>
 
-          <v-list-item-content @click="item.action()">
+          <v-list-item-content @click="item.action&&item.action()">
             <v-list-item-title class="font-weight-bold">{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
