@@ -1,7 +1,7 @@
 <template>
   <v-app id="simple-twitter">
     <v-main>
-      <router-view />
+      <router-view v-if="isAlive" />
     </v-main>
   </v-app>
 </template>
@@ -9,6 +9,24 @@
 <script>
 export default {
   name: "App",
+  provide() {
+    return {
+      reload: this.reload,
+    };
+  },
+  data() {
+    return {
+      isAlive: true,
+    };
+  },
+  methods: {
+    reload() {
+      this.isAlive = false;
+      this.$nextTick(() => {
+        this.isAlive = true;
+      });
+    },
+  },
 };
 </script>
 <style>
