@@ -10,7 +10,7 @@
         <v-col cols="12" md="7" class="ma-auto pa-4 align-self-center">
           <AlertErr :alertMsg.sync='alertMsg' v-if='alertMsg' />
           <v-form class="my-4 text-right" ref="form" v-model="valid" lazy-validation>
-            <v-text-field v-model.trim="currentUser.account" :rules="[rules.required, rules.accountRules]" maxlength="50" label="帳號" disabled></v-text-field>
+            <v-text-field v-model.trim="account" :rules="[rules.required, rules.accountRules]" maxlength="50" label="帳號" disabled></v-text-field>
             <v-text-field v-model.trim="name" :rules="[rules.required, rules.nameRules]" maxlength="50" label="姓名"></v-text-field>
             <v-text-field v-model.trim="email" :rules="[rules.required, rules.emailRules]" label="Email" required></v-text-field>
             <v-text-field v-model.trim="password" maxlength="20" type='password' :rules="[rules.required, rules.passwordRules]" label="密碼"></v-text-field>
@@ -37,7 +37,7 @@ export default {
     valid: true,
     id: 0,
     name: "",
-    // account: "",
+    account: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -65,7 +65,7 @@ export default {
       await this.fetchCurrentUser();
       this.id = this.currentUser.id;
       this.name = this.currentUser.name;
-      // this.account = this.currentUser.account;
+      this.account = this.currentUser.account;
       this.email = this.currentUser.email;
     } catch (error) {
       console.log("error", error);
@@ -80,7 +80,7 @@ export default {
         this.btnLoading = true;
         const userData = {
           name: this.name,
-          account: this.currentUser.account,
+          account: this.account,
           email: this.email,
           password: this.password,
           checkPassword: this.confirmPassword,
@@ -105,6 +105,7 @@ export default {
         // 更新使用者資料
         await this.fetchCurrentUser();
         this.name = this.currentUser.name;
+        this.account = this.currentUser.account;
         this.email = this.currentUser.email;
       } catch (err) {
         this.btnLoading = false;

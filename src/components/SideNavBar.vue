@@ -11,37 +11,22 @@
         <!-- nav list -->
         <v-list flat class="mt-2 mr-0">
           <v-list-item-group v-model="selectedItem" color="primary">
-            <v-list-item
-              class="pl-0 pr-0"
-              v-for="(item, i) in items"
-              :key="i"
-              :to="item.link"
-              link
-            >
+            <v-list-item class="pl-0 pr-0" v-for="(item, i) in items" :key="i" :to="item.link" link>
               <v-list-item-icon class="mr-4">
                 <v-icon v-text="item.icon"></v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title
-                  v-text="item.text"
-                ></v-list-item-title>
+                <v-list-item-title v-text="item.text"></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list-item-group>
         </v-list>
         <!-- btn add new tweet -->
-        <v-btn
-          block
-          rounded
-          color="primary"
-          dark
-          class="mt-2"
-          @click="
+        <v-btn block rounded color="primary" dark class="mt-2" @click="
             () => {
               isTweetDialogOpened = true;
             }
-          "
-        >
+          ">
           推文
         </v-btn>
       </v-col>
@@ -51,7 +36,7 @@
     <NewTweetReplyModal v-if="tweetReplyDialogOpen" />
     <v-row cols="1" class="flex-grow-0 flex-shrink-0 py-0 my-0 px-8">
       <v-col cols="12" class="py-5 my-0">
-        <v-btn block rounded color="white" class="btnsignout">
+        <v-btn block rounded color="white" class="btnsignout" @click="logout">
           <v-icon>mdi-logout-variant</v-icon> 登出
         </v-btn>
       </v-col>
@@ -73,9 +58,10 @@
 
 <script>
 import NewTweetModal from "./NewTweetModal.vue";
-import NewTweetReplyModal from '@/components/NewTweetReplyModal.vue'
+import NewTweetReplyModal from "@/components/NewTweetReplyModal.vue";
 import Popup from "@/components/Popup";
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
+import { Toast } from "../utils/helpers";
 
 export default {
   name: "SideNavBar",
@@ -103,12 +89,19 @@ export default {
     };
   },
   methods: {
+    logout() {
+      this.$store.commit("revokeAuthentication");
+      this.$router.push("/signin");
+      Toast.fire({
+        icon: "success",
+        title: "已成功登出",
+      });
+    },
   },
-    computed: {
+  computed: {
     ...mapState({
-      tweetReplyDialogOpen: (state) => state.tweets.tweetReplyDialogOpen
+      tweetReplyDialogOpen: (state) => state.tweets.tweetReplyDialogOpen,
     }),
   },
-
 };
 </script>
