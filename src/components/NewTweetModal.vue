@@ -3,7 +3,7 @@
     <v-dialog v-model="isTweetDialogOpened" persistent max-width="550px">
       <v-card>
         <v-card-title class="pa-2">
-          <v-btn icon color="primary" @click="$emit('update:isTweetDialogOpened', false)">
+          <v-btn icon color="primary" :disabled="btnLoading" @click="$emit('update:isTweetDialogOpened', false)">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
@@ -26,7 +26,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" class="mb-3" rounded small depressed :disabled="!valid" @click="postTweet">
+          <v-btn color="primary" class="mb-3" rounded small depressed :loading="btnLoading" :disabled="!valid" @click="postTweet">
             推文
           </v-btn>
         </v-card-actions>
@@ -45,6 +45,7 @@ export default {
       type: Boolean,
     },
   },
+  inject:['reload'],
   data: () => ({
     valid: true,
     description: "",
@@ -70,12 +71,12 @@ export default {
           description: this.description,
         };
         const { data } = await tweetsAPI.createTweet({ tweetData });
-
+        this.btnLoading = false;
         console.log("新增結果： ", data);
         if (data.status !== "success") {
           Toast.fire({
             icon: "error",
-            title: `推文失敗，${data.message}`
+            title: `推文失敗，${data.message}`,
           });
           throw new Error(data.message);
         }
@@ -83,8 +84,9 @@ export default {
         this.$emit("update:isTweetDialogOpened", false);
         Toast.fire({
           icon: "success",
-          title: "推文成功"
+          title: "推文成功",
         });
+         this.reload()
       } catch (err) {
         this.btnLoading = false;
         console.log(err);

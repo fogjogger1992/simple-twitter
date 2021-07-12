@@ -5,6 +5,7 @@
         <img src="../assets/img/logo.svg">
         <p class="text--h6 font-weight-bold mt-4">建立你的帳號</p>
 
+       <AlertErr :alertMsg.sync='alertMsg' v-if='alertMsg' />
         <v-form class="my-4" ref="form" v-model="valid" lazy-validation>
           <v-text-field single-line solo v-model.trim="account" :rules="[rules.required, rules.accountRules]" maxlength="50" label="帳號"></v-text-field>
           <v-text-field single-line solo v-model.trim="name" :rules="[rules.required, rules.nameRules]" maxlength="50" label="姓名"></v-text-field>
@@ -25,12 +26,13 @@
 </template>
 <script>
 import Popup from "@/components/Popup";
+import AlertErr from "@/components/AlertErr";
 import userAPI from "../apis/users";
 import { mapMutations } from "vuex";
 
 export default {
   name: "SignUp",
-  components: { Popup },
+  components: { Popup, AlertErr },
   data: () => ({
     valid: true,
     name: "",
@@ -39,6 +41,8 @@ export default {
     password: "",
     confirmPassword: "",
     showPassword: false,
+
+    alertMsg: "",
 
     btnLoading: false,
 
@@ -73,13 +77,10 @@ export default {
         // console.log("data: ", data);
         this.btnLoading = false;
         if (data.status !== "success") {
-          this.setShowPopup(true, { root: true });
-          this.setPopupDetails(
-            { popupColor: "red", popupMsg: `註冊失敗，${data.message}` },
-            { root: true }
-          );
+          this.alertMsg = data.message;
           throw new Error(data.message);
         }
+        this.alertMsg = "";
         this.setShowPopup(true, { root: true });
         this.setPopupDetails(
           { popupColor: "green", popupMsg: "註冊成功" },

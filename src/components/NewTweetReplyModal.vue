@@ -3,7 +3,7 @@
     <v-dialog v-model="tweetReplyDialogOpen" persistent max-width="550px">
       <v-card>
         <v-card-title class="pa-2">
-          <v-btn icon color="primary" @click="setTweetReplyDialogOpen(false)">
+          <v-btn icon color="primary" :disabled="btnLoading" @click="setTweetReplyDialogOpen(false)">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
@@ -72,6 +72,7 @@ export default {
     //   type: Boolean,
     // },
   },
+  inject:['reload'],
   mixins: [fromNowFilter],
   data: () => ({
     valid: true,
@@ -122,6 +123,8 @@ export default {
           icon: "success",
           title: "回覆成功",
         });
+        this.reload()
+        
       } catch (err) {
         this.btnLoading = false;
         console.log(err);

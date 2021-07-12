@@ -5,6 +5,7 @@
         <img src="../assets/img/logo.svg">
         <p class="text--h6 font-weight-bold mt-4">後台登入</p>
 
+        <AlertErr :alertMsg.sync='alertMsg' v-if='alertMsg' />
         <v-form class="mt-4 mb-5" ref="form" v-model="valid" lazy-validation>
           <v-text-field single-line solo v-model.trim="email" :rules="[rules.required, rules.emailRules]" maxlength="50" label="帳號"></v-text-field>
           <v-text-field single-line solo v-model.trim="password" maxlength="20" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required]" :type="showPassword ? 'text' : 'password'" label="密碼" @click:append="showPassword = !showPassword"></v-text-field>
@@ -12,8 +13,6 @@
             登入
           </v-btn>
         </v-form>
-
-        <AlertErr :alertMsg.sync='alertMsg' v-if='alertMsg' />
 
         <div class="text-right">
           <router-link class="text-subtitle-2 secondary--text font-weight-bold" to="/signin">前台登入</router-link>
