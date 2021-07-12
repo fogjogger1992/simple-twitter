@@ -31,7 +31,9 @@
             ></v-textarea>
             <v-card-actions class="pa-0 ma-0">
               <v-spacer></v-spacer>
-              <v-btn type="submit" rounded color="primary"> 推文 </v-btn>
+              <v-btn :loading="isLoading" type="submit" rounded color="primary">
+                推文
+              </v-btn>
             </v-card-actions>
           </form>
         </v-container>
@@ -62,10 +64,10 @@ export default {
           /[^\s\d]/.test(v) || "填寫您的推文，輸入空格外的文字",
       },
       value: "",
+      isLoading: false,
     };
   },
   methods: {
-    // TODO: fix this
     async handleSubmit() {
       try {
         // empty input
@@ -75,10 +77,31 @@ export default {
             title: "請寫下您的推文",
           });
           return;
+          // only space
+        } else if (!this.value.trim()) {
+          Toast.fire({
+            icon: "warning",
+            title: "填寫您的推文，輸入空格外的文字",
+          });
+          return;
+          // >140
+        } else if (this.value.length > 140) {
+          Toast.fire({
+            icon: "warning",
+            title: "推文字數限制(140)",
+          });
+          return;
         }
 
+        this.isLoading = true;
+
+        const tweetData = {
+          userId: this.currentUser.id,
+          description: this.value,
+        };
+
         const { data } = await tweetsAPI.createTweet({
-          text: this.value,
+          tweetData,
         });
 
         if (data.status === "error") {
@@ -87,8 +110,7 @@ export default {
 
         // 伺服器新增推文成功後...
         this.$emit("after-create-tweet", {
-          userId: this.currentUser.id,
-          text: this.value,
+          tweetData,
         });
         Toast.fire({
           icon: "success",
@@ -97,7 +119,10 @@ export default {
 
         // 清空已送出的推文
         this.value = "";
+
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         Toast.fire({
           icon: "error",
           title: "無法新增推文，請稍後再試",

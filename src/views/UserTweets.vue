@@ -8,9 +8,21 @@
       background-color="transparent"
       color="primary"
     >
-      <v-tab class="font-weight-bold"> 推文 </v-tab>
-      <v-tab class="font-weight-bold"> 推文與回覆 </v-tab>
-      <v-tab class="font-weight-bold"> 喜歡的內容 </v-tab>
+      <v-tab
+        class="font-weight-bold"
+        @click.stop.prevent="fetchTweets(user.id)"
+      >
+        推文
+      </v-tab>
+      <v-tab
+        class="font-weight-bold"
+        @click.stop.prevent="fetchReplies(user.id)"
+      >
+        推文與回覆
+      </v-tab>
+      <v-tab class="font-weight-bold" @click.stop.prevent="fetchLikes(user.id)">
+        喜歡的內容
+      </v-tab>
     </v-tabs>
     <!-- tweets list -->
     <TweetCard
@@ -111,6 +123,46 @@ export default {
         }
 
         this.tweets = data;
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取得使用者推文，請稍後再試",
+        });
+      }
+    },
+    async fetchReplies(userId) {
+      try {
+        const { data } = await usersAPI.getUserReplies({ userId });
+
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+
+        const replies = [];
+        data.forEach((object) => (object.Tweet.id = object.id));
+        data.forEach((object) => replies.push(object.Tweet));
+
+        this.tweets = replies;
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取得使用者推文，請稍後再試",
+        });
+      }
+    },
+    async fetchLikes(userId) {
+      try {
+        const { data } = await usersAPI.getUserLikes({ userId });
+
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+
+        const likes = [];
+        data.forEach((object) => (object.Tweet.id = object.id));
+        data.forEach((object) => likes.push(object.Tweet));
+
+        this.tweets = likes;
       } catch (error) {
         Toast.fire({
           icon: "error",
