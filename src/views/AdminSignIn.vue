@@ -74,9 +74,10 @@ export default {
         // 登入成功
         this.alertMsg = "";
         localStorage.setItem("token", data.token);
-        this.$router.push("/admin/admin_main");
+        this.$router.push("/admin/main");
 
       } catch (err) {
+        this.btnLoading = false;
         console.log(err);
       }
     }

@@ -63,9 +63,9 @@
           </v-row>
         </v-col>
 
-        <NewTweetReplyModal
-          :isTweetReplyDialogOpened.sync="isTweetReplyDialogOpened"
-        />
+        <!-- <NewTweetReplyModal
+          :tweetReplyDialogOpen.sync="tweetReplyDialogOpen"
+        /> -->
       </v-row>
     </router-link>
   </v-card>
@@ -73,11 +73,12 @@
 
 <script>
 import { fromNowFilter } from "./../utils/mixins";
-import NewTweetReplyModal from "@/components/NewTweetReplyModal";
+// import NewTweetReplyModal from "@/components/NewTweetReplyModal";
+import { mapMutations} from 'vuex';
 
 export default {
   name: "TweetCard",
-  components: { NewTweetReplyModal },
+  // components: { NewTweetReplyModal },
   props: {
     initialTweet: {
       type: Object,
@@ -92,14 +93,21 @@ export default {
   data() {
     return {
       tweet: this.initialTweet,
-      isTweetReplyDialogOpened: false,
+      // tweetReplyDialogOpen: false,
     };
   },
   methods: {
     replyTweet() {
       console.log("replyTweet");
-      this.isTweetReplyDialogOpened = true;
+      // 把要回覆的該則推文傳給 store
+      this.setTweet(this.tweet)
+      // this.tweetReplyDialogOpen = true;
+      this.setTweetReplyDialogOpen(true)
     },
+    ...mapMutations({
+      setTweet: 'tweets/setTweet',
+      setTweetReplyDialogOpen: 'tweets/setTweetReplyDialogOpen'
+    })
     // TODO: addLike
     // TODO: deleteLike
   },

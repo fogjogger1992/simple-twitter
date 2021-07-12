@@ -40,6 +40,7 @@ import Loading from "@/components/Loading";
 import adminAPI from "../apis/admin";
 import moment from "moment";
 import { mapMutations } from "vuex";
+import { Toast } from "../utils/helpers";
 
 export default {
   name: "AdminTweets",
@@ -73,23 +74,38 @@ export default {
   methods: {
     async deleteTweet(tweetId) {
       try {
-        const response = await adminAPI.deleteTweet(tweetId);
-        console.log("response: ", response);
+        const decision = await Toast.fire({
+          title: "確定要刪除此則推文嗎？",
+          icon: "warning",
+          position: 'center',
+          confirmButtonColor: "#FF6602",
+          cancelButtonColor: "#888888",
+          confirmButtonText: "確定",
+          cancelButtonText: "取消",
+          showCancelButton: true,
+          showConfirmButton: true,
+          timer: undefined,
+        });
 
-        const { data } = response;
-        if (data.status === "success") {
-          this.setShowPopup(true, { root: true });
-          this.setPopupDetails(
-            { popupColor: "green", popupMsg: "推文刪除成功" },
-            { root: true }
-          );
-        } else {
-          this.setShowPopup(true, { root: true });
-          this.setPopupDetails(
-            { popupColor: "red", popupMsg: "推文刪除失敗" },
-            { root: true }
-          );
-          throw new Error(data.message);
+        if (decision.isConfirmed) {
+          const response = await adminAPI.deleteTweet(tweetId);
+          console.log("response: ", response);
+
+          const { data } = response;
+          if (data.status === "success") {
+            this.setShowPopup(true, { root: true });
+            this.setPopupDetails(
+              { popupColor: "green", popupMsg: "推文刪除成功" },
+              { root: true }
+            );
+          } else {
+            this.setShowPopup(true, { root: true });
+            this.setPopupDetails(
+              { popupColor: "red", popupMsg: "推文刪除失敗" },
+              { root: true }
+            );
+            throw new Error(data.message);
+          }
         }
       } catch (err) {
         console.log(err);
@@ -98,7 +114,7 @@ export default {
     ...mapMutations({
       setShowPopup: "setShowPopup",
       setPopupDetails: "setPopupDetails",
-      setShowOverlayLoading: "setShowOverlayLoading"
+      setShowOverlayLoading: "setShowOverlayLoading",
     }),
   },
   computed: {},

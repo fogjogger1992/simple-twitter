@@ -21,8 +21,10 @@
               <v-list-item-icon class="mr-4">
                 <v-icon v-text="item.icon"></v-icon>
               </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title v-text="item.text"></v-list-item-title>
+              <v-list-item-content @click="item.action&&item.action()">
+                <v-list-item-title
+                  v-text="item.text"
+                ></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list-item-group>
@@ -46,6 +48,8 @@
     </v-row>
     <UserSelfEditModal :isProfileDialogOpened.sync="isProfileDialogOpened" />
     <NewTweetModal :isTweetDialogOpened.sync="isTweetDialogOpened" />
+    <Popup />
+    <NewTweetReplyModal v-if="tweetReplyDialogOpen" />
     <v-row cols="1" class="flex-grow-0 flex-shrink-0 py-0 my-0 px-8">
       <v-col cols="12" class="py-5 my-0">
         <v-btn block rounded color="white" class="btnsignout">
@@ -71,10 +75,13 @@
 <script>
 import UserSelfEditModal from "@/components/UserSelfEditModal.vue";
 import NewTweetModal from "./NewTweetModal.vue";
+import NewTweetReplyModal from '@/components/NewTweetReplyModal.vue'
+import Popup from "@/components/Popup";
+import { mapState } from 'vuex'
 
 export default {
   name: "SideNavBar",
-  components: { UserSelfEditModal, NewTweetModal },
+  components: { UserSelfEditModal, NewTweetModal, Popup, NewTweetReplyModal },
   props: {
     currentUser: {
       type: Object,
@@ -93,11 +100,23 @@ export default {
         {
           text: "個人資料",
           icon: "mdi-account-outline",
+          action: () => this.openInfoDialog(),
           link: "/users/" + this.currentUser.id,
         },
         { text: "設定", icon: "mdi-cog-outline", link: "/setting" },
       ],
     };
   },
+  methods: {
+    openInfoDialog(){
+      this.isProfileDialogOpened = true
+    }
+  },
+    computed: {
+    ...mapState({
+      tweetReplyDialogOpen: (state) => state.tweets.tweetReplyDialogOpen
+    }),
+  },
+
 };
 </script>

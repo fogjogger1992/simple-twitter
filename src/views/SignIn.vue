@@ -77,6 +77,7 @@ export default {
         localStorage.setItem("token", data.token);
         this.$router.push("/tweets");
       } catch (err) {
+        this.btnLoading = false;
         console.log(err);
       }
     },

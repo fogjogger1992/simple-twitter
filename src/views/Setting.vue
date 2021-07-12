@@ -26,25 +26,13 @@
           >帳戶設定</v-card
         >
         <v-col cols="12" md="7" class="ma-auto pa-4 align-self-center">
-          <v-form
-            class="my-4 text-right"
-            ref="form"
-            v-model="valid"
-            lazy-validation
-          >
-            <UserInfoForm />
-            <!-- <v-text-field v-model="password" maxlength="20" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.passwordRules]" :type="showPassword ? 'text' : 'password'" label="密碼" @click:append="showPassword = !showPassword"></v-text-field>
-          <v-text-field v-model.trim="confirmPassword" maxlength="20" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="confirmPasswordRules" :type="showPassword ? 'text' : 'password'" label="確認密碼" @click:append="showPassword = !showPassword"></v-text-field>
-          <v-text-field v-model.trim="email" :rules="[rules.required, rules.emailRules]" label="Email" required></v-text-field>
-          <v-text-field v-model.trim="name" :rules="[rules.required, rules.nameRules]" maxlength="50" label="姓名"></v-text-field>
-          <v-text-field v-model.trim="account" :rules="[rules.required, rules.accountRules]" maxlength="50" label="帳號"></v-text-field> -->
-            <v-btn
-              rounded
-              :disabled="!valid"
-              color="primary"
-              class=""
-              @click="save"
-            >
+          <v-form class="my-4 text-right" ref="form" v-model="valid" lazy-validation>
+            <v-text-field v-model.trim="account" :rules="[rules.required, rules.accountRules]" maxlength="50" label="帳號"></v-text-field>
+            <v-text-field v-model.trim="name" :rules="[rules.required, rules.nameRules]" maxlength="50" label="姓名"></v-text-field>
+            <v-text-field v-model.trim="email" :rules="[rules.required, rules.emailRules]" label="Email" required></v-text-field>
+            <v-text-field v-model.trim="password" maxlength="20" type='password' :rules="[rules.required, rules.passwordRules]" label="密碼"></v-text-field>
+            <v-text-field v-model.trim="confirmPassword" maxlength="20" type='password' :rules="confirmPasswordRules" label="確認密碼"></v-text-field>
+            <v-btn rounded :disabled="!valid" color="primary" :loading="btnLoading" @click="updateSetting">
               儲存
             </v-btn>
           </v-form>
@@ -54,39 +42,95 @@
   </v-container>
 </template>
 <script>
-import UserInfoForm from "@/components/UserInfoForm";
 import SideNavBar from "@/components/SideNavBar";
-import { mapState } from "vuex";
+import usersAPI from "../apis/users";
+import { mapMutations, mapActions, mapState } from "vuex";
 
 export default {
   name: "Setting",
-  components: { UserInfoForm, SideNavBar },
+  components: { SideNavBar },
   data: () => ({
     valid: true,
-    // password: "",
-    // confirmPassword: "",
-    // name: "",
-    // account: "",
-    // email: "",
-    // showPassword: false,
+    id: 0,
+    name: "",
+    account: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+
+    btnLoading: false,
 
     // 表單驗證條件
-    // rules: {
-    //   required: (value) => !!value || "必填",
-    //   accountRules: (value) =>
-    //     (value && value.length <= 50) || "帳號不得超過50個字",
-    //   nameRules: (value) =>
-    //     (value && value.length <= 50) || "姓名不得超過50個字",
-    //   emailRules: (value) =>
-    //     /.+@.+\..+/.test(value) || "Email格式無效，應為：xxx@xxx.xx",
-    //   passwordRules: (value) =>
-    //     (value && value.length <= 20) || "密碼不得超過20個字",
-    // },
-  }),
-  methods: {
-    save() {
-      this.$refs.form.validate();
+    rules: {
+      required: (value) => !!value || "必填",
+      accountRules: (value) =>
+        (value && value.length <= 50) || "帳號不得超過50個字",
+      nameRules: (value) =>
+        (value && value.length <= 50) || "姓名不得超過50個字",
+      emailRules: (value) =>
+        /.+@.+\..+/.test(value) || "Email格式無效，應為：xxx@xxx.xx",
+      passwordRules: (value) =>
+        (value && value.length <= 20) || "密碼不得超過20個字",
     },
+  }),
+  async created() {
+    try {
+      // 取登入使用者資訊
+      await this.fetchCurrentUser();
+      this.id = this.currentUser.id;
+      this.name = this.currentUser.name;
+      this.account = this.currentUser.account;
+      this.email = this.currentUser.email;
+    } catch (error) {
+      console.log("error", error);
+      console.error("can not fetch user information");
+    }
+  },
+  methods: {
+    async updateSetting() {
+      // 表單驗證
+      this.$refs.form.validate();
+
+      try {
+        this.btnLoading = true;
+        const userData = {
+          name: this.name,
+          account: this.account,
+          email: this.email,
+          password: this.password,
+          checkPassword: this.confirmPassword,
+        };
+        const { data } = await usersAPI.updateSetting({
+          userId: this.id,
+          userData,
+        });
+        this.btnLoading = false;
+        if (data.status !== "success") {
+          this.setShowPopup(true, { root: true });
+          this.setPopupDetails(
+            { popupColor: "red", popupMsg: `資料更新失敗，${data.message}` },
+            { root: true }
+          );
+          throw new Error(data.message);
+        }
+
+        this.setShowPopup(true, { root: true });
+        this.setPopupDetails(
+          { popupColor: "green", popupMsg: "資料更新成功" },
+          { root: true }
+        );
+      } catch (err) {
+        this.btnLoading = false;
+        console.log(err);
+      }
+    },
+    ...mapMutations({
+      setShowPopup: "setShowPopup",
+      setPopupDetails: "setPopupDetails",
+    }),
+    ...mapActions({
+      fetchCurrentUser: "fetchCurrentUser",
+    }),
   },
   computed: {
     ...mapState(["currentUser"]),
@@ -99,6 +143,9 @@ export default {
       ];
       return rules;
     },
+    ...mapState({
+      currentUser: (state) => state.currentUser,
+    }),
   },
 };
 </script>

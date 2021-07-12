@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import admin from './modules/admin'
+import tweets from './modules/tweets'
 import usersAPI from '../apis/users'
 
 Vue.use(Vuex)
@@ -16,6 +17,7 @@ export default new Vuex.Store({
     showOverlayLoading: false,
 
     currentUser: {},
+    isAuthenticated: false
 
   },
   mutations: {
@@ -31,6 +33,14 @@ export default new Vuex.Store({
     },
     setCurrentUser(state, currentUser) {
       state.currentUser = currentUser
+      // 將使用者的登入狀態改為 true
+      state.isAuthenticated = true
+    },
+    revokeAuthentication (state) {
+      // 移除token，登出
+      state.currentUser = {}
+      state.isAuthenticated = false
+      localStorage.removeItem('token')
     }
 
   },
@@ -39,14 +49,17 @@ export default new Vuex.Store({
       try {
         // 取登入使用者資訊
         const { data } = await usersAPI.getCurrentUser()
-        const { id, account, name, avatar, email } = data
+        const { id, account, name, avatar, cover, email, introduction, password } = data
 
         commit('setCurrentUser', {
           id,
           account,
           name,
           avatar,
-          email
+          cover,
+          email,
+          introduction,
+          password
         })
 
       } catch (error) {
@@ -57,6 +70,7 @@ export default new Vuex.Store({
 
   },
   modules: {
-    admin
+    admin,
+    tweets
   }
 })
