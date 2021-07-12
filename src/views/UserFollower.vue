@@ -19,7 +19,7 @@
     <!-- tweets list -->
     <UserCard
       v-for="follower in followers"
-      :key="follower.account"
+      :key="follower.id"
       :initialUser="follower"
     />
   </v-container>
@@ -27,26 +27,9 @@
 
 <script>
 import UserCard from "./../components/UserCard.vue";
-
-// remove this after integrating API
-const dummyData = {
-  Users: [
-    {
-      account: "fooa",
-      name: "fooA",
-      image: "https://i.pravatar.cc/300",
-      info: "Hi, I am fooA. I am a follower. lol",
-      isFollowed: true,
-    },
-    {
-      account: "foob",
-      name: "fooB",
-      image: "https://i.pravatar.cc/300",
-      info: "Hi, I am fooB.  I am a follower, too. lol",
-      isFollowed: false,
-    },
-  ],
-};
+import { mapState } from "vuex";
+import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
 
 export default {
   name: "UserFollower",
@@ -73,13 +56,34 @@ export default {
       followers: [],
     };
   },
+  computed: {
+    ...mapState(["currentUser"]),
+  },
   created() {
-    this.fetchFollowers();
+    const { id } = this.$route.params;
+    this.fetchFollowers(id);
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.fetchFollowers(id);
+    next();
   },
   methods: {
-    fetchFollowers() {
-      const followers = dummyData.Users;
-      this.followers = followers;
+    async fetchFollowers(userId) {
+      try {
+        const { data } = await usersAPI.getUserFollowers({ userId });
+
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+
+        this.followers = data;
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取得使用者資料，請稍後再試",
+        });
+      }
     },
   },
 };

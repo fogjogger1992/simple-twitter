@@ -72,20 +72,8 @@ export default {
         });
       }
     },
-    //TODO: fix this
-    afterCreateTweet(payload) {
-      const { tweetId, text } = payload;
-      this.tweets.push({
-        id: tweetId,
-        text: text,
-        User: {
-          id: this.currentUser.id,
-          account: this.currentUser.account,
-          name: this.currentUser.name,
-          avatar: this.currentUser.avatar,
-        },
-        createdAt: new Date(),
-      });
+    afterCreateTweet() {
+      this.fetchTweets();
     },
   },
 };

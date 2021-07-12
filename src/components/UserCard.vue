@@ -9,7 +9,7 @@
       <!-- avatar -->
       <v-col class="flex-grow-1">
         <v-avatar class="mt-1">
-          <img :src="user.image" :alt="user.name" />
+          <img :src="user.avatar" :alt="user.name" />
         </v-avatar>
       </v-col>
       <!-- name and account -->
@@ -47,7 +47,7 @@
           class="d-flex flex-wrap font-weight-normal px-2"
         >
           <v-col class="body-2 font-weight-normal text-justify my-0">
-            {{ user.info }}
+            {{ user.introduction }}
           </v-col>
         </v-row>
       </v-col>

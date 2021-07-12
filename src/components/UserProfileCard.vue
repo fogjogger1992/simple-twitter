@@ -91,15 +91,25 @@
     </v-row>
     <!-- followings & followers -->
     <v-row no-gutters align="center" class="pa-3 ma-0">
-      <p class="subtitle-2 font-weight-bold my-0 pa-0">
-        {{ user.followingCounts }} 個
-      </p>
+      <router-link
+        :to="{ name: 'user-following', params: { id: user.id } }"
+        style="text-decoration: none"
+      >
+        <p class="subtitle-2 font-weight-bold black--text my-0 pa-0">
+          {{ user.followingCounts }} 個
+        </p>
+      </router-link>
       <p class="subtitle-2 grey--text font-weight-bold mr-1 my-0 pa-0">
         跟隨中
       </p>
-      <p class="subtitle-2 font-weight-bold my-0 pa-0">
-        {{ user.followerCounts }} 位
-      </p>
+      <router-link
+        :to="{ name: 'user-follower', params: { id: user.id } }"
+        style="text-decoration: none"
+      >
+        <p class="subtitle-2 font-weight-bold black--text my-0 pa-0">
+          {{ user.followerCounts }} 位
+        </p>
+      </router-link>
       <p class="subtitle-2 grey--text font-weight-bold my-0 pa-0">跟隨者</p>
     </v-row>
     <UserSelfEditModal :isProfileDialogOpened.sync="isProfileDialogOpened" />

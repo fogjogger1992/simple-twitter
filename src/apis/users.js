@@ -24,5 +24,18 @@ export default {
   },
   removeCover({ userId }){
     return apiHelper.delete(`/users/${userId}/cover`)
-  }
+  },
+  getUserReplies({ userId }) {
+    return apiHelper.get(`/users/${userId}/replied_tweets`)
+  },
+  getUserLikes({ userId }) {
+    return apiHelper.get(`/users/${userId}/likes`)
+  },
+  getUserFollowers({ userId }) {
+    return apiHelper.get(`/users/${userId}/followers`)
+  },
+  getUserFollowings({ userId }) {
+    return apiHelper.get(`/users/${userId}/followings`)
+  },
 }
+
