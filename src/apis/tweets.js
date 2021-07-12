@@ -7,6 +7,12 @@ export default {
   createTweet({ tweetData }) {
     return apiHelper.post('/tweets', tweetData)
   },
+  getTweet({ tweetId }) {
+    return apiHelper.get(`/tweets/${tweetId}`)
+  },
+  getTweetReplies({ tweetId }) {
+    return apiHelper.get(`/tweets/${tweetId}/replies`)
+  },
 }
 
     

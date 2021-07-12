@@ -20,33 +20,26 @@
         <v-row no-gutters class="py-2">
           <!-- avatar -->
           <v-col cols="auto">
-            <router-link
-              :to="{ name: 'user', params: { id: tweet.User.account } }"
-            >
+            <router-link :to="{ name: 'user', params: { id: tweet.User.id } }">
               <v-avatar class="mt-1">
-                <img :src="tweet.User.image" :alt="tweet.User.name" />
+                <img :src="tweet.User.avatar" :alt="tweet.User.name" />
               </v-avatar>
             </router-link>
           </v-col>
           <!-- name and account -->
           <v-col no-gutters class="pa-2">
-            <router-link
-              style="text-decoration: none"
-              :to="{ name: 'user', params: { id: tweet.User.account } }"
-            >
-              <p class="subtitle-2 black--text font-weight-bold my-0 pa-0">
-                {{ tweet.User.name }}
-              </p>
-              <p class="subtitle-2 grey--text font-weight-normal my-0 pa-0">
-                @{{ tweet.User.account }}
-              </p>
-            </router-link>
+            <p class="subtitle-2 black--text font-weight-bold my-0 pa-0">
+              {{ tweet.User.name }}
+            </p>
+            <p class="subtitle-2 grey--text font-weight-normal my-0 pa-0">
+              @{{ tweet.User.account }}
+            </p>
           </v-col>
         </v-row>
         <!-- text -->
         <v-row no-gutters class="py-2">
           <h2 class="my-0 font-weight-regular">
-            {{ tweet.text }}
+            {{ tweet.description }}
           </h2>
         </v-row>
         <!-- created at -->
@@ -70,11 +63,10 @@
     >
       <v-row class="pa-0 ma-0">
         <v-col cols="2" class="pa-0 ma-0"
-          ><span class="black--text">{{ tweet.Replies.length }}</span>
-          回覆</v-col
+          ><span class="black--text">{{ tweet.replyCounts }}</span> 回覆</v-col
         >
         <v-col cols="10" class="pa-0 ma-0"
-          ><span class="black--text">{{ tweet.LikedUsers.length }}</span>
+          ><span class="black--text">{{ tweet.likeCounts }}</span>
           喜歡次數</v-col
         >
       </v-row>
@@ -101,7 +93,7 @@
     </v-card>
     <!-- replies -->
     <v-card
-      v-for="reply in tweet.Replies"
+      v-for="reply in replies"
       :key="reply.id"
       flat
       tile
@@ -111,7 +103,7 @@
       <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
         <v-col class="flex-grow-1">
           <v-avatar class="mt-1">
-            <img :src="reply.User.image" :alt="reply.User.name" />
+            <img :src="reply.User.avatar" :alt="reply.User.name" />
           </v-avatar>
         </v-col>
         <v-col cols="11" class="flex-shrink-1">
@@ -120,7 +112,7 @@
               {{ reply.User.name }}
             </p>
             <router-link
-              :to="{ name: 'user', params: { id: reply.User.account } }"
+              :to="{ name: 'user', params: { id: reply.User.id } }"
               class="subtitle-2 grey--text font-weight-normal pa-0"
               style="text-decoration: none"
             >
@@ -133,15 +125,14 @@
           <v-row no-gutters align="center" class="font-weight-normal px-2 mb-2">
             <p class="body-2 font-weight-normal text-justify grey--text my-0">
               回覆
-              <router-link
-                :to="{ name: 'user', params: { id: reply.User.account } }"
+              <router-link :to="{ name: 'user', params: { id: tweet.User.id } }"
                 >@{{ tweet.User.name }}</router-link
               >
             </p>
           </v-row>
           <v-row no-gutters align="center" class="font-weight-normal px-2">
             <p class="body-2 font-weight-normal text-justify my-0">
-              {{ reply.text }}
+              {{ reply.comment }}
             </p>
           </v-row>
         </v-col>
@@ -152,60 +143,88 @@
 
 <script>
 import { fromNowFilter } from "./../utils/mixins";
-
-const dummyData = {
-  tweet: {
-    id: 1,
-    text: "text text text text text text text text text text text text text text text",
-    User: {
-      account: "test1",
-      name: "TSET1",
-      image: "https://i.pravatar.cc/300",
-    },
-    createdAt: "2019-07-05T09:00:43.000Z",
-    LikedUsers: [],
-    Replies: [
-      {
-        id: 1,
-        text: "hi",
-        User: {
-          account: "test1",
-          name: "TSET1",
-          image: "https://i.pravatar.cc/300",
-        },
-        createdAt: "2021-07-05T09:00:43.000Z",
-      },
-      {
-        id: 2,
-        text: ":)",
-        User: {
-          account: "test2",
-          name: "TSET2",
-          image: "https://i.pravatar.cc/300",
-        },
-        createdAt: "2019-05-22T09:00:43.000Z",
-      },
-    ],
-    isLiked: false,
-  },
-};
+import tweetsAPI from "./../apis/tweets";
+import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex";
 
 export default {
   name: "Tweet",
   mixins: [fromNowFilter],
   data() {
     return {
-      tweets: [],
+      tweet: {
+        id: -1,
+        description: "",
+        replyCounts: 3,
+        likeCounts: 0,
+        createdAt: "",
+        User: {
+          id: -1,
+          name: "",
+          account: "",
+          avatar: "",
+        },
+      },
+      replies: [],
     };
   },
+  computed: {
+    ...mapState(["currentUser"]),
+  },
   created() {
-    this.fetchTweet();
+    const { id } = this.$route.params;
+    this.fetchTweet(id);
+    this.fetchReplies(id);
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.fetchTweet(id);
+    this.fetchReplies(id);
+    next();
   },
   methods: {
-    // TODO: 向後端API拉取資料
-    fetchTweet() {
-      this.tweet = dummyData.tweet;
+    async fetchTweet(tweetId) {
+      try {
+        const { data } = await tweetsAPI.getTweet({ tweetId });
+
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+
+        const { id, description, replyCounts, likeCounts, createdAt } = data;
+
+        this.tweet = {
+          ...this.tweet,
+          id,
+          description,
+          replyCounts,
+          likeCounts,
+          createdAt,
+        };
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推文資料，請稍後再試",
+        });
+      }
     },
+    async fetchReplies(tweetId) {
+      try {
+        const { data } = await tweetsAPI.getTweetReplies({ tweetId });
+
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        this.replies = data;
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推文資料，請稍後再試",
+        });
+      }
+    },
+
+    // TODO: reply & like
     replyTweet() {
       console.log("replyTweet");
     },
