@@ -20,7 +20,7 @@
     <UserCard
       v-for="following in followings"
       :key="following.id"
-      :initialUser="following"
+      :initialUser="following.Following"
     />
   </v-container>
 </template>

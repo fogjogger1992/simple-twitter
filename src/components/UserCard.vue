@@ -65,7 +65,9 @@ export default {
   },
   data() {
     return {
-      user: this.initialUser,
+      user: {
+        ...this.initialUser,
+      },
     };
   },
 };

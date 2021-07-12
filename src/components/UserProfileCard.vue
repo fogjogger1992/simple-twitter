@@ -49,6 +49,9 @@
             </v-btn>
             <!-- if !isFollowed -->
             <v-btn
+              v-if="!isFollowed"
+              :loading="isLoading"
+              @click.stop.prevent="addFollowing(user.id)"
               outlined
               rounded
               large
@@ -60,6 +63,8 @@
             <!-- else -->
             <!-- TODO: follow -->
             <v-btn
+              v-else
+              :loading="isLoading"
               elevation="0"
               rounded
               large
@@ -131,12 +136,14 @@
 <script>
 import { emptyImageFilter } from "./../utils/mixins";
 import UserSelfEditModal from "@/components/UserSelfEditModal.vue";
+import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
 
 export default {
   name: "UserProfileCard",
   mixins: [emptyImageFilter],
   props: {
-    user: {
+    initialUser: {
       type: Object,
       required: true,
     },
@@ -150,16 +157,51 @@ export default {
   },
   data() {
     return {
+      user: {
+        ...this.initialUser,
+      },
       // 個人資料編輯視窗
       isProfileDialogOpened: false,
+      isLoading: false,
     };
+  },
+  watch: {
+    initialUser(newValue) {
+      this.user = {
+        ...this.user,
+        ...newValue,
+      };
+    },
   },
   methods: {
     openUserSelfEditModal() {
       this.isProfileDialogOpened = true;
     },
-    // TODO: Follow
-    // TODO: Unfollow
+    // TODO: fix addFollowing
+    async addFollowing(userId) {
+      try {
+        const followingId = {
+          id: userId,
+        };
+        const { data } = await usersAPI.addFollowing({ followingId });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.user = {
+          ...this.user,
+          isFollowed: true,
+          followerCounts: this.user.followerCounts + 1,
+        };
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法加入追蹤，請稍後再試",
+        });
+      }
+    },
+    // TODO: deleteFollowing
   },
 };
 </script>
