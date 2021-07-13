@@ -162,8 +162,13 @@ export default {
         }
 
         const likes = [];
-        data.forEach((object) => (object.Tweet.id = object.id));
-        data.forEach((object) => likes.push(object.Tweet));
+        data.forEach((object) => {
+          object = {
+            ...object,
+            isLiked: true,
+          };
+          likes.push(object);
+        });
 
         this.tweets = likes;
       } catch (error) {

@@ -42,6 +42,12 @@ export default {
   },
   deleteFollowing({ followingId }) {
     return apiHelper.delete(`/followships/${followingId}`)
+  },
+  addLike({ tweetId }) {
+    return apiHelper.post(`/tweets/${tweetId}/like`, null)
+  },
+  deleteLike({ tweetId }) {
+    return apiHelper.post(`/tweets/${tweetId}/unlike`, null)
   }
 }
 

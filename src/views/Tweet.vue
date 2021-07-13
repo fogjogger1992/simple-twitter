@@ -85,10 +85,23 @@
           ></v-col
         >
         <v-col cols="10" class="pa-0 ma-0"
-          ><v-icon @click.stop.prevent="addLiked" style="font-size: 20px"
+          ><v-icon
+            v-if="!tweet.isLiked"
+            :disabled="currentUser.id === tweet.User.id"
+            @click.stop.prevent="addLike(tweet.id)"
+            class="grey--text"
+            style="font-size: 20px"
             >far fa-heart</v-icon
-          ></v-col
-        >
+          >
+          <v-icon
+            v-else
+            :disabled="currentUser.id === tweet.User.id"
+            @click.stop.prevent="deleteLike(tweet.id)"
+            class="red--text"
+            style="font-size: 20px"
+            >far fa-heart</v-icon
+          >
+        </v-col>
       </v-row>
     </v-card>
     <!-- replies -->
@@ -144,6 +157,7 @@
 <script>
 import { fromNowFilter } from "./../utils/mixins";
 import tweetsAPI from "./../apis/tweets";
+import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 import { mapState } from "vuex";
 
@@ -158,6 +172,7 @@ export default {
         replyCounts: 3,
         likeCounts: 0,
         createdAt: "",
+        isLike: false,
         User: {
           id: -1,
           name: "",
@@ -191,8 +206,15 @@ export default {
           throw new Error(data.message);
         }
 
-        const { id, description, replyCounts, likeCounts, createdAt, User } =
-          data;
+        const {
+          id,
+          description,
+          replyCounts,
+          likeCounts,
+          createdAt,
+          isLiked,
+          User,
+        } = data;
 
         this.tweet = {
           ...this.tweet,
@@ -201,6 +223,7 @@ export default {
           replyCounts,
           likeCounts,
           createdAt,
+          isLiked,
           User,
         };
       } catch (error) {
@@ -225,13 +248,60 @@ export default {
         });
       }
     },
+    async addLike(tweetId) {
+      try {
+        // 只能按別人的
+        if (this.tweet.User.id === this.currentUser.id) {
+          Toast.fire({
+            icon: "error",
+            title: "無法將自己的推文加入LIKE",
+          });
+          this.isLoading = false;
+          return;
+        }
+        const { data } = await usersAPI.addLike({ tweetId });
 
-    // TODO: reply & like
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.tweet = {
+          ...this.tweet,
+          isLiked: true,
+          likeCounts: this.tweet.likeCounts + 1,
+        };
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "error",
+          title: "無法將推文加入LIKE，請稍後再試",
+        });
+      }
+    },
+    async deleteLike(tweetId) {
+      try {
+        const { data } = await usersAPI.deleteLike({ tweetId });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.tweet = {
+          ...this.tweet,
+          isLiked: false,
+          likeCounts: this.tweet.likeCounts - 1,
+        };
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "error",
+          title: "無法將推文移除LIKE，請稍後再試",
+        });
+      }
+    },
+    // TODO: reply
     replyTweet() {
       console.log("replyTweet");
-    },
-    addLiked() {
-      console.log("addLiked");
     },
   },
 };

@@ -51,8 +51,18 @@
             <v-col cols="1" class="d-flex justify-space-between ml-5">
               <!-- isLiked / !isLiked -->
               <v-icon
+                :disabled="currentUser.id === tweet.User.id"
+                v-if="!tweet.isLiked"
                 class="grey--text"
                 @click.stop.prevent="addLike(tweet.id)"
+                style="font-size: 18px"
+                >far fa-heart</v-icon
+              >
+              <v-icon
+                v-else
+                :disabled="currentUser.id === tweet.User.id"
+                class="red--text"
+                @click.stop.prevent="deleteLike(tweet.id)"
                 style="font-size: 18px"
                 >far fa-heart</v-icon
               >
@@ -74,7 +84,10 @@
 <script>
 import { fromNowFilter } from "./../utils/mixins";
 // import NewTweetReplyModal from "@/components/NewTweetReplyModal";
-import { mapMutations} from 'vuex';
+import { mapMutations } from "vuex";
+import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex";
 
 export default {
   name: "TweetCard",
@@ -96,20 +109,73 @@ export default {
       // tweetReplyDialogOpen: false,
     };
   },
+  computed: {
+    ...mapState(["currentUser"]),
+  },
   methods: {
     replyTweet() {
       console.log("replyTweet");
       // 把要回覆的該則推文傳給 store
-      this.setTweet(this.tweet)
+      this.setTweet(this.tweet);
       // this.tweetReplyDialogOpen = true;
-      this.setTweetReplyDialogOpen(true)
+      this.setTweetReplyDialogOpen(true);
     },
     ...mapMutations({
-      setTweet: 'tweets/setTweet',
-      setTweetReplyDialogOpen: 'tweets/setTweetReplyDialogOpen'
-    })
-    // TODO: addLike
-    // TODO: deleteLike
+      setTweet: "tweets/setTweet",
+      setTweetReplyDialogOpen: "tweets/setTweetReplyDialogOpen",
+    }),
+    // TODO: 在個人頁面的即時更新
+    async addLike(tweetId) {
+      try {
+        // 只能按別人的
+        if (this.tweet.User.id === this.currentUser.id) {
+          Toast.fire({
+            icon: "error",
+            title: "無法將自己的推文加入LIKE",
+          });
+          this.isLoading = false;
+          return;
+        }
+        const { data } = await usersAPI.addLike({ tweetId });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.tweet = {
+          ...this.tweet,
+          isLiked: true,
+          likeCounts: this.tweet.likeCounts + 1,
+        };
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "error",
+          title: "無法將推文加入LIKE，請稍後再試",
+        });
+      }
+    },
+    async deleteLike(tweetId) {
+      try {
+        const { data } = await usersAPI.deleteLike({ tweetId });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.tweet = {
+          ...this.tweet,
+          isLiked: false,
+          likeCounts: this.tweet.likeCounts - 1,
+        };
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "error",
+          title: "無法將推文移除LIKE，請稍後再試",
+        });
+      }
+    },
   },
 };
 </script>
