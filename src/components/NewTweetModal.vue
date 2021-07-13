@@ -59,7 +59,7 @@ export default {
       required: (value) => !!value || "必填",
       tweetRules: (value) =>
         (value && value.length <= 140) || "推文不得超過140個字",
-      spaceRules: (v) => /[^\s\d]/.test(v) || "必填，不能只輸入空格",
+      spaceRules: (v) => /[^\s]/.test(v) || "必填，不能只輸入空格",
     },
   }),
   methods: {
