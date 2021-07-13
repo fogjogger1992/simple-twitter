@@ -121,8 +121,30 @@ const router = new VueRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
+  // get token from localStorage
+  const token = localStorage.getItem('token')
+  const tokenInStore = store.state.token
+  let isAuthenticated = store.state.isAuthenticated
+  // 有 token && token 跟 tokenInStore 不同才向後端驗證
+  if (token && token !== tokenInStore) {
+    isAuthenticated = await store.dispatch('fetchCurrentUser')
+  }
+
+  const pathWithoutAuthentications = ['sign-in', 'sign-up','admin-sign-in']
+  // redirect to '/signin'
+  if (!isAuthenticated && !pathWithoutAuthentications.includes(to.name)) {
+    next('/signin')
+    return
+  }
+  // redirect to '/tweets'
+  if (isAuthenticated && pathWithoutAuthentications.includes(to.name)) {
+    next('/tweets')
+    return
+  }
+
   // console.log("from: ", from, "to: ", to);
   await store.dispatch('fetchCurrentUser')
+
   next()
 })
 
