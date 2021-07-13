@@ -8,8 +8,16 @@ import store from './../store'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const authorizeIsAdmin = (to, from, next) => {
+  const currentUser = store.state.currentUser
+  if (currentUser && currentUser.role !== 'admin') {
+    next('/admin/signin')
+    return
+  } 
+  next()
+}
+
+const routes = [{
     path: '/',
     name: 'root',
     redirect: '/signin',
@@ -33,27 +41,33 @@ const routes = [
     path: '/admin/signin',
     name: 'admin-sign-in',
     component: () => import('../views/AdminSignIn.vue'),
-  },
-  {
-    path: '/admin',
-    name: 'admin-signin',
-    component: () => import('../views/AdminSignIn.vue'),
+    beforeEnter: (to, from, next) => {
+      const currentUser = store.state.currentUser
+      if (currentUser && currentUser.role === 'admin') {
+        next('/admin/main')
+        return
+      }
+      next()
+    }
   },
   {
     path: '/admin',
     name: 'admin',
+    exact: true,
     component: Admin,
-    // redirect: '/main',
-    children: [
-      {
+    redirect: 'admin/main',
+    beforeEnter: authorizeIsAdmin,
+    children: [{
         name: "admin-tweets",
         path: 'main',
         component: () => import("@/views/AdminTweets.vue"),
+        beforeEnter: authorizeIsAdmin
       },
       {
         name: "admin-users",
         path: 'users',
         component: () => import("@/views/AdminUsers.vue"),
+        beforeEnter: authorizeIsAdmin
       },
     ],
   },
@@ -61,8 +75,7 @@ const routes = [
     path: '/tweets',
     name: 'home',
     component: Home,
-    children: [
-      {
+    children: [{
         name: 'tweets',
         path: '/',
         component: () => import('../views/Tweets.vue'),
@@ -77,8 +90,7 @@ const routes = [
         name: 'user',
         redirect: '/users/:id',
         component: () => import('../views/User.vue'),
-        children: [
-          {
+        children: [{
             name: 'user-tweets',
             path: ':id',
             component: () => import('../views/UserTweets.vue'),
@@ -108,8 +120,9 @@ const router = new VueRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
-  store.dispatch('fetchCurrentUser')
+router.beforeEach(async (to, from, next) => {
+  console.log("from: ", from, "to: ", to);
+  await store.dispatch('fetchCurrentUser')
   next()
 })
 

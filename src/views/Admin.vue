@@ -40,6 +40,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
+import { Toast } from "../utils/helpers";
 
 export default {
   data() {
@@ -66,7 +67,7 @@ export default {
   async created() {
     try {
       // 取登入使用者資訊
-      await this.fetchCurrentUser()
+      await this.fetchCurrentUser();
       this.name = this.currentUser.name;
     } catch (error) {
       console.log("error", error);
@@ -76,7 +77,11 @@ export default {
   methods: {
     logout() {
       this.$store.commit("revokeAuthentication");
-      this.$router.push("/admin");
+      this.$router.push("/admin/signin");
+      Toast.fire({
+        icon: "success",
+        title: "已成功登出",
+      });
     },
     ...mapActions({
       fetchCurrentUser: "fetchCurrentUser",
