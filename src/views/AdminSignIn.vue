@@ -64,7 +64,6 @@ export default {
 
         // 取得 API 請求後的資料
         const { data } = response;
-        console.log("data", data);
         // 登入失敗
         if (data.status === "error") {
           this.alertMsg = data.message;

@@ -92,7 +92,6 @@ export default {
         throw new Error(data.message);
       }
       // 成功
-      console.log("data: ", data);
       this.tweets = data;
       this.tableData = data;
     } catch (err) {
