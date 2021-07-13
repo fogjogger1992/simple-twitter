@@ -173,9 +173,11 @@ export default {
     },
     async deleteCover() {
       try {
+        this.btnLoading = true;
         const { data } = await usersAPI.removeCover({
           userId: this.id,
         });
+        this.btnLoading = false;
         if (data.status !== "success") {
           Toast.fire({
             icon: "error",
@@ -191,10 +193,11 @@ export default {
         // await this.fetchCurrentUser();
         // this.cover = this.currentUser.cover;
       } catch (err) {
+        this.btnLoading = false;
         console.log(err);
       }
     },
-    async closeDialog() {
+    closeDialog() {
       // 如果有更新資料，確認是否要儲存
       if (
         this.avatar !== this.currentUser.avatar ||
@@ -202,28 +205,32 @@ export default {
         this.name !== this.currentUser.name ||
         this.introduction !== this.currentUser.introduction
       ) {
-        const decision = await Toast.fire({
-          title: "尚有未儲存之資料，確定要關閉視窗嗎？一但關閉，未存的資料將會消失。",
-          icon: "warning",
-          position: "center",
-          confirmButtonColor: "#FF6602",
-          cancelButtonColor: "#888888",
-          confirmButtonText: "確定",
-          cancelButtonText: "取消",
-          showCancelButton: true,
-          showConfirmButton: true,
-          timer: undefined,
-        });
-        if (decision.isConfirmed) {
-          // 把還沒儲存的資料清空
-          this.avatar = this.currentUser.avatar;
-          this.cover = this.currentUser.cover;
-          this.name = this.currentUser.name;
-          this.introduction = this.currentUser.introduction;
-          this.$emit("update:isProfileDialogOpened", false);
-        }
+        this.closeDialogConfirm();
       } else {
         // 如果沒更新資料，直接關閉視窗
+        this.$emit("update:isProfileDialogOpened", false);
+      }
+    },
+    async closeDialogConfirm() {
+      const decision = await Toast.fire({
+        title:
+          "尚有未儲存之資料，確定要關閉視窗嗎？一但關閉，未存的資料將會消失。",
+        icon: "warning",
+        position: "center",
+        confirmButtonColor: "#FF6602",
+        cancelButtonColor: "#888888",
+        confirmButtonText: "確定",
+        cancelButtonText: "取消",
+        showCancelButton: true,
+        showConfirmButton: true,
+        timer: undefined,
+      });
+      if (decision.isConfirmed) {
+        // 把還沒儲存的資料清空
+        this.avatar = this.currentUser.avatar;
+        this.cover = this.currentUser.cover;
+        this.name = this.currentUser.name;
+        this.introduction = this.currentUser.introduction;
         this.$emit("update:isProfileDialogOpened", false);
       }
     },

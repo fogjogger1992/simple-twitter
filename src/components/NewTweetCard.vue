@@ -8,7 +8,7 @@
     <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
       <v-col class="flex-grow-1">
         <v-avatar class="mt-1">
-          <img :src="currentUser.avatar" :alt="currentUser.name" />
+          <v-img :src="currentUser.avatar" :alt="currentUser.name"></v-img>
         </v-avatar>
       </v-col>
       <v-col cols="11" class="flex-shrink-1">

@@ -2,7 +2,7 @@
   <v-container class="fill-height">
     <v-row justify="center">
       <v-col cols="10" sm="8" md="6" lg="5" class="text-center">
-        <img src="../assets/img/logo.svg">
+        <v-img src="../assets/img/logo.svg" max-width="35" class="ma-auto"></v-img>
         <p class="text--h6 font-weight-bold mt-4">登入Alphitter</p>
 
         <AlertErr :alertMsg.sync='alertMsg' v-if='alertMsg' />
@@ -68,7 +68,7 @@ export default {
         // 登入失敗
         if (data.status === "error") {
           this.alertMsg = data.message;
-          throw new Error(data.message)
+          throw new Error(data.message);
         }
         // 登入成功
         this.alertMsg = "";

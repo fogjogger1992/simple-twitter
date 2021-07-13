@@ -11,7 +11,7 @@
               </v-img>
               <div class="avatar">
                 <v-avatar size="80" class="avatar-border">
-                  <img :src="user.avatar | emptyImage" :alt="user.name">
+                  <v-img :src="user.avatar | emptyImage" :alt="user.name"></v-img>
                 </v-avatar>
               </div>
 

@@ -61,7 +61,7 @@ export default new Vuex.Store({
         // 取登入使用者資訊
         const { data } = await usersAPI.getCurrentUser()
         const { id, account, name, avatar, cover, email, introduction, role } = data
-        console.log('currentUser data: ', data);
+        // console.log('currentUser data: ', data);
         commit('setCurrentUser', {
           id,
           account,

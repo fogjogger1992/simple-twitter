@@ -143,7 +143,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   // console.log("from: ", from, "to: ", to);
-  await store.dispatch('fetchCurrentUser')
+  // await store.dispatch('fetchCurrentUser')
 
   next()
 })
