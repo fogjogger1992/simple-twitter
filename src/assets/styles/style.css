@@ -1,0 +1,4 @@
+/* 統一 Toast 字型 */
+.swal2-popup {
+  font-family: monospace, sans-serif !important;
+}

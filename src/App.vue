@@ -31,4 +31,5 @@ export default {
 </script>
 <style>
 @import "https://use.fontawesome.com/releases/v5.15.1/css/all.css";
+@import "./assets/styles/style.css"
 </style>

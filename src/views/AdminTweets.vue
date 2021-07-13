@@ -31,7 +31,7 @@
         </v-list-item-group>
       </v-list> -->
 
-      <v-data-table class="mt-4 pa-auto ma-auto pa-0" fixed-header height="623" :sort-by="'createdAt'" :sort-desc="true" :headers="headers" :items="tableData" :footer-props="{
+      <v-data-table class="mt-4" fixed-header height="623" :sort-by="'createdAt'" :sort-desc="true" :headers="headers" :items="tableData" :footer-props="{
              'items-per-page-options':[20, 30, 50, 100]
           }">
 
@@ -158,6 +158,7 @@ export default {
 </script>
 <style>
 .v-data-table-header__icon {
-  opacity: 1;
+  opacity: 1 !important;
 }
+
 </style>
