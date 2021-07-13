@@ -37,7 +37,7 @@
 
         <template v-slot:item.User="{ item }">
           <v-avatar size="35" class="avatar-border">
-            <v-img :src="item.User.avatar">
+            <v-img :src="item.User.avatar | emptyImage">
             </v-img>
           </v-avatar>
         </template>
