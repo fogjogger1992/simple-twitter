@@ -12,7 +12,7 @@
             <v-row>
               <v-col cols="2">
                 <v-avatar size="60" class="avatar-border">
-                  <v-img :src="currentUser.avatar" :alt="currentUser.name">
+                  <v-img :src="currentUser.avatar | emptyImage" :alt="currentUser.name">
                   </v-img>
                 </v-avatar>
               </v-col>
@@ -38,6 +38,7 @@
 import tweetsAPI from "../apis/tweets";
 import { mapActions, mapState } from "vuex";
 import { Toast } from "../utils/helpers";
+import { emptyImageFilter } from "../utils/mixins";
 
 export default {
   props: {
@@ -45,7 +46,8 @@ export default {
       type: Boolean,
     },
   },
-  inject:['reload'],
+  inject: ["reload"],
+  mixins: [emptyImageFilter],
   data: () => ({
     valid: true,
     description: "",
@@ -72,7 +74,7 @@ export default {
         };
         const { data } = await tweetsAPI.createTweet({ tweetData });
         this.btnLoading = false;
-        console.log("新增結果： ", data);
+        // console.log("新增結果： ", data);
         if (data.status !== "success") {
           Toast.fire({
             icon: "error",
@@ -86,7 +88,7 @@ export default {
           icon: "success",
           title: "推文成功",
         });
-         this.reload()
+        this.reload();
       } catch (err) {
         this.btnLoading = false;
         console.log(err);

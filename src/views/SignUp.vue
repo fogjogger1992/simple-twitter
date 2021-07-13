@@ -5,13 +5,13 @@
         <img src="../assets/img/logo.svg">
         <p class="text--h6 font-weight-bold mt-4">建立你的帳號</p>
 
-       <AlertErr :alertMsg.sync='alertMsg' v-if='alertMsg' />
+        <AlertErr :alertMsg.sync='alertMsg' v-if='alertMsg' />
         <v-form class="my-4" ref="form" v-model="valid" lazy-validation>
           <v-text-field single-line solo v-model.trim="account" :rules="[rules.required, rules.accountRules]" maxlength="50" label="帳號"></v-text-field>
           <v-text-field single-line solo v-model.trim="name" :rules="[rules.required, rules.nameRules]" maxlength="50" label="姓名"></v-text-field>
           <v-text-field single-line solo v-model.trim="email" :rules="[rules.required, rules.emailRules]" label="Email" required></v-text-field>
           <v-text-field single-line solo v-model.trim="password" maxlength="20" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.passwordRules]" :type="showPassword ? 'text' : 'password'" label="密碼" @click:append="showPassword = !showPassword"></v-text-field>
-          <v-text-field single-line solo v-model.trim="confirmPassword" maxlength="20" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="confirmPasswordRules" :type="showPassword ? 'text' : 'password'" label="確認密碼" @click:append="showPassword = !showPassword"></v-text-field>
+          <v-text-field single-line solo v-model.trim="confirmPassword" maxlength="20" :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="confirmPasswordRules" :type="showConfirmPassword ? 'text' : 'password'" label="確認密碼" @click:append="showConfirmPassword = !showConfirmPassword"></v-text-field>
 
           <v-btn rounded :disabled="!valid" :loading="btnLoading" color="primary" @click="signUp">
             註冊
@@ -19,20 +19,18 @@
         </v-form>
         <router-link class="text-subtitle-2 secondary--text font-weight-bold" to="/">取消</router-link>
 
-       <Popup />
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
-import Popup from "@/components/Popup";
 import AlertErr from "@/components/AlertErr";
 import userAPI from "../apis/users";
-import { mapMutations } from "vuex";
+import { Toast } from "../utils/helpers";
 
 export default {
   name: "SignUp",
-  components: { Popup, AlertErr },
+  components: { AlertErr },
   data: () => ({
     valid: true,
     name: "",
@@ -41,6 +39,7 @@ export default {
     password: "",
     confirmPassword: "",
     showPassword: false,
+    showConfirmPassword: false,
 
     alertMsg: "",
 
@@ -81,21 +80,16 @@ export default {
           throw new Error(data.message);
         }
         this.alertMsg = "";
-        this.setShowPopup(true, { root: true });
-        this.setPopupDetails(
-          { popupColor: "green", popupMsg: "註冊成功" },
-          { root: true }
-        );
-        setTimeout(() => ( this.$router.push("/signin") ), 1500)
+        Toast.fire({
+          icon: "success",
+          title: "註冊成功",
+        });
+        setTimeout(() => this.$router.push("/signin"), 1000);
       } catch (err) {
         this.btnLoading = false;
         console.log(err);
       }
     },
-    ...mapMutations({
-      setShowPopup: "setShowPopup",
-      setPopupDetails: "setPopupDetails",
-    }),
   },
   computed: {
     confirmPasswordRules() {

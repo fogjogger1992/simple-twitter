@@ -4,7 +4,7 @@
 
       <v-card>
         <v-card-title>
-          <v-btn icon color="primary" :disabled="btnLoading" @click="$emit('update:isProfileDialogOpened', false)">
+          <v-btn icon color="primary" :disabled="btnLoading" @click="closeDialog">
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <span class="text-body-1 ml-2">編輯個人資料</span>
@@ -17,21 +17,21 @@
           <v-container>
             <v-row>
               <v-col class="pa-0">
-                    <v-img :src="cover | emptyImage" aspect-ratio="2" max-height="170px">
-                        <v-overlay absolute color="grey" opacity="0.3">
-                          <v-file-input v-model="newCover" class="d-inline-flex mr-2" prepend-icon="mdi-camera-outline" hide-input accept="image/png, image/jpeg" @change="handleCoverChange"></v-file-input>
-                          <v-btn icon color="white" class="mb-3 ml-2" @click="deleteCover" v-if="cover">
-                            <v-icon>mdi-trash-can-outline</v-icon>
-                          </v-btn>
-                        </v-overlay>
-                    </v-img>
+                <v-img :src="cover | emptyImage" aspect-ratio="2" max-height="170px">
+                  <v-overlay absolute color="grey" opacity="0.3">
+                    <v-file-input v-model="newCover" class="d-inline-flex mr-2" prepend-icon="mdi-camera-outline" hide-input accept="image/png, image/jpeg" @change="handleCoverChange"></v-file-input>
+                    <v-btn icon color="white" class="mb-3 ml-2" @click="deleteCover" v-if="currentUser.cover">
+                      <v-icon>mdi-trash-can-outline</v-icon>
+                    </v-btn>
+                  </v-overlay>
+                </v-img>
 
                 <div class="avatar ml-3">
                   <v-avatar size="100" class="avatar-border">
                     <v-img :src="avatar | emptyImage" alt="Avatar">
-                    <v-overlay absolute color="grey" opacity="0.2">
-                      <v-file-input v-model="newAvatar" class="d-inline-flex ml-3 mb-2" prepend-icon="mdi-camera-outline" hide-input accept="image/png, image/jpeg" @change="handleAvatarChange"></v-file-input>
-                    </v-overlay>
+                      <v-overlay absolute color="grey" opacity="0.2">
+                        <v-file-input v-model="newAvatar" class="d-inline-flex ml-3 mb-2" prepend-icon="mdi-camera-outline" hide-input accept="image/png, image/jpeg" @change="handleAvatarChange"></v-file-input>
+                      </v-overlay>
                     </v-img>
                   </v-avatar>
                 </div>
@@ -64,7 +64,7 @@ export default {
       type: Boolean,
     },
   },
-  inject:['reload'],
+  inject: ["reload"],
   mixins: [emptyImageFilter],
   data: () => ({
     valid: true,
@@ -134,7 +134,8 @@ export default {
         formData.append("introduction", this.introduction);
 
         if (this.newCover.length !== 0) formData.append("cover", this.newCover);
-        if (this.newAvatar.length !== 0) formData.append("avatar", this.newAvatar);
+        if (this.newAvatar.length !== 0)
+          formData.append("avatar", this.newAvatar);
 
         // for (let [name, value] of formData.entries()) {
         //   console.log(name + ": " + value);
@@ -159,7 +160,7 @@ export default {
           title: "個人資料更新成功",
         });
         // 資料更新後重整頁面
-        this.reload()
+        this.reload();
         // await this.fetchCurrentUser();
         // this.avatar = this.currentUser.avatar;
         // this.cover = this.currentUser.cover;
@@ -186,11 +187,44 @@ export default {
           icon: "success",
           title: "封面照刪除成功",
         });
-        this.reload()
+        this.reload();
         // await this.fetchCurrentUser();
         // this.cover = this.currentUser.cover;
       } catch (err) {
         console.log(err);
+      }
+    },
+    async closeDialog() {
+      // 如果有更新資料，確認是否要儲存
+      if (
+        this.avatar !== this.currentUser.avatar ||
+        this.cover !== this.currentUser.cover ||
+        this.name !== this.currentUser.name ||
+        this.introduction !== this.currentUser.introduction
+      ) {
+        const decision = await Toast.fire({
+          title: "尚有未儲存之資料，確定要關閉視窗嗎？一但關閉，未存的資料將會消失。",
+          icon: "warning",
+          position: "center",
+          confirmButtonColor: "#FF6602",
+          cancelButtonColor: "#888888",
+          confirmButtonText: "確定",
+          cancelButtonText: "取消",
+          showCancelButton: true,
+          showConfirmButton: true,
+          timer: undefined,
+        });
+        if (decision.isConfirmed) {
+          // 把還沒儲存的資料清空
+          this.avatar = this.currentUser.avatar;
+          this.cover = this.currentUser.cover;
+          this.name = this.currentUser.name;
+          this.introduction = this.currentUser.introduction;
+          this.$emit("update:isProfileDialogOpened", false);
+        }
+      } else {
+        // 如果沒更新資料，直接關閉視窗
+        this.$emit("update:isProfileDialogOpened", false);
       }
     },
     ...mapActions({

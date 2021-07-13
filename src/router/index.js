@@ -121,7 +121,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  console.log("from: ", from, "to: ", to);
+  // console.log("from: ", from, "to: ", to);
   await store.dispatch('fetchCurrentUser')
   next()
 })

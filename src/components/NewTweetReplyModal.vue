@@ -13,7 +13,7 @@
             <v-row>
               <v-col cols="2">
                 <v-avatar size="60" class="avatar-border">
-                  <v-img :src="tweetInfo.User.avatar" alt="Avatar">
+                  <v-img :src="tweetInfo.User.avatar | emptyImage" alt="Avatar">
                   </v-img>
                 </v-avatar>
               </v-col>
@@ -36,7 +36,7 @@
             <v-row>
               <v-col cols="2">
                 <v-avatar size="60" class="avatar-border">
-                  <v-img :src="currentUser.avatar" alt="Avatar">
+                  <v-img :src="currentUser.avatar | emptyImage" alt="Avatar">
                   </v-img>
                 </v-avatar>
               </v-col>
@@ -62,7 +62,7 @@
 </template>
 <script>
 import repliesAPI from "../apis/replies";
-import { fromNowFilter } from "../utils/mixins";
+import { fromNowFilter, emptyImageFilter } from "../utils/mixins";
 import { mapState, mapActions, mapMutations } from "vuex";
 import { Toast } from "../utils/helpers.js";
 
@@ -72,8 +72,8 @@ export default {
     //   type: Boolean,
     // },
   },
-  inject:['reload'],
-  mixins: [fromNowFilter],
+  inject: ["reload"],
+  mixins: [fromNowFilter, emptyImageFilter],
   data: () => ({
     valid: true,
     comment: "",
@@ -123,8 +123,7 @@ export default {
           icon: "success",
           title: "回覆成功",
         });
-        this.reload()
-        
+        this.reload();
       } catch (err) {
         this.btnLoading = false;
         console.log(err);
@@ -141,8 +140,7 @@ export default {
     ...mapState({
       tweetInfo: (state) => state.tweets.tweetInfo,
       currentUser: (state) => state.currentUser,
-      tweetReplyDialogOpen: (state) =>
-        state.tweets.tweetReplyDialogOpen,
+      tweetReplyDialogOpen: (state) => state.tweets.tweetReplyDialogOpen,
     }),
   },
 };

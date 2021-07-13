@@ -2,8 +2,15 @@
   <v-row>
     <v-col>
       <p class="text-subtitle-1 font-weight-bold">推文清單</p>
+      <v-chip
+      class="text-body-2"
+      color=""
+      label
+      small
+      text-color="balck"
+    > 目前總共 {{tweets.length}} 則推文 </v-chip>
 
-      <v-list three-line>
+      <v-list three-line class="mt-4">
         <v-list-item-group color="secondary" v-model="selectedItem">
           <template v-for="tweet in tweets">
 
