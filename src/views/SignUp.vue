@@ -11,7 +11,7 @@
           <v-text-field single-line solo v-model.trim="name" :rules="[rules.required, rules.nameRules]" maxlength="50" label="姓名"></v-text-field>
           <v-text-field single-line solo v-model.trim="email" :rules="[rules.required, rules.emailRules]" label="Email" required></v-text-field>
           <v-text-field single-line solo v-model.trim="password" maxlength="20" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.passwordRules]" :type="showPassword ? 'text' : 'password'" label="密碼" @click:append="showPassword = !showPassword"></v-text-field>
-          <v-text-field single-line solo v-model.trim="confirmPassword" maxlength="20" :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="confirmPasswordRules" :type="showConfirmPassword ? 'text' : 'password'" label="確認密碼" @click:append="showConfirmPassword = !showConfirmPassword"></v-text-field>
+          <v-text-field single-line solo v-model.trim="confirmPassword" maxlength="20" :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="confirmPasswordRules" :type="showConfirmPassword ? 'text' : 'password'" label="確認密碼" @click:append="showConfirmPassword = !showConfirmPassword" @keypress.13.prevent="signUp"></v-text-field>
 
           <v-btn rounded :disabled="!valid" :loading="btnLoading" color="primary" @click="signUp">
             註冊

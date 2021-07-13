@@ -2,9 +2,10 @@
   <v-row>
     <v-col>
       <p class="text-subtitle-1 font-weight-bold">使用者列表</p>
+      <span class="text-body-2"> 目前總共 {{users.length}} 位使用者 </span>
 
       <v-row>
-        <v-col cols="6" sm="4" md="3" lg="2" class="d-flex ma-0 py-3 justify-center" v-for="user in users" :key="user.id">
+        <v-col cols="6" sm="4" md="3" lg="2" class="d-flex ma-0 py-3 justify-center mt-4" v-for="user in users" :key="user.id">
           <v-hover v-slot="{ hover }">
             <v-card class="mx-auto text-center" :elevation="hover ? 4 : 1" :class="{ 'on-hover': hover }">
               <v-img class="align-end" height="110px" :src="user.cover | emptyImage">
@@ -50,7 +51,7 @@ export default {
       users: [],
     };
   },
-  async mounted() {
+  async created() {
     this.setShowOverlayLoading(null, { root: true });
     try {
       // 取使用者名單

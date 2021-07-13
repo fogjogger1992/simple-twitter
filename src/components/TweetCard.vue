@@ -1,23 +1,15 @@
 <template>
-  <v-card
-    flat
-    tile
-    class="pa-3"
-    style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
-  >
-    <router-link
-      :to="{ name: 'tweet', params: { id: tweet.id } }"
-      style="text-decoration: none"
-    >
-      <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
-        <v-col class="flex-grow-1">
-          <router-link :to="{ name: 'user', params: { id: tweet.User.id } }">
-            <v-avatar class="mt-1">
-              <v-img :src="tweet.User.avatar" :alt="tweet.User.name"></v-img>
-            </v-avatar>
-          </router-link>
-        </v-col>
-        <v-col cols="11" class="flex-shrink-1">
+  <v-card flat tile class="pa-3" style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">
+    <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
+      <v-col class="flex-grow-1">
+        <router-link :to="{ name: 'user', params: { id: tweet.User.id } }">
+          <v-avatar class="mt-1">
+            <v-img :src="tweet.User.avatar" :alt="tweet.User.name"></v-img>
+          </v-avatar>
+        </router-link>
+      </v-col>
+      <v-col cols="11" class="flex-shrink-1">
+        <router-link :to="{ name: 'tweet', params: { id: tweet.id } }" style="text-decoration: none">
           <v-row no-gutters align="center" class="pa-2">
             <p class="subtitle-2 font-weight-bold mr-1 my-0 pa-0">
               {{ tweet.User.name }}
@@ -34,50 +26,29 @@
               {{ tweet.description }}
             </p>
           </v-row>
-          <v-row no-gutters align="center" class="font-weight-normal pa-2">
-            <v-col cols="1" class="d-flex justify-space-between mr-5">
-              <v-icon
-                @click.stop.prevent="replyTweet"
-                class="grey--text"
-                style="font-size: 18px"
-                >far fa-comment</v-icon
-              >
-              <p
-                class="subtitle-2 font-weight-normal grey--text pa-0 my-0 ml-1"
-              >
-                {{ tweet.replyCounts }}
-              </p>
-            </v-col>
-            <v-col cols="1" class="d-flex justify-space-between ml-5">
-              <!-- isLiked / !isLiked -->
-              <v-icon
-                :disabled="currentUser.id === tweet.User.id"
-                v-if="!tweet.isLiked"
-                class="grey--text"
-                @click.stop.prevent="addLike(tweet.id)"
-                style="font-size: 18px"
-                >far fa-heart</v-icon
-              >
-              <v-icon
-                v-else
-                :disabled="currentUser.id === tweet.User.id"
-                class="red--text"
-                @click.stop.prevent="deleteLike(tweet.id)"
-                style="font-size: 18px"
-                >far fa-heart</v-icon
-              >
-              <p class="subtitle-2 grey--text pa-0 my-0 ml-1">
-                {{ tweet.likeCounts }}
-              </p>
-            </v-col>
-          </v-row>
-        </v-col>
+        </router-link>
+        <v-row no-gutters align="center" class="font-weight-normal pa-2">
+          <v-col cols="1" class="d-flex justify-space-between mr-5">
+            <v-icon @click.stop.prevent="replyTweet" class="grey--text" style="font-size: 18px">far fa-comment</v-icon>
+            <p class="subtitle-2 font-weight-normal grey--text pa-0 my-0 ml-1">
+              {{ tweet.replyCounts }}
+            </p>
+          </v-col>
+          <v-col cols="1" class="d-flex justify-space-between ml-5">
+            <!-- isLiked / !isLiked -->
+            <v-icon :disabled="currentUser.id === tweet.User.id" v-if="!tweet.isLiked" class="grey--text" @click.stop.prevent="addLike(tweet.id)" style="font-size: 18px">far fa-heart</v-icon>
+            <v-icon v-else :disabled="currentUser.id === tweet.User.id" class="red--text" @click.stop.prevent="deleteLike(tweet.id)" style="font-size: 18px">far fa-heart</v-icon>
+            <p class="subtitle-2 grey--text pa-0 my-0 ml-1">
+              {{ tweet.likeCounts }}
+            </p>
+          </v-col>
+        </v-row>
+      </v-col>
 
-        <!-- <NewTweetReplyModal
+      <!-- <NewTweetReplyModal
           :tweetReplyDialogOpen.sync="tweetReplyDialogOpen"
         /> -->
-      </v-row>
-    </router-link>
+    </v-row>
   </v-card>
 </template>
 
@@ -114,7 +85,7 @@ export default {
   },
   methods: {
     replyTweet() {
-      console.log("replyTweet");
+      // console.log("replyTweet");
       // 把要回覆的該則推文傳給 store
       this.setTweet(this.tweet);
       // this.tweetReplyDialogOpen = true;

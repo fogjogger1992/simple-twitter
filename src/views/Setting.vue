@@ -7,7 +7,7 @@
 
       <v-col cols="12" sm="12" md="9" lg="9" class="ma-0 px-0 d-flex flex-column">
         <v-card tile flat class="pa-3 font-weight-bold text-subtitle-1" style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">帳戶設定</v-card>
-        <v-col cols="12" md="7" class="ma-auto pa-4 align-self-center">
+        <v-col cols="10" sm="8" md="7" lg="6" class="ma-auto pa-4 align-self-center">
           <AlertErr :alertMsg.sync='alertMsg' v-if='alertMsg' />
           <v-form class="my-4 text-right" ref="form" v-model="valid" lazy-validation>
             <v-text-field v-model.trim="account" :rules="[rules.required, rules.accountRules]" maxlength="50" label="帳號" required></v-text-field>

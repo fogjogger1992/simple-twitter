@@ -61,7 +61,7 @@ export default {
         tweetRules: (value) =>
           (value && value.length <= 140) || "推文字數限制(140)",
         spaceRules: (v) =>
-          /[^\s\d]/.test(v) || "填寫您的推文，輸入空格外的文字",
+          /[^\s]/.test(v) || "填寫您的推文，輸入空格外的文字",
       },
       value: "",
       isLoading: false,

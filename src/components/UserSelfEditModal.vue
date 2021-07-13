@@ -4,12 +4,12 @@
 
       <v-card>
         <v-card-title>
-          <v-btn icon color="primary" :disabled="btnLoading" @click="closeDialog">
+          <v-btn icon color="primary" :disabled="btnLoading" @click.prevent="closeDialog">
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <span class="text-body-1 ml-2">編輯個人資料</span>
           <v-spacer></v-spacer>
-          <v-btn color="primary" rounded small depressed :disabled="!valid" :loading="btnLoading" @click="updateInfo">
+          <v-btn color="primary" rounded small depressed :disabled="!valid" :loading="btnLoading" @click.prevent="updateInfo">
             儲存
           </v-btn>
         </v-card-title>
@@ -20,7 +20,7 @@
                 <v-img :src="cover | emptyImage" aspect-ratio="2" max-height="170px">
                   <v-overlay absolute color="grey" opacity="0.3">
                     <v-file-input v-model="newCover" class="d-inline-flex mr-2" prepend-icon="mdi-camera-outline" hide-input accept="image/png, image/jpeg" @change="handleCoverChange"></v-file-input>
-                    <v-btn icon color="white" class="mb-3 ml-2" @click="deleteCover" v-if="currentUser.cover">
+                    <v-btn icon color="white" class="mb-3 ml-2" @click.prevent="deleteCover" v-if="currentUser.cover">
                       <v-icon>mdi-trash-can-outline</v-icon>
                     </v-btn>
                   </v-overlay>
@@ -85,7 +85,7 @@ export default {
         (value && value.length <= 50) || "姓名不得超過50個字",
     },
   }),
-  async mounted() {
+  async created() {
     try {
       // 取登入使用者資訊
       await this.fetchCurrentUser();
@@ -145,7 +145,7 @@ export default {
           userId: this.id,
           formData,
         });
-        console.log("更新結果： ", data);
+        // console.log("更新結果： ", data);
         this.btnLoading = false;
         if (data.status !== "success") {
           Toast.fire({
