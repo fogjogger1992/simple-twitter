@@ -49,6 +49,9 @@
             </v-btn>
             <!-- if !isFollowed -->
             <v-btn
+              v-if="!user.isFollowed"
+              :loading="isLoading"
+              @click.stop.prevent="addFollowing(user.id)"
               outlined
               rounded
               large
@@ -60,6 +63,9 @@
             <!-- else -->
             <!-- TODO: follow -->
             <v-btn
+              v-else
+              :loading="isLoading"
+              @click.stop.prevent="deleteFollowing(user.id)"
               elevation="0"
               rounded
               large
@@ -131,12 +137,14 @@
 <script>
 import { emptyImageFilter } from "./../utils/mixins";
 import UserSelfEditModal from "@/components/UserSelfEditModal.vue";
+import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
 
 export default {
   name: "UserProfileCard",
   mixins: [emptyImageFilter],
   props: {
-    user: {
+    initialUser: {
       type: Object,
       required: true,
     },
@@ -150,16 +158,85 @@ export default {
   },
   data() {
     return {
+      user: {
+        ...this.initialUser,
+      },
       // 個人資料編輯視窗
       isProfileDialogOpened: false,
+      isLoading: false,
     };
+  },
+  watch: {
+    initialUser(newValue) {
+      this.user = {
+        ...this.user,
+        ...newValue,
+      };
+    },
   },
   methods: {
     openUserSelfEditModal() {
       this.isProfileDialogOpened = true;
     },
-    // TODO: Follow
-    // TODO: Unfollow
+    async addFollowing(userId) {
+      try {
+        this.isLoading = true;
+        // 不能跟隨自己
+        if (userId === this.currentUser.id) {
+          Toast.fire({
+            icon: "error",
+            title: "無法跟隨自己",
+          });
+          this.isLoading = false;
+          return;
+        }
+
+        const followingId = {
+          id: userId,
+        };
+        const { data } = await usersAPI.addFollowing({ followingId });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.user.isFollowed = true;
+        this.user.followerCounts += 1;
+        this.isLoading = false;
+        Toast.fire({
+          icon: "success",
+          title: "成功加入跟隨",
+        });
+      } catch (error) {
+        this.isLoading = false;
+        Toast.fire({
+          icon: "error",
+          title: "無法加入跟隨，請稍後再試",
+        });
+      }
+    },
+    async deleteFollowing(followingId) {
+      try {
+        this.isLoading = true;
+        const { data } = await usersAPI.deleteFollowing({ followingId });
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        this.user.isFollowed = false;
+        this.user.followerCounts -= 1;
+        this.isLoading = false;
+        Toast.fire({
+          icon: "success",
+          title: "成功取消跟隨",
+        });
+      } catch (error) {
+        this.isLoading = false;
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取消跟隨，請稍後再試",
+        });
+      }
+    },
   },
 };
 </script>

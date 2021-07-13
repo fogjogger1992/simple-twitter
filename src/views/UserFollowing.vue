@@ -20,7 +20,10 @@
     <UserCard
       v-for="following in followings"
       :key="following.id"
-      :initialUser="following"
+      :initialUser="following.Following"
+      :initialIsFollowed="following.isFollowed"
+      :currentUser="currentUser"
+      @after-delete-following="afterDeleteFollowing"
     />
   </v-container>
 </template>
@@ -84,6 +87,12 @@ export default {
           title: "無法取得使用者資料，請稍後再試",
         });
       }
+    },
+    afterDeleteFollowing(payload) {
+      const followingId = payload;
+      this.followings = this.followings.filter(
+        (following) => following.followingId !== followingId
+      );
     },
   },
 };

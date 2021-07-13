@@ -1,6 +1,6 @@
 <template>
   <v-container class="ma-0 pa-0">
-    <UserProfileCard :user="user" :current-user="currentUser" />
+    <UserProfileCard :initial-user="user" :current-user="currentUser" />
 
     <!-- tabs -->
     <v-tabs
@@ -58,6 +58,7 @@ export default {
         followerCounts: 0,
         cover: "",
         introduction: "",
+        isFollowed: false,
       },
       tweets: [],
     };
@@ -94,6 +95,7 @@ export default {
           followerCounts,
           cover,
           introduction,
+          isFollowed,
         } = data;
 
         this.user = {
@@ -106,6 +108,7 @@ export default {
           followerCounts,
           cover,
           introduction,
+          isFollowed,
         };
       } catch (error) {
         Toast.fire({
@@ -159,8 +162,13 @@ export default {
         }
 
         const likes = [];
-        data.forEach((object) => (object.Tweet.id = object.id));
-        data.forEach((object) => likes.push(object.Tweet));
+        data.forEach((object) => {
+          object = {
+            ...object,
+            isLiked: true,
+          };
+          likes.push(object);
+        });
 
         this.tweets = likes;
       } catch (error) {

@@ -9,7 +9,7 @@
       <!-- avatar -->
       <v-col class="flex-grow-1">
         <v-avatar class="mt-1">
-          <img :src="user.avatar" :alt="user.name" />
+          <img :src="user.avatar | emptyImage" :alt="user.name" />
         </v-avatar>
       </v-col>
       <!-- name and account -->
@@ -28,7 +28,9 @@
           <!-- btn -->
           <v-col no-gutters cols="auto" class="d-flex ma-0 pa-2">
             <v-btn
-              v-if="!user.isFollowed"
+              v-if="!isFollowed"
+              :loading="isLoading"
+              @click.stop.prevent="addFollowing(user.id)"
               rounded
               outlined
               small
@@ -36,7 +38,15 @@
             >
               跟隨
             </v-btn>
-            <v-btn v-else rounded small elevation="0" color="primary">
+            <v-btn
+              v-else
+              :loading="isLoading"
+              @click.stop.prevent="deleteFollowing(user.id)"
+              rounded
+              small
+              elevation="0"
+              color="primary"
+            >
               正在跟隨
             </v-btn>
           </v-col>
@@ -56,17 +66,106 @@
 </template>
 
 <script>
+import { emptyImageFilter } from "./../utils/mixins";
+import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
+
 export default {
+  name: "userCard",
   props: {
+    currentUser: {
+      type: Object,
+      required: true,
+    },
     initialUser: {
       type: Object,
       required: true,
     },
+    initialIsFollowed: {
+      type: Boolean,
+      required: true,
+    },
   },
+  mixins: [emptyImageFilter],
   data() {
     return {
-      user: this.initialUser,
+      user: {
+        ...this.initialUser,
+      },
+      isFollowed: this.initialIsFollowed,
+      isLoading: false,
     };
+  },
+  watch: {
+    initialUser(newValue) {
+      this.user = {
+        ...this.user,
+        ...newValue,
+      };
+    },
+    initialIsFollowed(isFollowed) {
+      this.isFollowed = isFollowed;
+    },
+  },
+  methods: {
+    async addFollowing(userId) {
+      try {
+        this.isLoading = true;
+        // 不能跟隨自己
+        if (userId === this.currentUser.id) {
+          Toast.fire({
+            icon: "error",
+            title: "無法跟隨自己",
+          });
+          this.isLoading = false;
+          return;
+        }
+
+        const followingId = {
+          id: userId,
+        };
+        const { data } = await usersAPI.addFollowing({ followingId });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.isFollowed = true;
+        this.isLoading = false;
+        Toast.fire({
+          icon: "success",
+          title: "成功加入跟隨",
+        });
+      } catch (error) {
+        this.isLoading = false;
+        Toast.fire({
+          icon: "error",
+          title: "無法加入跟隨，請稍後再試",
+        });
+      }
+    },
+    async deleteFollowing(followingId) {
+      try {
+        this.isLoading = true;
+        const { data } = await usersAPI.deleteFollowing({ followingId });
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        this.$emit("after-delete-following", followingId);
+        this.isFollowed = false;
+        this.isLoading = false;
+        Toast.fire({
+          icon: "success",
+          title: "成功取消跟隨",
+        });
+      } catch (error) {
+        this.isLoading = false;
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取消跟隨，請稍後再試",
+        });
+      }
+    },
   },
 };
 </script>
