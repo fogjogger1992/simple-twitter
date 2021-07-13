@@ -137,9 +137,6 @@ export default {
       replies: [],
     };
   },
-  computed: {
-    ...mapState(["currentUser"]),
-  },
   created() {
     const { id } = this.$route.params;
     this.fetchTweet(id);
