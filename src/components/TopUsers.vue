@@ -55,7 +55,7 @@
                     <v-btn
                       v-if="!topUsers[userIndex - 1].isFollowed"
                       @click.stop.prevent="
-                        addFollowed(topUsers[userIndex - 1].account)
+                        addFollowing(topUsers[userIndex - 1].id)
                       "
                       rounded
                       outlined
@@ -68,7 +68,7 @@
                     <v-btn
                       v-else
                       @click.stop.prevent="
-                        removeFollowed(topUsers[userIndex - 1].account)
+                        deleteFollowing(topUsers[userIndex - 1].id)
                       "
                       rounded
                       small
@@ -128,6 +128,14 @@ export default {
   created() {
     this.fetchUsers();
   },
+  watch: {
+    initialUser(newValue) {
+      this.user = {
+        ...this.user,
+        ...newValue,
+      };
+    },
+  },
   methods: {
     async fetchUsers() {
       try {
@@ -146,29 +154,52 @@ export default {
     showMore() {
       this.usersToShow = this.totalUsers;
     },
-    // TODO: addFollowing
-    addFollowed(userId) {
-      this.topUsers = this.topUsers.map((user) => {
-        if (user.account !== userId) {
-          return user;
+    // TODO: UserProfileCard、Followings、Followers 狀態更新同步
+    async addFollowing(userId) {
+      try {
+        // 不能跟隨自己
+        if (userId === this.currentUser.id) {
+          Toast.fire({
+            icon: "error",
+            title: "無法跟隨自己",
+          });
+          return;
         }
-        return {
-          ...user,
-          isFollowed: true,
+        const followingId = {
+          id: userId,
         };
-      });
+        const { data } = await usersAPI.addFollowing({ followingId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        Toast.fire({
+          icon: "success",
+          title: "成功加入跟隨",
+        });
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法加入跟隨，請稍後再試",
+        });
+      }
     },
-    // TODO: deleteFollowing
-    removeFollowed(userId) {
-      this.topUsers = this.topUsers.map((user) => {
-        if (user.account !== userId) {
-          return user;
+    async deleteFollowing(followingId) {
+      try {
+        const { data } = await usersAPI.deleteFollowing({ followingId });
+        if (data.status === "error") {
+          throw new Error(data.message);
         }
-        return {
-          ...user,
-          isFollowed: false,
-        };
-      });
+        Toast.fire({
+          icon: "success",
+          title: "成功取消跟隨",
+        });
+      } catch (error) {
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取消跟隨，請稍後再試",
+        });
+      }
     },
   },
 };

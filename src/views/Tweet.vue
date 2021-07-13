@@ -191,7 +191,8 @@ export default {
           throw new Error(data.message);
         }
 
-        const { id, description, replyCounts, likeCounts, createdAt } = data;
+        const { id, description, replyCounts, likeCounts, createdAt, User } =
+          data;
 
         this.tweet = {
           ...this.tweet,
@@ -200,6 +201,7 @@ export default {
           replyCounts,
           likeCounts,
           createdAt,
+          User,
         };
       } catch (error) {
         Toast.fire({

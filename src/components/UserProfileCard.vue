@@ -49,7 +49,7 @@
             </v-btn>
             <!-- if !isFollowed -->
             <v-btn
-              v-if="!isFollowed"
+              v-if="!user.isFollowed"
               :loading="isLoading"
               @click.stop.prevent="addFollowing(user.id)"
               outlined
@@ -65,6 +65,7 @@
             <v-btn
               v-else
               :loading="isLoading"
+              @click.stop.prevent="deleteFollowing(user.id)"
               elevation="0"
               rounded
               large
@@ -177,9 +178,19 @@ export default {
     openUserSelfEditModal() {
       this.isProfileDialogOpened = true;
     },
-    // TODO: fix addFollowing
     async addFollowing(userId) {
       try {
+        this.isLoading = true;
+        // 不能跟隨自己
+        if (userId === this.currentUser.id) {
+          Toast.fire({
+            icon: "error",
+            title: "無法跟隨自己",
+          });
+          this.isLoading = false;
+          return;
+        }
+
         const followingId = {
           id: userId,
         };
@@ -188,20 +199,44 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-
-        this.user = {
-          ...this.user,
-          isFollowed: true,
-          followerCounts: this.user.followerCounts + 1,
-        };
+        this.user.isFollowed = true;
+        this.user.followerCounts += 1;
+        this.isLoading = false;
+        Toast.fire({
+          icon: "success",
+          title: "成功加入跟隨",
+        });
       } catch (error) {
+        this.isLoading = false;
         Toast.fire({
           icon: "error",
-          title: "無法加入追蹤，請稍後再試",
+          title: "無法加入跟隨，請稍後再試",
         });
       }
     },
-    // TODO: deleteFollowing
+    async deleteFollowing(followingId) {
+      try {
+        this.isLoading = true;
+        const { data } = await usersAPI.deleteFollowing({ followingId });
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        this.user.isFollowed = false;
+        this.user.followerCounts -= 1;
+        this.isLoading = false;
+        Toast.fire({
+          icon: "success",
+          title: "成功取消跟隨",
+        });
+      } catch (error) {
+        this.isLoading = false;
+        console.error(error.message);
+        Toast.fire({
+          icon: "error",
+          title: "無法取消跟隨，請稍後再試",
+        });
+      }
+    },
   },
 };
 </script>
