@@ -10,8 +10,8 @@
         <v-col cols="12" md="7" class="ma-auto pa-4 align-self-center">
           <AlertErr :alertMsg.sync='alertMsg' v-if='alertMsg' />
           <v-form class="my-4 text-right" ref="form" v-model="valid" lazy-validation>
-            <v-text-field v-model.trim="account" :rules="[rules.required, rules.accountRules]" maxlength="50" label="帳號" disabled></v-text-field>
-            <v-text-field v-model.trim="name" :rules="[rules.required, rules.nameRules]" maxlength="50" label="姓名"></v-text-field>
+            <v-text-field v-model.trim="account" :rules="[rules.required, rules.accountRules]" maxlength="50" label="帳號" required></v-text-field>
+            <v-text-field v-model.trim="name" :rules="[rules.required, rules.nameRules]" maxlength="50" label="姓名" required></v-text-field>
             <v-text-field v-model.trim="email" :rules="[rules.required, rules.emailRules]" label="Email" required></v-text-field>
             <v-text-field v-model.trim="password" maxlength="20" type='password' :rules="[rules.required, rules.passwordRules]" label="密碼"></v-text-field>
             <v-text-field v-model.trim="confirmPassword" maxlength="20" type='password' :rules="confirmPasswordRules" label="確認密碼"></v-text-field>
@@ -28,7 +28,8 @@
 import SideNavBar from "@/components/SideNavBar";
 import AlertErr from "@/components/AlertErr";
 import usersAPI from "../apis/users";
-import { mapMutations, mapActions, mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
+import { Toast } from "../utils/helpers";
 
 export default {
   name: "Setting",
@@ -97,11 +98,10 @@ export default {
         }
         // 更新成功
         this.alertMsg = "";
-        this.setShowPopup(true, { root: true });
-        this.setPopupDetails(
-          { popupColor: "green", popupMsg: "資料更新成功" },
-          { root: true }
-        );
+        Toast.fire({
+          icon: "success",
+          title: "資料更新成功",
+        });
         // 更新使用者資料
         await this.fetchCurrentUser();
         this.name = this.currentUser.name;
@@ -112,10 +112,6 @@ export default {
         console.log(err);
       }
     },
-    ...mapMutations({
-      setShowPopup: "setShowPopup",
-      setPopupDetails: "setPopupDetails",
-    }),
     ...mapActions({
       fetchCurrentUser: "fetchCurrentUser",
     }),
