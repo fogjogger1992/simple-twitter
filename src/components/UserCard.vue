@@ -8,9 +8,11 @@
     <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
       <!-- avatar -->
       <v-col class="flex-grow-1">
-        <v-avatar class="mt-1">
-          <img :src="user.avatar | emptyImage" :alt="user.name" />
-        </v-avatar>
+        <router-link :to="{ name: 'user', params: { id: user.id } }">
+          <v-avatar class="mt-1">
+            <img :src="user.avatar | emptyImage" :alt="user.name" />
+          </v-avatar>
+        </router-link>
       </v-col>
       <!-- name and account -->
       <v-col cols="11" class="flex-shrink-1">

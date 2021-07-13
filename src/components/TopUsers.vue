@@ -24,11 +24,18 @@
                 style="min-width: 40px"
               >
                 <v-list-item-avatar>
-                  <v-img
-                    class="elevation-6"
-                    alt=""
-                    :src="topUsers[userIndex - 1].avatar | emptyImage"
-                  ></v-img>
+                  <router-link
+                    :to="{
+                      name: 'user',
+                      params: { id: topUsers[userIndex - 1].id },
+                    }"
+                  >
+                    <v-img
+                      class="elevation-6"
+                      alt=""
+                      :src="topUsers[userIndex - 1].avatar | emptyImage"
+                    ></v-img>
+                  </router-link>
                 </v-list-item-avatar>
               </v-col>
               <!-- account and btn -->
