@@ -23,20 +23,21 @@
                 class="pa-0 ma-0 flex-shrink-1"
                 style="min-width: 40px"
               >
-                <v-list-item-avatar>
-                  <router-link
+              <!-- 把 router-link 跟 v-list-item-avatar 位置調換，不然 avatar 無法正常顯示 -->
+              <router-link
                     :to="{
                       name: 'user',
                       params: { id: topUsers[userIndex - 1].id },
                     }"
                   >
+                <v-list-item-avatar>
                     <v-img
                       class="elevation-6"
                       alt=""
                       :src="topUsers[userIndex - 1].avatar | emptyImage"
                     ></v-img>
-                  </router-link>
                 </v-list-item-avatar>
+              </router-link>
               </v-col>
               <!-- account and btn -->
               <v-col cols="auto" class="flex-grow-1 pa-0 ma-0">

@@ -13,7 +13,7 @@
         <v-col class="flex-grow-1">
           <router-link :to="{ name: 'user', params: { id: tweet.User.id } }">
             <v-avatar class="mt-1">
-              <img :src="tweet.User.avatar" :alt="tweet.User.name" />
+              <v-img :src="tweet.User.avatar" :alt="tweet.User.name"></v-img>
             </v-avatar>
           </router-link>
         </v-col>

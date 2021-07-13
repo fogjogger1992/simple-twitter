@@ -2,7 +2,7 @@
   <v-container class="fill-height">
     <v-row justify="center">
       <v-col cols="10" sm="8" md="6" lg="5" class="text-center">
-        <img src="../assets/img/logo.svg">
+        <v-img src="../assets/img/logo.svg" max-width="35" class="ma-auto"></v-img>
         <p class="text--h6 font-weight-bold mt-4">後台登入</p>
 
         <AlertErr :alertMsg.sync='alertMsg' v-if='alertMsg' />

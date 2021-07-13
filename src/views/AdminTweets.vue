@@ -2,15 +2,9 @@
   <v-row>
     <v-col>
       <p class="text-subtitle-1 font-weight-bold">推文清單</p>
-      <v-chip
-      class="text-body-2"
-      color=""
-      label
-      small
-      text-color="balck"
-    > 目前總共 {{tweets.length}} 則推文 </v-chip>
+      <span class="text-body-2"> 目前總共 {{tweets.length}} 則推文 </span>
 
-      <v-list three-line class="mt-4">
+      <!-- <v-list three-line class="mt-4">
         <v-list-item-group color="secondary" v-model="selectedItem">
           <template v-for="tweet in tweets">
 
@@ -35,7 +29,28 @@
 
           </template>
         </v-list-item-group>
-      </v-list>
+      </v-list> -->
+
+      <v-data-table class="mt-4 pa-auto ma-auto pa-0" fixed-header height="623" :sort-by="'createdAt'" :sort-desc="true" :headers="headers" :items="tableData" :footer-props="{
+             'items-per-page-options':[20, 30, 50, 100]
+          }">
+
+        <template v-slot:item.User="{ item }">
+          <v-avatar size="35" class="avatar-border">
+            <v-img :src="item.User.avatar">
+            </v-img>
+          </v-avatar>
+        </template>
+
+        <template v-slot:item.delete="{ item }">
+          <v-btn icon dark color="red darken-2" @click="deleteTweet(item.id)">
+            <v-icon>
+              mdi-trash-can-outline
+            </v-icon>
+          </v-btn>
+        </template>
+      </v-data-table>
+
       <Popup />
       <Loading />
     </v-col>
@@ -45,6 +60,7 @@
 import Popup from "@/components/Popup";
 import Loading from "@/components/Loading";
 import adminAPI from "../apis/admin";
+import { tableTitle } from "@/assets/js/adminTable";
 // import moment from "moment";
 import { mapMutations } from "vuex";
 import { Toast } from "../utils/helpers";
@@ -58,6 +74,11 @@ export default {
     return {
       tweets: [],
       selectedItem: null,
+
+      headers: tableTitle,
+      tableData: [],
+      sortBy: "createdAt",
+      sortDesc: true,
     };
   },
   async created() {
@@ -71,7 +92,9 @@ export default {
         throw new Error(data.message);
       }
       // 成功
+      console.log("data: ", data);
       this.tweets = data;
+      this.tableData = data;
     } catch (err) {
       console.log(err);
       this.setShowOverlayLoading(null, { root: true });
@@ -111,6 +134,7 @@ export default {
             );
             const { data } = await adminAPI.getTweets();
             this.tweets = data;
+            this.tableData = data;
           } else {
             throw new Error(data.message);
           }
@@ -133,3 +157,8 @@ export default {
   computed: {},
 };
 </script>
+<style>
+.v-data-table-header__icon {
+  opacity: 1;
+}
+</style>

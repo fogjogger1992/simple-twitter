@@ -10,7 +10,7 @@
       <v-col class="flex-grow-1">
         <router-link :to="{ name: 'user', params: { id: user.id } }">
           <v-avatar class="mt-1">
-            <img :src="user.avatar | emptyImage" :alt="user.name" />
+            <v-img :src="user.avatar | emptyImage" :alt="user.name"></v-img>
           </v-avatar>
         </router-link>
       </v-col>

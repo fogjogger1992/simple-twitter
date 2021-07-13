@@ -22,7 +22,7 @@
           <v-col cols="auto">
             <router-link :to="{ name: 'user', params: { id: tweet.User.id } }">
               <v-avatar class="mt-1">
-                <img :src="tweet.User.avatar" :alt="tweet.User.name" />
+                <v-img :src="tweet.User.avatar | emptyImage" :alt="tweet.User.name"></v-img>
               </v-avatar>
             </router-link>
           </v-col>
@@ -117,7 +117,7 @@
         <v-col class="flex-grow-1">
           <v-avatar class="mt-1">
             <router-link :to="{ name: 'user', params: { id: reply.User.id } }">
-              <img :src="reply.User.avatar" :alt="reply.User.name" />
+              <v-img :src="reply.User.avatar | emptyImage" :alt="reply.User.name"></v-img>
             </router-link>
           </v-avatar>
         </v-col>
@@ -159,7 +159,7 @@
 </template>
 
 <script>
-import { fromNowFilter } from "./../utils/mixins";
+import { fromNowFilter, emptyImageFilter } from "./../utils/mixins";
 import tweetsAPI from "./../apis/tweets";
 import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
@@ -167,7 +167,7 @@ import { mapState } from "vuex";
 
 export default {
   name: "Tweet",
-  mixins: [fromNowFilter],
+  mixins: [fromNowFilter, emptyImageFilter],
   data() {
     return {
       tweet: {
