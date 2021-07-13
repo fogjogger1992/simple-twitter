@@ -116,7 +116,9 @@
       <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
         <v-col class="flex-grow-1">
           <v-avatar class="mt-1">
-            <img :src="reply.User.avatar" :alt="reply.User.name" />
+            <router-link :to="{ name: 'user', params: { id: reply.User.id } }">
+              <img :src="reply.User.avatar" :alt="reply.User.name" />
+            </router-link>
           </v-avatar>
         </v-col>
         <v-col cols="11" class="flex-shrink-1">
@@ -138,7 +140,9 @@
           <v-row no-gutters align="center" class="font-weight-normal px-2 mb-2">
             <p class="body-2 font-weight-normal text-justify grey--text my-0">
               回覆
-              <router-link :to="{ name: 'user', params: { id: tweet.User.id } }"
+              <router-link
+                :to="{ name: 'user', params: { id: tweet.User.id } }"
+                style="text-decoration: none"
                 >@{{ tweet.User.name }}</router-link
               >
             </p>
