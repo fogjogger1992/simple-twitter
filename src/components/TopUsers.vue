@@ -23,21 +23,21 @@
                 class="pa-0 ma-0 flex-shrink-1"
                 style="min-width: 40px"
               >
-              <!-- 把 router-link 跟 v-list-item-avatar 位置調換，不然 avatar 無法正常顯示 -->
-              <router-link
-                    :to="{
-                      name: 'user',
-                      params: { id: topUsers[userIndex - 1].id },
-                    }"
-                  >
-                <v-list-item-avatar>
+                <!-- 把 router-link 跟 v-list-item-avatar 位置調換，不然 avatar 無法正常顯示 -->
+                <router-link
+                  :to="{
+                    name: 'user',
+                    params: { id: topUsers[userIndex - 1].id },
+                  }"
+                >
+                  <v-list-item-avatar>
                     <v-img
                       class="elevation-6"
                       alt=""
                       :src="topUsers[userIndex - 1].avatar | emptyImage"
                     ></v-img>
-                </v-list-item-avatar>
-              </router-link>
+                  </v-list-item-avatar>
+                </router-link>
               </v-col>
               <!-- account and btn -->
               <v-col cols="auto" class="flex-grow-1 pa-0 ma-0">
@@ -63,8 +63,9 @@
                     <v-btn
                       v-if="!topUsers[userIndex - 1].isFollowed"
                       @click.stop.prevent="
-                        addFollowing(topUsers[userIndex - 1].id)
+                        addFollowing(topUsers[userIndex - 1].id, userIndex - 1)
                       "
+                      :loading="topUsers[userIndex - 1].isLoading"
                       rounded
                       outlined
                       small
@@ -76,8 +77,12 @@
                     <v-btn
                       v-else
                       @click.stop.prevent="
-                        deleteFollowing(topUsers[userIndex - 1].id)
+                        deleteFollowing(
+                          topUsers[userIndex - 1].id,
+                          userIndex - 1
+                        )
                       "
+                      :loading="topUsers[userIndex - 1].isLoading"
                       rounded
                       small
                       elevation="0"
@@ -136,20 +141,18 @@ export default {
   created() {
     this.fetchUsers();
   },
-  watch: {
-    initialUser(newValue) {
-      this.user = {
-        ...this.user,
-        ...newValue,
-      };
-    },
-  },
   methods: {
     async fetchUsers() {
       try {
         const response = await usersAPI.getTopUsers();
         const users = response.data;
-        this.topUsers = users;
+        users.forEach((user) => {
+          user = {
+            ...user,
+            isLoading: false,
+          };
+          this.topUsers.push(user);
+        });
         this.totalUsers = this.topUsers.length;
       } catch (error) {
         "error", error;
@@ -160,17 +163,23 @@ export default {
       }
     },
     showMore() {
-      this.usersToShow = this.totalUsers;
+      if (this.totalUsers <= 10) {
+        this.usersToShow = this.totalUsers;
+      } else {
+        this.usersToShow = 10;
+      }
     },
     // TODO: UserProfileCard、Followings、Followers 狀態更新同步
-    async addFollowing(userId) {
+    async addFollowing(userId, userIndex) {
       try {
+        this.topUsers[userIndex].isLoading = true;
         // 不能跟隨自己
         if (userId === this.currentUser.id) {
           Toast.fire({
             icon: "error",
             title: "無法跟隨自己",
           });
+          this.topUsers[userIndex].isLoading = false;
           return;
         }
         const followingId = {
@@ -180,29 +189,62 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
+
+        this.topUsers = this.topUsers
+          .map((user) => {
+            if (user.id !== userId) {
+              return user;
+            }
+            return {
+              ...user,
+              isLoading: false,
+              isFollowed: true,
+              followerCounts: user.followerCounts + 1,
+            };
+          })
+          .sort((a, b) => b.followerCounts - a.followerCounts);
+
         Toast.fire({
           icon: "success",
           title: "成功加入跟隨",
         });
       } catch (error) {
+        this.topUsers[userIndex].isLoading = false;
         Toast.fire({
           icon: "error",
           title: "無法加入跟隨，請稍後再試",
         });
       }
     },
-    async deleteFollowing(followingId) {
+    async deleteFollowing(followingId, userIndex) {
       try {
+        this.topUsers[userIndex].isLoading = true;
         const { data } = await usersAPI.deleteFollowing({ followingId });
         if (data.status === "error") {
           throw new Error(data.message);
         }
+
+        this.topUsers = this.topUsers
+          .map((user) => {
+            if (user.id !== followingId) {
+              return user;
+            }
+            return {
+              ...user,
+              isLoading: false,
+              isFollowed: false,
+              followerCounts: user.followerCounts - 1,
+            };
+          })
+          .sort((a, b) => b.followerCounts - a.followerCounts);
+
         Toast.fire({
           icon: "success",
           title: "成功取消跟隨",
         });
       } catch (error) {
         console.error(error.message);
+        this.topUsers[userIndex].isLoading = false;
         Toast.fire({
           icon: "error",
           title: "無法取消跟隨，請稍後再試",

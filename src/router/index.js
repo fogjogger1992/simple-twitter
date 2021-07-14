@@ -17,7 +17,8 @@ const authorizeIsAdmin = (to, from, next) => {
   next()
 }
 
-const routes = [{
+const routes = [
+  {
     path: '/',
     name: 'root',
     redirect: '/signin',
@@ -48,7 +49,7 @@ const routes = [{
         return
       }
       next()
-    }
+    },
   },
   {
     path: '/admin',
@@ -57,17 +58,18 @@ const routes = [{
     component: Admin,
     redirect: 'admin/main',
     beforeEnter: authorizeIsAdmin,
-    children: [{
-        name: "admin-tweets",
+    children: [
+      {
+        name: 'admin-tweets',
         path: 'main',
-        component: () => import("@/views/AdminTweets.vue"),
-        beforeEnter: authorizeIsAdmin
+        component: () => import('@/views/AdminTweets.vue'),
+        beforeEnter: authorizeIsAdmin,
       },
       {
-        name: "admin-users",
+        name: 'admin-users',
         path: 'users',
-        component: () => import("@/views/AdminUsers.vue"),
-        beforeEnter: authorizeIsAdmin
+        component: () => import('@/views/AdminUsers.vue'),
+        beforeEnter: authorizeIsAdmin,
       },
     ],
   },
@@ -75,7 +77,8 @@ const routes = [{
     path: '/tweets',
     name: 'home',
     component: Home,
-    children: [{
+    children: [
+      {
         name: 'tweets',
         path: '/',
         component: () => import('../views/Tweets.vue'),
@@ -90,10 +93,29 @@ const routes = [{
         name: 'user',
         redirect: '/users/:id',
         component: () => import('../views/User.vue'),
-        children: [{
-            name: 'user-tweets',
+        children: [
+          {
+            name: 'user-profile',
             path: ':id',
-            component: () => import('../views/UserTweets.vue'),
+            redirect: '/users/:id/tweets',
+            component: () => import('../views/UserProfile.vue'),
+            children: [
+              {
+                name: 'user-tweets',
+                path: 'tweets',
+                component: () => import('@/views/UserTweets.vue'),
+              },
+              {
+                name: 'user-replies',
+                path: 'replies',
+                component: () => import('@/views/UserReplies.vue'),
+              },
+              {
+                name: 'user-likes',
+                path: 'likes',
+                component: () => import('@/views/UserLikes.vue'),
+              },
+            ],
           },
           {
             name: 'user-follower',

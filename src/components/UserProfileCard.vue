@@ -33,7 +33,6 @@
             @click.stop.prevent="openUserSelfEditModal"
             outlined
             rounded
-            large
             color="primary"
             class="font-weight-bold"
           >
@@ -41,11 +40,29 @@
           </v-btn>
           <!-- else -->
           <div v-else>
-            <v-btn fab small outlined color="primary" class="mr-2">
-              <v-icon color="primary"> far fa-envelope </v-icon>
+            <v-btn
+              fab
+              small
+              outlined
+              color="primary"
+              class="mr-2"
+              style="height: 36px; width: 36px"
+            >
+              <v-icon color="primary" style="font-size: 1.2rem">
+                far fa-envelope
+              </v-icon>
             </v-btn>
-            <v-btn fab small outlined color="primary" class="mr-2">
-              <v-icon color="primary"> far fa-bell </v-icon>
+            <v-btn
+              fab
+              small
+              outlined
+              color="primary"
+              class="mr-2"
+              style="height: 36px; width: 36px"
+            >
+              <v-icon color="primary" style="font-size: 1.2rem">
+                far fa-bell
+              </v-icon>
             </v-btn>
             <!-- if !isFollowed -->
             <v-btn
@@ -54,21 +71,18 @@
               @click.stop.prevent="addFollowing(user.id)"
               outlined
               rounded
-              large
               color="primary"
               class="font-weight-bold"
             >
               跟隨
             </v-btn>
             <!-- else -->
-            <!-- TODO: follow -->
             <v-btn
               v-else
               :loading="isLoading"
               @click.stop.prevent="deleteFollowing(user.id)"
               elevation="0"
               rounded
-              large
               color="primary"
               class="font-weight-bold"
             >
