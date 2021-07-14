@@ -142,7 +142,6 @@ export default {
         }
 
         const replies = [];
-        data.forEach((object) => (object.Tweet.id = object.id));
         data.forEach((object) => replies.push(object.Tweet));
 
         this.tweets = replies;
