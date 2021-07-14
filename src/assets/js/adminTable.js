@@ -1,6 +1,6 @@
 const tableTitle = [
   {
-      text: "",
+      text: "頭像",
       align: "start",
       sortable: false,
       value: "User",
@@ -9,8 +9,8 @@ const tableTitle = [
   { text: "姓名", value: "User.name", sortable: false, class: "grey lighten-2 subtitle-2", },
   { text: "帳號", value: "User.account", sortable: true, class: "grey lighten-2 subtitle-2", },
   { text: "推文時間", value: "createdAt", sortable: true, width: "auto", class: "grey lighten-2 subtitle-2", },
-  { text: "推文內容", value: "description", sortable: false, class: "grey lighten-2 subtitle-2", },
-  { text: "刪除", value: "delete", sortable: false, class: "grey lighten-2 subtitle-2 rounded-tr", },
+  { text: "推文內容(前50字)", value: "description", sortable: false, class: "grey lighten-2 subtitle-2", },
+  { text: "", value: "delete", sortable: false, class: "grey lighten-2 subtitle-2 rounded-tr", },
 ];
 
 export {

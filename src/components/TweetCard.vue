@@ -4,7 +4,7 @@
       <v-col class="flex-grow-1">
         <router-link :to="{ name: 'user', params: { id: tweet.User.id } }">
           <v-avatar class="mt-1">
-            <v-img :src="tweet.User.avatar" :alt="tweet.User.name"></v-img>
+            <v-img :src="tweet.User.avatar | emptyImage" :alt="tweet.User.name"></v-img>
           </v-avatar>
         </router-link>
       </v-col>
@@ -29,32 +29,31 @@
         </router-link>
         <v-row no-gutters align="center" class="font-weight-normal pa-2">
           <v-col cols="1" class="d-flex justify-space-between mr-5">
-            <v-icon @click.stop.prevent="replyTweet" class="grey--text" style="font-size: 18px">far fa-comment</v-icon>
-            <p class="subtitle-2 font-weight-normal grey--text pa-0 my-0 ml-1">
-              {{ tweet.replyCounts }}
-            </p>
+            <div class="d-flex align-center cursor-pointer" @click.stop.prevent="replyTweet">
+              <v-icon color="grey" style="font-size: 18px">far fa-comment</v-icon>
+              <p class="subtitle-2 font-weight-normal grey--text pa-0 my-0 ml-2">
+                {{ tweet.replyCounts }}
+              </p>
+            </div>
           </v-col>
           <v-col cols="1" class="d-flex justify-space-between ml-5">
             <!-- isLiked / !isLiked -->
-            <v-icon :disabled="currentUser.id === tweet.User.id" v-if="!tweet.isLiked" class="grey--text" @click.stop.prevent="addLike(tweet.id)" style="font-size: 18px">far fa-heart</v-icon>
-            <v-icon v-else :disabled="currentUser.id === tweet.User.id" class="red--text" @click.stop.prevent="deleteLike(tweet.id)" style="font-size: 18px">far fa-heart</v-icon>
-            <p class="subtitle-2 grey--text pa-0 my-0 ml-1">
-              {{ tweet.likeCounts }}
-            </p>
+            <div class="d-flex align-center" :class="cursorStyle">
+              <v-icon :disabled="currentUser.id === tweet.User.id" v-if="!tweet.isLiked" color="grey" @click.stop.prevent="addLike(tweet.id)" style="font-size: 18px">far fa-heart</v-icon>
+              <v-icon v-else :disabled="currentUser.id === tweet.User.id" color="red" @click.stop.prevent="deleteLike(tweet.id)" style="font-size: 18px">fas fa-heart</v-icon>
+              <p class="subtitle-2 grey--text pa-0 my-0 ml-2">
+                {{ tweet.likeCounts }}
+              </p>
+            </div>
           </v-col>
         </v-row>
       </v-col>
-
-      <!-- <NewTweetReplyModal
-          :tweetReplyDialogOpen.sync="tweetReplyDialogOpen"
-        /> -->
     </v-row>
   </v-card>
 </template>
 
 <script>
-import { fromNowFilter } from "./../utils/mixins";
-// import NewTweetReplyModal from "@/components/NewTweetReplyModal";
+import { fromNowFilter, emptyImageFilter } from "./../utils/mixins";
 import { mapMutations } from "vuex";
 import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
@@ -62,7 +61,6 @@ import { mapState } from "vuex";
 
 export default {
   name: "TweetCard",
-  // components: { NewTweetReplyModal },
   props: {
     initialTweet: {
       type: Object,
@@ -73,7 +71,7 @@ export default {
       required: true,
     },
   },
-  mixins: [fromNowFilter],
+  mixins: [fromNowFilter, emptyImageFilter],
   data() {
     return {
       tweet: this.initialTweet,
@@ -81,6 +79,9 @@ export default {
     };
   },
   computed: {
+    cursorStyle(){
+      return this.currentUser.id === this.tweet.User.id ? "cursor-normal" : "cursor-pointer"
+    },
     ...mapState(["currentUser"]),
   },
   methods: {
@@ -150,3 +151,11 @@ export default {
   },
 };
 </script>
+<style>
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-normal {
+  cursor: not-allowed;
+}
+</style>

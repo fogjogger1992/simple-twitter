@@ -63,9 +63,9 @@
         <v-col cols="2" class="pa-0 ma-0">
           <v-icon @click.stop.prevent="replyTweet" style="font-size: 20px">far fa-comment</v-icon>
         </v-col>
-        <v-col cols="10" class="pa-0 ma-0">
+        <v-col cols="10" class="pa-0 ma-0" :class="cursorStyle">
           <v-icon v-if="!tweet.isLiked" :disabled="currentUser.id === tweet.User.id" @click.stop.prevent="addLike(tweet.id)" class="grey--text" style="font-size: 20px">far fa-heart</v-icon>
-          <v-icon v-else :disabled="currentUser.id === tweet.User.id" @click.stop.prevent="deleteLike(tweet.id)" class="red--text" style="font-size: 20px">far fa-heart</v-icon>
+          <v-icon v-else :disabled="currentUser.id === tweet.User.id" @click.stop.prevent="deleteLike(tweet.id)" color="red" style="font-size: 20px">fas fa-heart</v-icon>
         </v-col>
       </v-row>
     </v-card>
@@ -262,7 +262,18 @@ export default {
     }),
   },
   computed: {
+    cursorStyle(){
+      return this.currentUser.id === this.tweet.User.id ? "cursor-normal" : "cursor-pointer"
+    },
     ...mapState(["currentUser"]),
   },
 };
 </script>
+<style>
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-normal {
+  cursor: not-allowed;
+}
+</style>

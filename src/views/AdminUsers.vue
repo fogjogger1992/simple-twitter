@@ -21,11 +21,27 @@
               </v-card-subtitle>
               <v-card-text class="text--primary">
                 <div class="grey--text text--darken-2 mb-2">@{{user.account}}</div>
-                <div class="mb-2">
-                  <v-icon small>far fa-comment</v-icon> {{user.TweetCounts}}
-                  <v-icon small class="pl-3">far fa-heart</v-icon> {{user.BeLikedCounts || 0}}
+                <div class="mb-2 d-flex justify-center">
+
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <div v-bind="attrs" v-on="on">
+                        <v-icon small>far fa-comment</v-icon> {{user.TweetCounts}}
+                      </div>
+                    </template>
+                    <span>{{user.name}}的推文數</span>
+                  </v-tooltip>
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <div v-bind="attrs" v-on="on">
+                        <v-icon small class="pl-3">far fa-heart</v-icon> {{user.BeLikedCounts || 0}}
+                      </div>
+                    </template>
+                    <span>{{user.name}}的推文被喜愛的次數</span>
+                  </v-tooltip>
+
                 </div>
-                <div>{{user.followingCounts}}位跟隨中 <span class="pl-2">{{user.followerCounts}}位跟隨者</span></div>
+                <div>{{user.followingCounts}}位跟隨中 <span class="yellow--text text--darken-2">  •  </span><v-spacer></v-spacer> {{user.followerCounts}}位跟隨者</div>
 
               </v-card-text>
             </v-card>
