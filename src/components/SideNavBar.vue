@@ -24,15 +24,14 @@
         <!-- btn add new tweet -->
         <v-btn block rounded color="primary" dark class="mt-2" @click="
             () => {
-              isTweetDialogOpened = true;
+              tweetDialogOpen = true;
             }
           ">
           推文
         </v-btn>
       </v-col>
     </v-row>
-    <NewTweetModal :isTweetDialogOpened.sync="isTweetDialogOpened" />
-    <Popup />
+    <NewTweetModal :tweetDialogOpen.sync="tweetDialogOpen" />
     <NewTweetReplyModal v-if="tweetReplyDialogOpen" />
     <v-row cols="1" class="flex-grow-0 flex-shrink-0 py-0 my-0 px-8">
       <v-col cols="12" class="py-5 my-0">
@@ -59,13 +58,12 @@
 <script>
 import NewTweetModal from "./NewTweetModal.vue";
 import NewTweetReplyModal from "@/components/NewTweetReplyModal.vue";
-import Popup from "@/components/Popup";
 import { mapState } from "vuex";
 import { Toast } from "../utils/helpers";
 
 export default {
   name: "SideNavBar",
-  components: { NewTweetModal, Popup, NewTweetReplyModal },
+  components: { NewTweetModal, NewTweetReplyModal },
   props: {
     currentUser: {
       type: Object,
@@ -74,7 +72,7 @@ export default {
   },
   data() {
     return {
-      isTweetDialogOpened: false,
+      tweetDialogOpen: false,
 
       selectedItem: 0,
       items: [

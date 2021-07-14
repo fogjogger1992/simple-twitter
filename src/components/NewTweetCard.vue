@@ -8,7 +8,7 @@
     <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
       <v-col class="flex-grow-1">
         <v-avatar class="mt-1">
-          <v-img :src="currentUser.avatar" :alt="currentUser.name"></v-img>
+          <v-img :src="currentUser.avatar| emptyImage" :alt="currentUser.name"></v-img>
         </v-avatar>
       </v-col>
       <v-col cols="11" class="flex-shrink-1">
@@ -22,8 +22,7 @@
               no-resize
               auto-grow
               counter="140"
-              maxlength="140"
-              rows="2"
+              maxlength="140" 
               label="有什麼新鮮事？"
               :rules="[rules.required, rules.tweetRules, rules.spaceRules]"
               :value="value"
@@ -45,6 +44,7 @@
 <script>
 import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
+import { emptyImageFilter } from "../utils/mixins";
 
 export default {
   name: "NewTweetCard",
@@ -54,14 +54,14 @@ export default {
       required: true,
     },
   },
+  mixins: [emptyImageFilter],
   data() {
     return {
       rules: {
         required: (value) => !!value || "填寫您的推文",
         tweetRules: (value) =>
           (value && value.length <= 140) || "推文字數限制(140)",
-        spaceRules: (v) =>
-          /[^\s]/.test(v) || "填寫您的推文，輸入空格外的文字",
+        spaceRules: (v) => /[^\s]/.test(v) || "填寫您的推文，輸入空格外的文字",
       },
       value: "",
       isLoading: false,

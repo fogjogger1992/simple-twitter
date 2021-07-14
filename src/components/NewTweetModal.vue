@@ -1,9 +1,9 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="isTweetDialogOpened" persistent max-width="550px">
+    <v-dialog v-model="tweetDialogOpen" persistent max-width="550px">
       <v-card>
         <v-card-title class="pa-2">
-          <v-btn icon color="primary" :disabled="btnLoading" @click="$emit('update:isTweetDialogOpened', false)">
+          <v-btn icon color="primary" :disabled="btnLoading" @click="$emit('update:tweetDialogOpen', false)">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
@@ -42,7 +42,7 @@ import { emptyImageFilter } from "../utils/mixins";
 
 export default {
   props: {
-    isTweetDialogOpened: {
+    tweetDialogOpen: {
       type: Boolean,
     },
   },
@@ -62,6 +62,13 @@ export default {
       spaceRules: (v) => /[^\s]/.test(v) || "必填，不能只輸入空格",
     },
   }),
+  watch: {
+    tweetDialogOpen() {
+      // 每次關閉推文視窗即復原為預設狀態
+      this.description = "";
+      this.resetForm();
+    },
+  },
   methods: {
     async postTweet() {
       try {
@@ -83,7 +90,8 @@ export default {
           throw new Error(data.message);
         }
 
-        this.$emit("update:isTweetDialogOpened", false);
+        this.$emit("update:tweetDialogOpen", false);
+        this.description = "";
         Toast.fire({
           icon: "success",
           title: "推文成功",
@@ -93,6 +101,10 @@ export default {
         this.btnLoading = false;
         console.log(err);
       }
+    },
+    resetForm() {
+      if (this.$refs.form === undefined) return;
+      this.$refs.form.reset();
     },
     ...mapActions({
       fetchCurrentUser: "fetchCurrentUser",

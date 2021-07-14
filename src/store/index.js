@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import admin from './modules/admin'
 import tweets from './modules/tweets'
 import usersAPI from '../apis/users'
 
@@ -85,7 +84,6 @@ export default new Vuex.Store({
 
   },
   modules: {
-    admin,
     tweets
   }
 })

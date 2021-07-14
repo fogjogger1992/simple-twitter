@@ -95,6 +95,13 @@ export default {
       console.log(err);
     }
   },
+  watch: {
+    tweetReplyDialogOpen() {
+      // 每次關閉推文回覆視窗即復原為預設狀態
+      this.comment = "";
+      this.resetForm();
+    },
+  },
   methods: {
     async replyTweet() {
       // 新增回覆
@@ -119,6 +126,7 @@ export default {
         }
 
         this.setTweetReplyDialogOpen(false);
+        this.comment = "";
         Toast.fire({
           icon: "success",
           title: "回覆成功",
@@ -128,6 +136,10 @@ export default {
         this.btnLoading = false;
         console.log(err);
       }
+    },
+    resetForm() {
+      if (this.$refs.form === undefined) return;
+      this.$refs.form.reset();
     },
     ...mapActions({
       fetchCurrentUser: "fetchCurrentUser",
