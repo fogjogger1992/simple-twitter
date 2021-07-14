@@ -17,7 +17,7 @@ import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 
 export default {
-  name: "UserTweets",
+  name: "UserReplies",
   components: {
     TweetCard,
   },
@@ -31,23 +31,26 @@ export default {
   },
   created() {
     const { id } = this.$route.params;
-    this.fetchTweets(id);
+    this.fetchReplies(id);
   },
   beforeRouteUpdate(to, from, next) {
     const { id } = to.params;
-    this.fetchTweets(id);
+    this.fetchReplies(id);
     next();
   },
   methods: {
-    async fetchTweets(userId) {
+    async fetchReplies(userId) {
       try {
-        const { data } = await usersAPI.getUserTweets({ userId });
+        const { data } = await usersAPI.getUserReplies({ userId });
 
         if (data.status === "error") {
           throw new Error(data.message);
         }
 
-        this.tweets = data;
+        const replies = [];
+        data.forEach((object) => replies.push(object.Tweet));
+
+        this.tweets = replies;
       } catch (error) {
         Toast.fire({
           icon: "error",
