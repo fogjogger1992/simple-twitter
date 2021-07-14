@@ -1,5 +1,5 @@
 <template>
-  <v-container class="ma-0 pa-0">
+  <v-container class="ma-0 pa-0 d-flex flex-column main">
     <!-- top nav -->
     <v-card
       tile
@@ -13,7 +13,7 @@
       :current-user="currentUser"
       @after-create-tweet="afterCreateTweet"
     />
-    <v-system-bar style="height: 10px"></v-system-bar>
+    <v-system-bar style="height: 30px"></v-system-bar>
     <!-- tweets list -->
     <div class="tweetslist">
       <TweetCard
@@ -27,8 +27,10 @@
 </template>
 
 <style scoped>
+.main {
+  height: calc(100vh);
+}
 .tweetslist {
-  height: calc(100vh - 211px);
   overflow-y: scroll;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
