@@ -1,12 +1,7 @@
 <template>
   <v-container class="ma-0 pa-0">
     <!-- tweets list -->
-    <TweetCard
-      v-for="tweet in tweets"
-      :key="tweet.id"
-      :initial-tweet="tweet"
-      :user="user"
-    />
+    <TweetCard v-for="tweet in tweets" :key="tweet.id" :initial-tweet="tweet" />
   </v-container>
 </template>
 
@@ -49,8 +44,13 @@ export default {
 
         const replies = [];
         data.forEach((object) => replies.push(object.Tweet));
+        // 同則推文重複回覆時只顯示一次回覆過的原推文
+        const set = new Set();
+        const filteredReplies = replies.filter((item) =>
+          !set.has(item.id) ? set.add(item.id) : false
+        );
 
-        this.tweets = replies;
+        this.tweets = filteredReplies;
       } catch (error) {
         Toast.fire({
           icon: "error",

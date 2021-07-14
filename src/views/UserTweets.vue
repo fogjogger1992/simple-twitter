@@ -1,12 +1,7 @@
 <template>
   <v-container class="ma-0 pa-0">
     <!-- tweets list -->
-    <TweetCard
-      v-for="tweet in tweets"
-      :key="tweet.id"
-      :initial-tweet="tweet"
-      :user="user"
-    />
+    <TweetCard v-for="tweet in tweets" :key="tweet.id" :initial-tweet="tweet" />
   </v-container>
 </template>
 

@@ -1,5 +1,10 @@
 <template>
-  <v-card flat tile class="pa-3" style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">
+  <v-card
+    flat
+    tile
+    class="pa-3"
+    style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
+  >
     <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
       <v-col class="flex-grow-1">
         <router-link :to="{ name: 'user', params: { id: tweet.User.id } }">
@@ -9,7 +14,10 @@
         </router-link>
       </v-col>
       <v-col cols="11" class="flex-shrink-1">
-        <router-link :to="{ name: 'tweet', params: { id: tweet.id } }" style="text-decoration: none">
+        <router-link
+          :to="{ name: 'tweet', params: { id: tweet.id } }"
+          style="text-decoration: none"
+        >
           <v-row no-gutters align="center" class="pa-2">
             <p class="subtitle-2 font-weight-bold mr-1 my-0 pa-0">
               {{ tweet.User.name }}
@@ -29,15 +37,36 @@
         </router-link>
         <v-row no-gutters align="center" class="font-weight-normal pa-2">
           <v-col cols="1" class="d-flex justify-space-between mr-5">
-            <v-icon @click.stop.prevent="replyTweet" class="grey--text" style="font-size: 18px">far fa-comment</v-icon>
+            <v-icon
+              @click.stop.prevent="replyTweet"
+              class="grey--text"
+              style="font-size: 18px"
+              >far fa-comment</v-icon
+            >
             <p class="subtitle-2 font-weight-normal grey--text pa-0 my-0 ml-1">
               {{ tweet.replyCounts }}
             </p>
           </v-col>
           <v-col cols="1" class="d-flex justify-space-between ml-5">
             <!-- isLiked / !isLiked -->
-            <v-icon :disabled="currentUser.id === tweet.User.id" v-if="!tweet.isLiked" class="grey--text" @click.stop.prevent="addLike(tweet.id)" style="font-size: 18px">far fa-heart</v-icon>
-            <v-icon v-else :disabled="currentUser.id === tweet.User.id" class="red--text" @click.stop.prevent="deleteLike(tweet.id)" style="font-size: 18px">far fa-heart</v-icon>
+            <v-icon
+              :disabled="currentUser.id === tweet.User.id"
+              v-if="!tweet.isLiked"
+              class="grey--text"
+              @click.stop.prevent="addLike(tweet.id)"
+              style="font-size: 18px"
+            >
+              far fa-heart
+            </v-icon>
+            <v-icon
+              v-else
+              :disabled="currentUser.id === tweet.User.id"
+              class="red--text"
+              @click.stop.prevent="deleteLike(tweet.id)"
+              style="font-size: 18px"
+            >
+              far fa-heart
+            </v-icon>
             <p class="subtitle-2 grey--text pa-0 my-0 ml-1">
               {{ tweet.likeCounts }}
             </p>
@@ -68,15 +97,13 @@ export default {
       type: Object,
       required: true,
     },
-    user: {
-      type: Object,
-      required: true,
-    },
   },
   mixins: [fromNowFilter],
   data() {
     return {
-      tweet: this.initialTweet,
+      tweet: {
+        ...this.initialTweet,
+      },
       // tweetReplyDialogOpen: false,
     };
   },
@@ -139,6 +166,8 @@ export default {
           isLiked: false,
           likeCounts: this.tweet.likeCounts - 1,
         };
+
+        this.$emit("after-delete-like", tweetId);
       } catch (error) {
         console.log("error", error);
         Toast.fire({

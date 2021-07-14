@@ -1,9 +1,9 @@
 <template>
   <v-container class="ma-0 pa-0">
     <UserProfileCard :initial-user="user" :current-user="currentUser" />
-
     <!-- tabs -->
     <v-tabs
+      v-model="selectedItem"
       style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
       background-color="transparent"
       color="primary"
@@ -40,10 +40,11 @@ import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 
 export default {
-  name: "UserTweets",
+  name: "UserProfile",
   components: {
     UserProfileCard,
   },
+
   data() {
     return {
       user: {
@@ -57,6 +58,7 @@ export default {
         introduction: "",
         isFollowed: false,
       },
+      selectedItem: 0,
     };
   },
   computed: {
@@ -65,10 +67,12 @@ export default {
   created() {
     const { id } = this.$route.params;
     this.fetchUser(id);
+    this.selectedItem = 0;
   },
   beforeRouteUpdate(to, from, next) {
     const { id } = to.params;
     this.fetchUser(id);
+    this.selectedItem = 0;
     next();
   },
   methods: {

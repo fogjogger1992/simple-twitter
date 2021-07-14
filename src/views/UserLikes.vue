@@ -5,7 +5,7 @@
       v-for="tweet in tweets"
       :key="tweet.id"
       :initial-tweet="tweet"
-      :user="user"
+      @after-delete-like="afterDeleteLike"
     />
   </v-container>
 </template>
@@ -17,12 +17,15 @@ import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 
 export default {
-  name: "UserReplies",
+  name: "UserLikes",
   components: {
     TweetCard,
   },
   data() {
     return {
+      user: {
+        id: -1,
+      },
       tweets: [],
     };
   },
@@ -31,14 +34,37 @@ export default {
   },
   created() {
     const { id } = this.$route.params;
+    this.fetchUser(id);
     this.fetchLikes(id);
   },
   beforeRouteUpdate(to, from, next) {
     const { id } = to.params;
+    this.fetchUser(id);
     this.fetchLikes(id);
     next();
   },
   methods: {
+    async fetchUser(userId) {
+      try {
+        const { data } = await usersAPI.getUser({ userId });
+
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+
+        const { id } = data;
+
+        this.user = {
+          ...this.user,
+          id,
+        };
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取得使用者資料，請稍後再試",
+        });
+      }
+    },
     async fetchLikes(userId) {
       try {
         const { data } = await usersAPI.getUserLikes({ userId });
@@ -62,6 +88,12 @@ export default {
           icon: "error",
           title: "無法取得使用者推文，請稍後再試",
         });
+      }
+    },
+    afterDeleteLike(payload) {
+      const tweetId = payload;
+      if (this.currentUser.id === this.user.id) {
+        this.tweets = this.tweets.filter((tweet) => tweet.id !== tweetId);
       }
     },
   },
