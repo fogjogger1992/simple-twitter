@@ -9,7 +9,10 @@
       <v-col class="flex-grow-1">
         <router-link :to="{ name: 'user', params: { id: tweet.User.id } }">
           <v-avatar class="mt-1">
-            <v-img :src="tweet.User.avatar | emptyImage" :alt="tweet.User.name"></v-img>
+            <v-img
+              :src="tweet.User.avatar | emptyImage"
+              :alt="tweet.User.name"
+            ></v-img>
           </v-avatar>
         </router-link>
       </v-col>
@@ -30,16 +33,27 @@
             </p>
           </v-row>
           <v-row no-gutters align="center" class="font-weight-normal px-2">
-            <p class="body-2 black--text font-weight-normal text-justify my-0">
-              {{ tweet.description }}
-            </p>
+            <v-col cols="12" class="ma-0 pa-0">
+              <p
+                class="body-2 black--text font-weight-normal text-justify my-0"
+              >
+                {{ tweet.description }}
+              </p>
+            </v-col>
           </v-row>
         </router-link>
         <v-row no-gutters align="center" class="font-weight-normal pa-2">
           <v-col cols="1" class="d-flex justify-space-between mr-5">
-            <div class="d-flex align-center cursor-pointer" @click.stop.prevent="replyTweet">
-              <v-icon color="grey" style="font-size: 18px">far fa-comment</v-icon>
-              <p class="subtitle-2 font-weight-normal grey--text pa-0 my-0 ml-2">
+            <div
+              class="d-flex align-center cursor-pointer"
+              @click.stop.prevent="replyTweet"
+            >
+              <v-icon color="grey" style="font-size: 18px"
+                >far fa-comment</v-icon
+              >
+              <p
+                class="subtitle-2 font-weight-normal grey--text pa-0 my-0 ml-2"
+              >
                 {{ tweet.replyCounts }}
               </p>
             </div>
@@ -47,8 +61,22 @@
           <v-col cols="1" class="d-flex justify-space-between ml-5">
             <!-- isLiked / !isLiked -->
             <div class="d-flex align-center" :class="cursorStyle">
-              <v-icon :disabled="currentUser.id === tweet.User.id" v-if="!tweet.isLiked" color="grey" @click.stop.prevent="addLike(tweet.id)" style="font-size: 18px">far fa-heart</v-icon>
-              <v-icon v-else :disabled="currentUser.id === tweet.User.id" color="red" @click.stop.prevent="deleteLike(tweet.id)" style="font-size: 18px">fas fa-heart</v-icon>
+              <v-icon
+                :disabled="currentUser.id === tweet.User.id"
+                v-if="!tweet.isLiked"
+                color="grey"
+                @click.stop.prevent="addLike(tweet.id)"
+                style="font-size: 18px"
+                >far fa-heart</v-icon
+              >
+              <v-icon
+                v-else
+                :disabled="currentUser.id === tweet.User.id"
+                color="red"
+                @click.stop.prevent="deleteLike(tweet.id)"
+                style="font-size: 18px"
+                >fas fa-heart</v-icon
+              >
               <p class="subtitle-2 grey--text pa-0 my-0 ml-2">
                 {{ tweet.likeCounts }}
               </p>
@@ -85,8 +113,10 @@ export default {
     };
   },
   computed: {
-    cursorStyle(){
-      return this.currentUser.id === this.tweet.User.id ? "cursor-normal" : "cursor-pointer"
+    cursorStyle() {
+      return this.currentUser.id === this.tweet.User.id
+        ? "cursor-normal"
+        : "cursor-pointer";
     },
     ...mapState(["currentUser"]),
   },

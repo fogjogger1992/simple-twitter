@@ -1,19 +1,33 @@
 <template>
-  <v-card tile flat class="pa-3" style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">
+  <v-card
+    tile
+    flat
+    class="pa-3"
+    style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
+  >
     <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
       <v-col class="flex-grow-1">
         <v-avatar class="mt-1">
-          <v-img :src="currentUser.avatar| emptyImage" :alt="currentUser.name"></v-img>
+          <v-img
+            :src="currentUser.avatar | emptyImage"
+            :alt="currentUser.name"
+          ></v-img>
         </v-avatar>
       </v-col>
       <v-col cols="11" class="flex-shrink-1">
         <v-container fluid class="pa-0 ma-0">
-          <v-form ref="form" v-model="valid" lazy-validation @submit.stop.prevent="handleSubmit">
+          <v-form
+            ref="form"
+            v-model="valid"
+            lazy-validation
+            @submit.stop.prevent="handleSubmit"
+          >
             <v-textarea
               v-model="value"
               class="pa-0 ma-0"
               flat
               solo
+              rows="2"
               no-resize
               auto-grow
               counter="140"
@@ -25,7 +39,13 @@
             ></v-textarea>
             <v-card-actions class="pa-0 ma-0">
               <v-spacer></v-spacer>
-              <v-btn :loading="isLoading" :disabled="!valid" type="submit" rounded color="primary">
+              <v-btn
+                :loading="isLoading"
+                :disabled="!valid"
+                type="submit"
+                rounded
+                color="primary"
+              >
                 推文
               </v-btn>
             </v-card-actions>

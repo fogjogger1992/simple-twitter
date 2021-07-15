@@ -13,7 +13,7 @@
       :current-user="currentUser"
       @after-create-tweet="afterCreateTweet"
     />
-    <v-system-bar style="height: 30px"></v-system-bar>
+    <v-system-bar style="height: 50px"></v-system-bar>
     <!-- tweets list -->
     <div class="tweetslist">
       <TweetCard
