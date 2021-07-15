@@ -131,7 +131,14 @@ export default {
           icon: "success",
           title: "回覆成功",
         });
-        this.reload();
+        
+        // 回覆完會直接到詳情頁看詳情
+        if(this.$route.name != "tweet"){
+          this.$router.push(`/tweets/${this.tweetInfo.id}`);
+        } else {
+          // 如果已在詳情頁，就更新畫面
+          this.reload();
+        }
       } catch (err) {
         this.btnLoading = false;
         console.log(err);

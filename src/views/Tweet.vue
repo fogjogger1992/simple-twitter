@@ -317,8 +317,9 @@ export default {
     // TODO: reply
     replyTweet() {
       // console.log("replyTweet");
-      console.log("Tweet: ", this.tweet);
+      // console.log("Tweet: ", this.tweet);
       this.setTweetReplyDialogOpen(true);
+      this.setTweet(this.tweet)
     },
     ...mapMutations({
       setTweet: "tweets/setTweet",
