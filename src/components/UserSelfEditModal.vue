@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="isProfileDialogOpened" persistent max-width="550px">
+    <v-dialog v-model="profileDialogOpen" persistent max-width="550px">
 
       <v-card>
         <v-card-title>
@@ -38,9 +38,9 @@
               </v-col>
 
               <v-col cols="12" class="mt-7">
-                <v-form class="" ref="form" v-model="valid" lazy-validation>
+                <v-form ref="form" v-model="valid" lazy-validation>
                   <v-text-field v-model.trim="name" :rules="[rules.required, rules.nameRules]" label="姓名" counter="50" maxlength="50" required></v-text-field>
-                  <v-textarea label="自我介紹" v-model="introduction" counter="160" maxlength="160" required></v-textarea>
+                  <v-textarea label="自我介紹" v-model.trim="introduction" :rules="[rules.introRules]" counter="160" maxlength="160"></v-textarea>
                 </v-form>
               </v-col>
 
@@ -60,7 +60,7 @@ import { emptyImageFilter } from "./../utils/mixins";
 export default {
   name: "UserSelfEditModal",
   props: {
-    isProfileDialogOpened: {
+    profileDialogOpen: {
       type: Boolean,
     },
   },
@@ -83,8 +83,15 @@ export default {
       required: (value) => !!value || "必填",
       nameRules: (value) =>
         (value && value.length <= 50) || "姓名不得超過50個字",
+      introRules: (value) => value.length <= 160 || "自介不得超過160個字",
     },
   }),
+  watch: {
+    profileDialogOpen(newValue) {
+      // 每次關閉視窗即復原為預設狀態
+      if (newValue === false) this.$refs.form.resetValidation();
+    },
+  },
   async created() {
     try {
       // 取登入使用者資訊
@@ -124,10 +131,12 @@ export default {
       }
     },
     async updateInfo() {
-      // 表單驗證
-      this.$refs.form.validate();
       try {
-        this.btnLoading = true;
+        // 表單驗證，沒驗過就不繼續
+        if (this.$refs.form.validate() === false) return;
+
+         this.btnLoading = true;
+
         // 整理要上傳更新的檔案
         let formData = new FormData();
         formData.append("name", this.name);
@@ -154,7 +163,7 @@ export default {
           });
           throw new Error(data.message);
         }
-        this.$emit("update:isProfileDialogOpened", false);
+        this.$emit("update:profileDialogOpen", false);
         Toast.fire({
           icon: "success",
           title: "個人資料更新成功",
@@ -208,7 +217,7 @@ export default {
         this.closeDialogConfirm();
       } else {
         // 如果沒更新資料，直接關閉視窗
-        this.$emit("update:isProfileDialogOpened", false);
+        this.$emit("update:profileDialogOpen", false);
       }
     },
     async closeDialogConfirm() {
@@ -231,9 +240,10 @@ export default {
         this.cover = this.currentUser.cover;
         this.name = this.currentUser.name;
         this.introduction = this.currentUser.introduction;
-        this.$emit("update:isProfileDialogOpened", false);
+        this.$emit("update:profileDialogOpen", false);
       }
     },
+
     ...mapActions({
       fetchCurrentUser: "fetchCurrentUser",
     }),
