@@ -1,5 +1,5 @@
 <template>
-  <v-container class="ma-0 pa-0">
+  <v-container class="ma-0 pa-0 d-flex flex-column main">
     <!-- top nav -->
     <v-card
       tile
@@ -114,63 +114,82 @@
       </v-row>
     </v-card>
     <!-- replies -->
-    <v-card
-      v-for="reply in replies"
-      :key="reply.id"
-      flat
-      tile
-      class="pa-3"
-      style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
-    >
-      <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
-        <v-col class="flex-grow-1">
-          <router-link :to="{ name: 'user', params: { id: reply.User.id } }">
-            <v-avatar class="mt-1">
-              <v-img
-                :src="reply.User.avatar | emptyImage"
-                :alt="reply.User.name"
-              ></v-img>
-            </v-avatar>
-          </router-link>
-        </v-col>
-        <v-col cols="11" class="flex-shrink-1">
-          <v-row no-gutters align="center" class="pa-2">
-            <p class="subtitle-2 font-weight-bold mr-1 my-0 pa-0">
-              {{ reply.User.name }}
-            </p>
-            <router-link
-              :to="{ name: 'user', params: { id: reply.User.id } }"
-              class="subtitle-2 grey--text font-weight-normal pa-0"
-              style="text-decoration: none"
-            >
-              @{{ reply.User.account }}
+    <div class="replylist">
+      <v-card
+        v-for="reply in replies"
+        :key="reply.id"
+        flat
+        tile
+        class="pa-3"
+        style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
+      >
+        <v-row no-gutters class="pa-0" style="flex-wrap: nowrap">
+          <v-col class="flex-grow-1">
+            <router-link :to="{ name: 'user', params: { id: reply.User.id } }">
+              <v-avatar class="mt-1">
+                <v-img
+                  :src="reply.User.avatar | emptyImage"
+                  :alt="reply.User.name"
+                ></v-img>
+              </v-avatar>
             </router-link>
-            <p class="subtitle-2 font-weight-normal grey--text pa-0 my-0 ml-1">
-              ‧ {{ reply.createdAt | fromNow }}
-            </p>
-          </v-row>
-          <v-row no-gutters align="center" class="font-weight-normal px-2 mb-2">
-            <p class="body-2 font-weight-normal text-justify grey--text my-0">
-              回覆
-              <router-link
-                :to="{ name: 'user', params: { id: tweet.User.id } }"
-                style="text-decoration: none"
-                >@{{ tweet.User.name }}</router-link
-              >
-            </p>
-          </v-row>
-          <v-row no-gutters align="center" class="font-weight-normal px-2">
-            <v-col cols="12" class="ma-0 pa-0">
-              <p class="body-2 font-weight-normal text-justify my-0">
-                {{ reply.comment }}
+          </v-col>
+          <v-col cols="11" class="flex-shrink-1">
+            <v-row no-gutters align="center" class="pa-2">
+              <p class="subtitle-2 font-weight-bold mr-1 my-0 pa-0">
+                {{ reply.User.name }}
               </p>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
-    </v-card>
+              <router-link
+                :to="{ name: 'user', params: { id: reply.User.id } }"
+                class="subtitle-2 grey--text font-weight-normal pa-0"
+                style="text-decoration: none"
+              >
+                @{{ reply.User.account }}
+              </router-link>
+              <p
+                class="subtitle-2 font-weight-normal grey--text pa-0 my-0 ml-1"
+              >
+                ‧ {{ reply.createdAt | fromNow }}
+              </p>
+            </v-row>
+            <v-row
+              no-gutters
+              align="center"
+              class="font-weight-normal px-2 mb-2"
+            >
+              <p class="body-2 font-weight-normal text-justify grey--text my-0">
+                回覆
+                <router-link
+                  :to="{ name: 'user', params: { id: tweet.User.id } }"
+                  style="text-decoration: none"
+                  >@{{ tweet.User.name }}</router-link
+                >
+              </p>
+            </v-row>
+            <v-row no-gutters align="center" class="font-weight-normal px-2">
+              <v-col cols="12" class="ma-0 pa-0">
+                <p class="body-2 font-weight-normal text-justify my-0">
+                  {{ reply.comment }}
+                </p>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-card>
+    </div>
   </v-container>
 </template>
+
+<style scoped>
+.main {
+  height: calc(100vh);
+}
+.replylist {
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+</style>
 
 <script>
 import { fromNowFilter, emptyImageFilter } from "./../utils/mixins";
@@ -319,7 +338,7 @@ export default {
       // console.log("replyTweet");
       // console.log("Tweet: ", this.tweet);
       this.setTweetReplyDialogOpen(true);
-      this.setTweet(this.tweet)
+      this.setTweet(this.tweet);
     },
     ...mapMutations({
       setTweet: "tweets/setTweet",
