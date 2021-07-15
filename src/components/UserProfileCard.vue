@@ -132,7 +132,7 @@
       </router-link>
       <p class="subtitle-2 grey--text font-weight-bold my-0 pa-0">跟隨者</p>
     </v-row>
-    <UserSelfEditModal :isProfileDialogOpened.sync="isProfileDialogOpened" />
+    <UserSelfEditModal :profileDialogOpen.sync="profileDialogOpen" />
   </v-container>
 </template>
 
@@ -177,7 +177,7 @@ export default {
         ...this.initialUser,
       },
       // 個人資料編輯視窗
-      isProfileDialogOpened: false,
+      profileDialogOpen: false,
       isLoading: false,
     };
   },
@@ -191,7 +191,7 @@ export default {
   },
   methods: {
     openUserSelfEditModal() {
-      this.isProfileDialogOpened = true;
+      this.profileDialogOpen = true;
     },
     ...mapMutations({
       setfollowshipUpdate: "setfollowshipUpdate",
