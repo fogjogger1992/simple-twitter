@@ -38,7 +38,7 @@ import TopUsers from "../components/TopUsers.vue";
 import { mapState } from "vuex";
 
 export default {
-  name: "Tweets",
+  name: "Home",
   components: {
     SideNavBar,
     TopUsers,

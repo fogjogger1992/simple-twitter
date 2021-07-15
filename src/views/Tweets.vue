@@ -45,7 +45,7 @@ import { Toast } from "./../utils/helpers";
 import { mapState } from "vuex";
 
 export default {
-  name: "Feeds",
+  name: "Tweets",
   components: {
     NewTweetCard,
     TweetCard,
