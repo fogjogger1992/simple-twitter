@@ -18,22 +18,39 @@
             <v-row>
               <v-col class="pa-0">
                 <v-img :src="cover | emptyImage" aspect-ratio="2" max-height="170px">
-                  <v-overlay absolute color="grey" opacity="0.3">
-                    <v-file-input v-model="newCover" class="d-inline-flex mr-2" prepend-icon="mdi-camera-outline" hide-input accept="image/png, image/jpeg" @change="handleCoverChange"></v-file-input>
-                    <v-btn icon color="white" class="mb-3 ml-2" @click.prevent="deleteCover" v-if="currentUser.cover">
-                      <v-icon>mdi-trash-can-outline</v-icon>
-                    </v-btn>
+                  <v-overlay absolute color="grey" opacity="0.2">
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-file-input v-bind="attrs" v-on="on" @mouseenter.native="on.mouseenter" @mouseleave.native="on.mouseleave" v-model="newCover" class="d-inline-flex mr-2" prepend-icon="mdi-camera-outline" hide-input accept="image/png, image/jpeg" @change="handleCoverChange">
+                        </v-file-input>
+                      </template>
+                      <span>更新封面照 </span>
+                    </v-tooltip>
+
+                    <v-tooltip right v-if="currentUser.cover && newCoverEmpty">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon v-bind="attrs" v-on="on" color="white" class="mb-3 ml-2" @click.prevent="deleteCover">
+                          <v-icon>mdi-trash-can-outline</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>刪除封面照</span>
+                    </v-tooltip>
                   </v-overlay>
                 </v-img>
 
                 <div class="avatar ml-3">
-                  <v-avatar size="100" class="avatar-border">
-                    <v-img :src="avatar | emptyImage" alt="Avatar">
-                      <v-overlay absolute color="grey" opacity="0.2">
-                        <v-file-input v-model="newAvatar" class="d-inline-flex ml-3 mb-2" prepend-icon="mdi-camera-outline" hide-input accept="image/png, image/jpeg" @change="handleAvatarChange"></v-file-input>
-                      </v-overlay>
-                    </v-img>
-                  </v-avatar>
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-avatar size="100" class="avatar-border" v-bind="attrs" v-on="on">
+                        <v-img :src="avatar | emptyImage" alt="Avatar">
+                          <v-overlay absolute color="grey" opacity="0.2">
+                            <v-file-input v-model="newAvatar" class="d-inline-flex ml-3 mb-2" prepend-icon="mdi-camera-outline" hide-input accept="image/png, image/jpeg" @change="handleAvatarChange"></v-file-input>
+                          </v-overlay>
+                        </v-img>
+                      </v-avatar>
+                    </template>
+                    <span>更新頭像</span>
+                  </v-tooltip>
                 </div>
               </v-col>
 
@@ -75,6 +92,7 @@ export default {
     cover: "",
     newAvatar: [],
     newCover: [],
+    newCoverEmpty: true,
 
     btnLoading: false,
 
@@ -108,7 +126,7 @@ export default {
   },
   methods: {
     handleAvatarChange() {
-      // 刪除原本要上傳的檔案
+      // 如果移除原本要上傳的檔案
       if (this.newAvatar === undefined)
         return (this.avatar = this.currentUser.avatar);
       if (this.newAvatar.length !== 0) {
@@ -116,18 +134,24 @@ export default {
         const imageURL = window.URL.createObjectURL(this.newAvatar);
         this.avatar = imageURL;
       } else {
-        // 如果沒有
+        // 如果沒有要上傳的檔案
         this.avatar = this.currentUser.avatar;
       }
     },
     handleCoverChange() {
-      if (this.newCover === undefined)
-        return (this.cover = this.currentUser.cover);
-      if (this.newCover.length !== 0) {
+      if (this.newCover === undefined) {
+        // 如果移除原本要上傳的檔案，就預設資料庫照片，顯示刪除按鈕
+        this.cover = this.currentUser.cover
+        this.newCoverEmpty = true
+      } else if (this.newCover.length !== 0){
+        // 如果有選擇要上傳的檔案，暫時先隱藏刪除按鈕
         const imageURL = window.URL.createObjectURL(this.newCover);
         this.cover = imageURL;
+        this.newCoverEmpty = false
       } else {
+        // 如果沒有選擇要上傳的檔案，顯示刪除按鈕
         this.cover = this.currentUser.cover;
+        this.newCoverEmpty = true  
       }
     },
     async updateInfo() {
@@ -135,7 +159,7 @@ export default {
         // 表單驗證，沒驗過就不繼續
         if (this.$refs.form.validate() === false) return;
 
-         this.btnLoading = true;
+        this.btnLoading = true;
 
         // 整理要上傳更新的檔案
         let formData = new FormData();

@@ -8,10 +8,21 @@ import store from './../store'
 
 Vue.use(VueRouter)
 
+// 如果是已登入的普通會員進入後台，導回 /admin/signin (會接著被導到 /tweets 頁)
 const authorizeIsAdmin = (to, from, next) => {
   const currentUser = store.state.currentUser
   if (currentUser && currentUser.role !== 'admin') {
     next('/admin/signin')
+    return
+  } 
+  next()
+}
+
+// 如果是已登入的管理員進入前台，導到 /admin/main
+const authorizeIsNormal = (to, from, next) => {
+  const currentUser = store.state.currentUser
+  if (currentUser && currentUser.role !== 'normal') {
+    next('/admin/main')
     return
   } 
   next()
@@ -63,13 +74,13 @@ const routes = [
         name: 'admin-tweets',
         path: 'main',
         component: () => import('@/views/AdminTweets.vue'),
-        beforeEnter: authorizeIsAdmin,
+        // beforeEnter: authorizeIsAdmin,
       },
       {
         name: 'admin-users',
         path: 'users',
         component: () => import('@/views/AdminUsers.vue'),
-        beforeEnter: authorizeIsAdmin,
+        // beforeEnter: authorizeIsAdmin,
       },
     ],
   },
@@ -77,6 +88,7 @@ const routes = [
     path: '/tweets',
     name: 'home',
     component: Home,
+    beforeEnter: authorizeIsNormal,
     children: [
       {
         name: 'tweets',
