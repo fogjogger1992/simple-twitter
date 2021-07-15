@@ -71,6 +71,7 @@
 import { emptyImageFilter } from "./../utils/mixins";
 import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
+import { mapMutations } from "vuex";
 
 export default {
   name: "userCard",
@@ -99,20 +100,28 @@ export default {
     };
   },
   watch: {
-    initialUser(newValue) {
-      this.user = {
-        ...this.user,
-        ...newValue,
-      };
+    initialUser: {
+      handler: function (newValue) {
+        this.user = {
+          ...this.user,
+          ...newValue,
+        };
+      },
+      deep: true,
+      immediate: true,
     },
     initialIsFollowed(isFollowed) {
       this.isFollowed = isFollowed;
     },
   },
   methods: {
+    ...mapMutations({
+      setfollowshipUpdate: "setfollowshipUpdate",
+    }),
     async addFollowing(userId) {
       try {
         this.isLoading = true;
+        this.setfollowshipUpdate(null, { root: true });
         // 不能跟隨自己
         if (userId === this.currentUser.id) {
           Toast.fire({
@@ -120,6 +129,7 @@ export default {
             title: "無法跟隨自己",
           });
           this.isLoading = false;
+          this.setfollowshipUpdate(null, { root: true });
           return;
         }
 
@@ -133,12 +143,14 @@ export default {
         }
         this.isFollowed = true;
         this.isLoading = false;
+        this.setfollowshipUpdate(null, { root: true });
         Toast.fire({
           icon: "success",
           title: "成功加入跟隨",
         });
       } catch (error) {
         this.isLoading = false;
+        this.setfollowshipUpdate(null, { root: true });
         Toast.fire({
           icon: "error",
           title: "無法加入跟隨，請稍後再試",
@@ -148,6 +160,7 @@ export default {
     async deleteFollowing(followingId) {
       try {
         this.isLoading = true;
+        this.setfollowshipUpdate(null, { root: true });
         const { data } = await usersAPI.deleteFollowing({ followingId });
         if (data.status === "error") {
           throw new Error(data.message);
@@ -155,12 +168,14 @@ export default {
         this.$emit("after-delete-following", followingId);
         this.isFollowed = false;
         this.isLoading = false;
+        this.setfollowshipUpdate(null, { root: true });
         Toast.fire({
           icon: "success",
           title: "成功取消跟隨",
         });
       } catch (error) {
         this.isLoading = false;
+        this.setfollowshipUpdate(null, { root: true });
         console.error(error.message);
         Toast.fire({
           icon: "error",

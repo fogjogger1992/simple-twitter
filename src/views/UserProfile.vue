@@ -62,7 +62,19 @@ export default {
     };
   },
   computed: {
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser", "topFollowshipUpdate"]),
+  },
+  watch: {
+    topFollowshipUpdate: {
+      handler: function () {
+        // console.log("topFollowshipUpdate", this.topFollowshipUpdate);
+        const { id } = this.$route.params;
+        this.fetchUser(id);
+        this.selectedItem = 0;
+      },
+      deep: true,
+      immediate: true,
+    },
   },
   created() {
     const { id } = this.$route.params;

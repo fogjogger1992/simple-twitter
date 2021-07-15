@@ -121,6 +121,8 @@
 import { emptyImageFilter } from "./../utils/mixins";
 import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex";
+import { mapMutations } from "vuex";
 
 export default {
   name: "TopUsers",
@@ -141,11 +143,33 @@ export default {
   created() {
     this.fetchUsers();
   },
+  computed: {
+    ...mapState(["followshipUpdate"]),
+  },
+  watch: {
+    followshipUpdate: {
+      handler: function () {
+        // console.log("followshipUpdate", this.followshipUpdate);
+        this.resetData();
+        this.fetchUsers();
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
   methods: {
+    ...mapMutations({
+      setTopFollowshipUpdate: "setTopFollowshipUpdate",
+    }),
+    resetData() {
+      this.topUsers = [];
+      this.totalUsers = 0;
+    },
     async fetchUsers() {
       try {
         const response = await usersAPI.getTopUsers();
         const users = response.data;
+        this.resetData();
         users.forEach((user) => {
           user = {
             ...user,
@@ -169,10 +193,10 @@ export default {
         this.usersToShow = 10;
       }
     },
-    // TODO: UserProfileCard、Followings、Followers 狀態更新同步
     async addFollowing(userId, userIndex) {
       try {
         this.topUsers[userIndex].isLoading = true;
+        this.setTopFollowshipUpdate(null, { root: true });
         // 不能跟隨自己
         if (userId === this.currentUser.id) {
           Toast.fire({
@@ -180,6 +204,7 @@ export default {
             title: "無法跟隨自己",
           });
           this.topUsers[userIndex].isLoading = false;
+          this.setTopFollowshipUpdate(null, { root: true });
           return;
         }
         const followingId = {
@@ -203,6 +228,7 @@ export default {
             };
           })
           .sort((a, b) => b.followerCounts - a.followerCounts);
+        this.setTopFollowshipUpdate(null, { root: true });
 
         Toast.fire({
           icon: "success",
@@ -210,6 +236,7 @@ export default {
         });
       } catch (error) {
         this.topUsers[userIndex].isLoading = false;
+        this.setTopFollowshipUpdate(null, { root: true });
         Toast.fire({
           icon: "error",
           title: "無法加入跟隨，請稍後再試",
@@ -219,6 +246,7 @@ export default {
     async deleteFollowing(followingId, userIndex) {
       try {
         this.topUsers[userIndex].isLoading = true;
+        this.setTopFollowshipUpdate(null, { root: true });
         const { data } = await usersAPI.deleteFollowing({ followingId });
         if (data.status === "error") {
           throw new Error(data.message);
@@ -237,6 +265,7 @@ export default {
             };
           })
           .sort((a, b) => b.followerCounts - a.followerCounts);
+        this.setTopFollowshipUpdate(null, { root: true });
 
         Toast.fire({
           icon: "success",
@@ -245,6 +274,7 @@ export default {
       } catch (error) {
         console.error(error.message);
         this.topUsers[userIndex].isLoading = false;
+        this.setTopFollowshipUpdate(null, { root: true });
         Toast.fire({
           icon: "error",
           title: "無法取消跟隨，請稍後再試",

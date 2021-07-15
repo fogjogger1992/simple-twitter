@@ -8,6 +8,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    // followship update
+    followshipUpdate: false,
+    topFollowshipUpdate: false,
     // toast 顯示
     showPopup: false,
     popupColor: '',
@@ -29,6 +32,13 @@ export default new Vuex.Store({
 
   },
   mutations: {
+    // followship update
+    setfollowshipUpdate(state) {
+      state.followshipUpdate = !state.followshipUpdate
+    },
+    setTopFollowshipUpdate(state) {
+      state.topFollowshipUpdate = !state.topFollowshipUpdate
+    },
     setShowPopup(state, showPopup) {
       state.showPopup = showPopup
     },

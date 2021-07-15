@@ -153,6 +153,7 @@ import { emptyImageFilter } from "./../utils/mixins";
 import UserSelfEditModal from "@/components/UserSelfEditModal.vue";
 import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
+import { mapMutations } from "vuex";
 
 export default {
   name: "UserProfileCard",
@@ -192,9 +193,13 @@ export default {
     openUserSelfEditModal() {
       this.isProfileDialogOpened = true;
     },
+    ...mapMutations({
+      setfollowshipUpdate: "setfollowshipUpdate",
+    }),
     async addFollowing(userId) {
       try {
         this.isLoading = true;
+        this.setfollowshipUpdate(null, { root: true });
         // 不能跟隨自己
         if (userId === this.currentUser.id) {
           Toast.fire({
@@ -202,6 +207,7 @@ export default {
             title: "無法跟隨自己",
           });
           this.isLoading = false;
+          this.setfollowshipUpdate(null, { root: true });
           return;
         }
 
@@ -216,12 +222,14 @@ export default {
         this.user.isFollowed = true;
         this.user.followerCounts += 1;
         this.isLoading = false;
+        this.setfollowshipUpdate(null, { root: true });
         Toast.fire({
           icon: "success",
           title: "成功加入跟隨",
         });
       } catch (error) {
         this.isLoading = false;
+        this.setfollowshipUpdate(null, { root: true });
         Toast.fire({
           icon: "error",
           title: "無法加入跟隨，請稍後再試",
@@ -231,6 +239,7 @@ export default {
     async deleteFollowing(followingId) {
       try {
         this.isLoading = true;
+        this.setfollowshipUpdate(null, { root: true });
         const { data } = await usersAPI.deleteFollowing({ followingId });
         if (data.status === "error") {
           throw new Error(data.message);
@@ -238,12 +247,14 @@ export default {
         this.user.isFollowed = false;
         this.user.followerCounts -= 1;
         this.isLoading = false;
+        this.setfollowshipUpdate(null, { root: true });
         Toast.fire({
           icon: "success",
           title: "成功取消跟隨",
         });
       } catch (error) {
         this.isLoading = false;
+        this.setfollowshipUpdate(null, { root: true });
         console.error(error.message);
         Toast.fire({
           icon: "error",
