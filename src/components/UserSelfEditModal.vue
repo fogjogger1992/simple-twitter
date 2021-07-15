@@ -57,7 +57,7 @@
               <v-col cols="12" class="mt-7">
                 <v-form ref="form" v-model="valid" lazy-validation>
                   <v-text-field v-model.trim="name" :rules="[rules.required, rules.nameRules]" label="姓名" counter="50" maxlength="50" required></v-text-field>
-                  <v-textarea label="自我介紹" v-model.trim="introduction" :rules="[rules.introRules]" counter="160" maxlength="160"></v-textarea>
+                  <v-textarea label="自我介紹" v-model.trim="introduction" :rules="introRules" counter="160" maxlength="160"></v-textarea>
                 </v-form>
               </v-col>
 
@@ -101,7 +101,8 @@ export default {
       required: (value) => !!value || "必填",
       nameRules: (value) =>
         (value && value.length <= 50) || "姓名不得超過50個字",
-      introRules: (value) => value.length <= 160 || "自介不得超過160個字",
+      // introRules: (value) =>
+      //   (value && value.length <= 160) || "自介不得超過160個字",
     },
   }),
   watch: {
@@ -118,7 +119,7 @@ export default {
       this.avatar = this.currentUser.avatar;
       this.cover = this.currentUser.cover;
       this.name = this.currentUser.name;
-      this.introduction = this.currentUser.introduction;
+      this.introduction = this.currentUser.introduction || "";
     } catch (error) {
       console.log("error", error);
       console.error("can not fetch user information");
@@ -141,17 +142,17 @@ export default {
     handleCoverChange() {
       if (this.newCover === undefined) {
         // 如果移除原本要上傳的檔案，就預設資料庫照片，顯示刪除按鈕
-        this.cover = this.currentUser.cover
-        this.newCoverEmpty = true
-      } else if (this.newCover.length !== 0){
+        this.cover = this.currentUser.cover;
+        this.newCoverEmpty = true;
+      } else if (this.newCover.length !== 0) {
         // 如果有選擇要上傳的檔案，暫時先隱藏刪除按鈕
         const imageURL = window.URL.createObjectURL(this.newCover);
         this.cover = imageURL;
-        this.newCoverEmpty = false
+        this.newCoverEmpty = false;
       } else {
         // 如果沒有選擇要上傳的檔案，顯示刪除按鈕
         this.cover = this.currentUser.cover;
-        this.newCoverEmpty = true  
+        this.newCoverEmpty = true;
       }
     },
     async updateInfo() {
@@ -164,8 +165,8 @@ export default {
         // 整理要上傳更新的檔案
         let formData = new FormData();
         formData.append("name", this.name);
-        formData.append("introduction", this.introduction);
-
+        // 如果資料沒更新就不回傳給後端
+        if (this.introduction !=="") formData.append("introduction", this.introduction)
         if (this.newCover.length !== 0) formData.append("cover", this.newCover);
         if (this.newAvatar.length !== 0)
           formData.append("avatar", this.newAvatar);
@@ -263,7 +264,7 @@ export default {
         this.avatar = this.currentUser.avatar;
         this.cover = this.currentUser.cover;
         this.name = this.currentUser.name;
-        this.introduction = this.currentUser.introduction;
+        this.introduction = this.currentUser.introduction || "";
         this.$emit("update:profileDialogOpen", false);
       }
     },
@@ -273,6 +274,17 @@ export default {
     }),
   },
   computed: {
+    introRules() {
+      // 如果沒填自介，就不驗證
+      const introRules = [];
+
+      if (this.introduction !=="") {
+        const rules = (value) =>
+          (value && value.length <= 160) || "自介不得超過160個字";
+        introRules.push(rules);
+      }
+      return introRules;
+    },
     ...mapState({
       currentUser: (state) => state.currentUser,
     }),
