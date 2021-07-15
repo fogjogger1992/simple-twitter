@@ -87,7 +87,7 @@ export default {
     valid: true,
     id: 0,
     name: "",
-    introduction: "",
+    introduction: null,
     avatar: "",
     cover: "",
     newAvatar: [],
@@ -119,7 +119,7 @@ export default {
       this.avatar = this.currentUser.avatar;
       this.cover = this.currentUser.cover;
       this.name = this.currentUser.name;
-      this.introduction = this.currentUser.introduction || "";
+      this.introduction = this.currentUser.introduction;
     } catch (error) {
       console.log("error", error);
       console.error("can not fetch user information");
@@ -166,7 +166,7 @@ export default {
         let formData = new FormData();
         formData.append("name", this.name);
         // 如果資料沒更新就不回傳給後端
-        if (this.introduction !=="") formData.append("introduction", this.introduction)
+        if (this.introduction !== null) formData.append("introduction", this.introduction)
         if (this.newCover.length !== 0) formData.append("cover", this.newCover);
         if (this.newAvatar.length !== 0)
           formData.append("avatar", this.newAvatar);
@@ -264,7 +264,7 @@ export default {
         this.avatar = this.currentUser.avatar;
         this.cover = this.currentUser.cover;
         this.name = this.currentUser.name;
-        this.introduction = this.currentUser.introduction || "";
+        this.introduction = this.currentUser.introduction;
         this.$emit("update:profileDialogOpen", false);
       }
     },
@@ -278,7 +278,7 @@ export default {
       // 如果沒填自介，就不驗證
       const introRules = [];
 
-      if (this.introduction !=="") {
+      if (this.introduction) {
         const rules = (value) =>
           (value && value.length <= 160) || "自介不得超過160個字";
         introRules.push(rules);
