@@ -41,7 +41,7 @@
                   </v-tooltip>
 
                 </div>
-                <div>{{user.followingCounts}}位跟隨中 <span class="yellow--text text--darken-2">  •  </span><v-spacer></v-spacer> {{user.followerCounts}}位跟隨者</div>
+                <div>{{user.followingCounts}}位跟隨中 <span class="grey--text text--lighten-1">  |  </span>{{user.followerCounts}}位跟隨者</div>
 
               </v-card-text>
             </v-card>

@@ -34,7 +34,6 @@
       <v-data-table class="mt-4" fixed-header height="623" :sort-by="'createdAt'" :sort-desc="true" :headers="headers" :items="tableData" :footer-props="{
              'items-per-page-options':[20, 30, 50, 100]
           }">
-
         <template v-slot:item.User="{ item }">
           <v-avatar size="35" class="avatar-border">
             <v-img :src="item.User.avatar | emptyImage">
@@ -42,13 +41,23 @@
           </v-avatar>
         </template>
 
-        <template v-slot:item.delete="{ item }">
-          <v-btn icon dark color="red darken-2" @click="deleteTweet(item.id)">
-            <v-icon>
-              mdi-trash-can-outline
-            </v-icon>
-          </v-btn>
+        <template v-slot:item.createdAt="{ item }">
+        {{item.createdAt | fromNow}}
         </template>
+
+        <template v-slot:item.delete="{ item }">
+          <v-tooltip left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-bind="attrs" v-on="on" icon dark color="red darken-2" @click="deleteTweet(item.id)">
+                <v-icon>
+                  mdi-delete-empty
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>刪除此則推文</span>
+          </v-tooltip>
+        </template>
+
       </v-data-table>
 
       <Popup />
@@ -160,5 +169,4 @@ export default {
 .v-data-table-header__icon {
   opacity: 1 !important;
 }
-
 </style>

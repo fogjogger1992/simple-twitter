@@ -18,7 +18,7 @@
               </v-col>
               <v-col cols="10">
                 <v-form ref="form" v-model="valid">
-                  <v-textarea v-model="description" label="有什麼新鮮事？" counter="140" maxlength="140" :rules="[rules.required, rules.tweetRules, rules.spaceRules]" required></v-textarea>
+                  <v-textarea v-model.trim="description" label="有什麼新鮮事？" counter="140" maxlength="140" :rules="[rules.required, rules.tweetRules, rules.spaceRules]" required></v-textarea>
                 </v-form>
               </v-col>
             </v-row>
