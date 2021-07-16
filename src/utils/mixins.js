@@ -3,7 +3,7 @@ import moment from 'moment'
 export const fromNowFilter = {
   filters: {
     fromNow (datetime) {
-      return datetime ? moment(datetime, "YYYY-MM-DD, h:mm:ss a").calendar() : '-'
+      return datetime ? moment.utc(datetime, "YYYY-MM-DD, h:mm:ss a").local().calendar() : '-'
     }
   }
 }
