@@ -33,6 +33,7 @@
 <script>
 import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
+import { mapMutations } from "vuex";
 
 export default {
   name: "User",
@@ -59,6 +60,7 @@ export default {
   methods: {
     async fetchUser(userId) {
       try {
+        this.setShowOverlayLoading(null, { root: true });
         const { data } = await usersAPI.getUser({ userId });
         const tweetsData = await usersAPI.getUserTweets({ userId });
 
@@ -80,7 +82,11 @@ export default {
           title: "無法取得使用者資料，請稍後再試",
         });
       }
+      this.setShowOverlayLoading(null, { root: true });
     },
+   ...mapMutations({
+      setShowOverlayLoading: "setShowOverlayLoading",
+    }),
   },
 };
 </script> 

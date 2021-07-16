@@ -33,6 +33,7 @@
     </v-row>
     <NewTweetModal :tweetDialogOpen.sync="tweetDialogOpen" />
     <NewTweetReplyModal v-if="tweetReplyDialogOpen" />
+    <Loading />
     <v-row cols="1" class="flex-grow-0 flex-shrink-0 py-0 my-0 px-8">
       <v-col cols="12" class="py-5 my-0">
         <v-btn block rounded color="white" class="btnsignout" @click="logout">
@@ -58,12 +59,14 @@
 <script>
 import NewTweetModal from "./NewTweetModal.vue";
 import NewTweetReplyModal from "@/components/NewTweetReplyModal.vue";
+import Loading from "@/components/Loading";
 import { mapState } from "vuex";
 import { Toast } from "../utils/helpers";
 
+// 在這裡家loading, 路線一有變化就 show
 export default {
   name: "SideNavBar",
-  components: { NewTweetModal, NewTweetReplyModal },
+  components: { NewTweetModal, NewTweetReplyModal, Loading },
   props: {
     currentUser: {
       type: Object,
