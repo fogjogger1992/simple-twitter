@@ -189,6 +189,10 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+/* Hide scrollbar for Chrome, Safari and Opera */
+.replylist::-webkit-scrollbar {
+  display: none;
+}
 </style>
 
 <script>
