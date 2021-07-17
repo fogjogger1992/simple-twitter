@@ -2,31 +2,14 @@
   <v-container fluid class="ma-0 pa-0">
     <v-row no-gutters>
       <v-col cols="4" class="ma-0 px-0 d-flex flex-column userlistcol">
-        <v-card
-          tile
-          flat
-          class="pa-3 align-center"
-          style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
-          >上線使用者 ({{ onlineUsers.length }})</v-card
-        >
+        <v-card tile flat class="pa-3 align-center" style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">上線使用者 ({{ onlineUsers.length }})</v-card>
         <!-- online user list -->
         <div class="onlineuserlist">
-          <ChatroomUserCard
-            v-for="user in onlineUsers"
-            :key="user.id"
-            :user="user"
-            :currentUser="currentUser"
-          />
+          <ChatroomUserCard v-for="user in onlineUsers" :key="user.id" :user="user" :currentUser="currentUser" />
         </div>
       </v-col>
       <v-col cols="8" class="ma-0 px-0 d-flex flex-column chatroomcol">
-        <v-card
-          tile
-          flat
-          class="pa-3 align-center"
-          style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
-          >公開聊天室</v-card
-        >
+        <v-card tile flat class="pa-3 align-center" style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">公開聊天室</v-card>
         <!-- {{ Chatroom }} -->
       </v-col>
     </v-row>
@@ -56,6 +39,7 @@
 <script>
 import ChatroomUserCard from "../components/ChatroomUserCard.vue";
 import { mapState } from "vuex";
+// import { socket, publicNamespace, privateNamespace } from "@/socket";
 
 // TODO: remove after integrating api
 const dummyData = {
@@ -94,8 +78,36 @@ export default {
   computed: {
     ...mapState(["currentUser"]),
   },
+  sockets: {
+    connect: function () {
+      console.log("socket connected");
+    },
+    customEmit: function () {
+      console.log(
+        'this method was fired by the socket server. eg: io.emit("customEmit", data)'
+      );
+    },
+  },
   created() {
     this.fetchOnlineUsers();
+    // io.on('connect', onConnect);
+    // this.$socket.emit('newUser');
+    // socket.connect();
+
+    // socket 設定
+    // const msg = {};
+    // msg.socketId = publicNamespace.id;
+    // msg.content = "Hi for test.";
+    // msg.isPublic = true;
+    // publicNamespace.emit("sendMessage", msg);
+
+    // socket.emit("newUser");
+    // socket.on("connect", () => {
+    //   console.log(socket);
+    // console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+    // });
+    // socket.auth = { email };
+    // socket.connect();
   },
   methods: {
     // TODO: modify after integrate api
@@ -103,6 +115,9 @@ export default {
       const { onlineUsers } = dummyData;
       this.onlineUsers = onlineUsers;
     },
+  },
+  destroyed() {
+    // socket.off("connect");
   },
 };
 </script> 
