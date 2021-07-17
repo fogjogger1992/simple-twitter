@@ -15,11 +15,11 @@
         </router-link>
       </v-col>
       <!-- name and account -->
-      <v-col no-gutters cols="12" class="d-flex flex pa-2 ma-0">
+      <v-col no-gutters cols="auto" class="flex-grow-1 d-flex flex pa-2 ma-0">
         <v-col cols="auto" class="ma-0 pa-0 align-self-center">
           <p class="subtitle-2 font-weight-bold ma-0 pa-0">{{ user.name }}</p>
         </v-col>
-        <v-col class="ma-0 px-2 py-0 align-self-center">
+        <v-col class="ma-0 pl-2 pr-0 py-0 align-self-center">
           <p
             class="subtitle-2 grey--text font-weight-normal ma-0 pa-0"
             style="text-decoration: none"
