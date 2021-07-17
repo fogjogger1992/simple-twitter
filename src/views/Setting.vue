@@ -1,21 +1,75 @@
 <template>
   <v-container fluid class="ma-0 pa-0">
     <v-row no-gutters>
-      <v-col cols="12" sm="12" md="3" lg="3" style="border-right: 1px solid rgba(0, 0, 0, 0.12)">
-        <SideNavBar :current-user="currentUser" />
-      </v-col>
-
-      <v-col cols="12" sm="12" md="9" lg="9" class="ma-0 px-0 d-flex flex-column">
-        <v-card tile flat class="pa-3 font-weight-bold text-subtitle-1" style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">帳戶設定</v-card>
-        <v-col cols="10" sm="8" md="7" lg="6" class="ma-auto pa-4 align-self-center">
-          <AlertErr :alertMsg.sync='alertMsg' v-if='alertMsg' />
-          <v-form class="my-4 text-right" ref="form" v-model="valid" lazy-validation>
-            <v-text-field v-model.trim="account" :rules="[rules.required, rules.accountRules]" maxlength="50" label="帳號" required></v-text-field>
-            <v-text-field v-model.trim="name" :rules="[rules.required, rules.nameRules]" maxlength="50" label="姓名" required></v-text-field>
-            <v-text-field v-model.trim="email" :rules="[rules.required, rules.emailRules]" label="Email" required></v-text-field>
-            <v-text-field v-model.trim="password" maxlength="20" type='password' :rules="[rules.required, rules.passwordRules]" label="密碼"></v-text-field>
-            <v-text-field v-model.trim="confirmPassword" maxlength="20" type='password' :rules="confirmPasswordRules" label="確認密碼"></v-text-field>
-            <v-btn rounded :disabled="!valid" color="primary" :loading="btnLoading" @click="updateSetting">
+      <v-col
+        cols="12"
+        sm="12"
+        md="12"
+        lg="12"
+        class="ma-0 px-0 d-flex flex-column"
+      >
+        <v-card
+          tile
+          flat
+          class="pa-3 font-weight-bold text-subtitle-1"
+          style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
+          >帳戶設定</v-card
+        >
+        <v-col
+          cols="10"
+          sm="8"
+          md="7"
+          lg="6"
+          class="ma-auto pa-4 align-self-center"
+        >
+          <AlertErr :alertMsg.sync="alertMsg" v-if="alertMsg" />
+          <v-form
+            class="my-4 text-right"
+            ref="form"
+            v-model="valid"
+            lazy-validation
+          >
+            <v-text-field
+              v-model.trim="account"
+              :rules="[rules.required, rules.accountRules]"
+              maxlength="50"
+              label="帳號"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model.trim="name"
+              :rules="[rules.required, rules.nameRules]"
+              maxlength="50"
+              label="姓名"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model.trim="email"
+              :rules="[rules.required, rules.emailRules]"
+              label="Email"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model.trim="password"
+              maxlength="20"
+              type="password"
+              :rules="[rules.required, rules.passwordRules]"
+              label="密碼"
+            ></v-text-field>
+            <v-text-field
+              v-model.trim="confirmPassword"
+              maxlength="20"
+              type="password"
+              :rules="confirmPasswordRules"
+              label="確認密碼"
+            ></v-text-field>
+            <v-btn
+              rounded
+              :disabled="!valid"
+              color="primary"
+              :loading="btnLoading"
+              @click="updateSetting"
+            >
               儲存
             </v-btn>
           </v-form>
@@ -25,7 +79,6 @@
   </v-container>
 </template>
 <script>
-import SideNavBar from "@/components/SideNavBar";
 import AlertErr from "@/components/AlertErr";
 import usersAPI from "../apis/users";
 import { mapActions, mapState } from "vuex";
@@ -33,7 +86,7 @@ import { Toast } from "../utils/helpers";
 
 export default {
   name: "Setting",
-  components: { SideNavBar, AlertErr },
+  components: { AlertErr },
   data: () => ({
     valid: true,
     id: 0,

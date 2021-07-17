@@ -4,13 +4,10 @@
       <v-col cols="12" md="3" class="sidenavcol pa-0">
         <SideNavBar :current-user="currentUser" />
       </v-col>
-      <v-col cols="12" md="6" class="pa-0 maincol">
+      <v-col cols="12" md="9" class="pa-0 maincol">
         <v-container class="ma-0 pa-0">
           <router-view></router-view>
         </v-container>
-      </v-col>
-      <v-col cols="12" md="3" class="topuserscol">
-        <TopUsers :current-user="currentUser" />
       </v-col>
     </v-row>
   </v-container>
@@ -27,21 +24,16 @@
 .maincol {
   height: 100vh;
 }
-.topuserscol {
-  border-left: thin solid rgba(0, 0, 0, 0.12);
-}
 </style>
 
 <script>
 import SideNavBar from "../components/SideNavBar.vue";
-import TopUsers from "../components/TopUsers.vue";
 import { mapState } from "vuex";
 
 export default {
-  name: "Home",
+  name: "HomeSideNavBar",
   components: {
     SideNavBar,
-    TopUsers,
   },
   computed: {
     ...mapState(["currentUser"]),
