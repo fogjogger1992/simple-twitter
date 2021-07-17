@@ -11,7 +11,13 @@
         <!-- nav list -->
         <v-list flat class="mt-2 mr-0">
           <v-list-item-group v-model="selectedItem" color="primary">
-            <v-list-item class="pl-0 pr-0" v-for="(item, i) in items" :key="i" :to="item.link" link>
+            <v-list-item
+              class="pl-0 pr-0"
+              v-for="(item, i) in items"
+              :key="i"
+              :to="item.link"
+              link
+            >
               <v-list-item-icon class="mr-4">
                 <v-icon v-text="item.icon"></v-icon>
               </v-list-item-icon>
@@ -22,11 +28,18 @@
           </v-list-item-group>
         </v-list>
         <!-- btn add new tweet -->
-        <v-btn block rounded color="primary" dark class="mt-2" @click="
+        <v-btn
+          block
+          rounded
+          color="primary"
+          dark
+          class="mt-2"
+          @click="
             () => {
               tweetDialogOpen = true;
             }
-          ">
+          "
+        >
           推文
         </v-btn>
       </v-col>
@@ -77,6 +90,9 @@ export default {
       selectedItem: 0,
       items: [
         { text: "首頁", icon: "mdi-home-variant-outline", link: "/tweets" },
+        { text: "通知", icon: "mdi-bell-outline", link: "/notification" },
+        { text: "公開聊天室", icon: "mdi-email-outline", link: "/chatroom" },
+        { text: "私人訊息", icon: "mdi-email-outline", link: "/message" },
         {
           text: "個人資料",
           icon: "mdi-account-outline",
