@@ -23,7 +23,7 @@
               <v-textarea v-model="message" class="pa-0 ma-0" hide-details rounded filled auto-grow rows="1" label="輸入訊息..."></v-textarea>
             </v-col>
             <v-col cols="1" class="py-0 ma-0 px-2 align-self-center d-flex justify-center">
-              <v-icon @click.prevent.stop="" color="primary" style="font-size: 25px">far fa-paper-plane</v-icon>
+              <v-icon @click.prevent.stop="sendMessage" color="primary" style="font-size: 25px">far fa-paper-plane</v-icon>
             </v-col>
           </v-row>
         </v-card>
@@ -102,17 +102,13 @@ export default {
   async created() {
     this.fetchOnlineUsers();
 
-    // 一進入聊天室畫面，取得上線用戶資料
-    console.log("currentUser: ", this.currentUser);
-
+    // 一進入聊天室，顯示user上線
     const payload = {
       id: this.currentUser.id, 
       name:this.currentUser.name,
       account: this.currentUser.account,
       avatar: this.currentUser.avatar
     }
-    
-    this.$socket.emit("newUser", payload);
     console.log(this.$socket.emit("newUser", payload));
 
   },
@@ -122,26 +118,47 @@ export default {
       const { onlineUsers } = dummyData;
       this.onlineUsers = onlineUsers;
     },
+    sendMessage(){
+      console.log("傳入的訊息： ", this.message);
+
+      const payload = {
+        senderId: this.currentUser.id,
+        receiverId: null,
+        content: this.message,
+        isPublic: true
+      }
+
+      console.log(this.$socket.emit("sendMessage", payload))
+      this.message = ""
+
+    }
   },
   sockets: {
     connect() {
       console.log("connect");
-      // console.log("newUser: ", newUser);
     },
     newUser(data){
-      console.log("newUser", data);
+      console.log("newUser: ", data);
     },
     userJoin(data){
       console.log("userJoin: ", data);
-
     },
     onlineUser(data){
+      // 取得上線用戶資料
       console.log("onlineUser: ", data);
 
+
+    },
+    historyMessages(data){
+      console.log("historyMessages: ", data);
+    },
+    async newMessage(data){
+      console.log("newMessage: ", data);
     }
   },
   destroyed() {
-    // socket.off("connect");
+    // 離開聊天室
+    console.log(this.$socket.emit("disconnect"))
   },
 };
 </script> 
