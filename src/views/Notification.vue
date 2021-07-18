@@ -9,7 +9,9 @@
       >通知</v-card
     >
     <!-- notification list -->
-    <div class="notificationlist"></div>
+    <div class="notificationlist">
+      <NotificationCard />
+    </div>
   </v-container>
 </template>
 
@@ -27,3 +29,26 @@
   display: none;
 }
 </style>
+
+<script>
+import NotificationCard from "./../components/NotificationCard.vue";
+import { mapState } from "vuex";
+
+export default {
+  name: "Message",
+  data() {
+    return {
+      message: "",
+      messages: [],
+    };
+  },
+  components: {
+    NotificationCard,
+  },
+  computed: {
+    ...mapState(["currentUser"]),
+  },
+  created() {},
+  methods: {},
+};
+</script>
