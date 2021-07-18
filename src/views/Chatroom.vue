@@ -225,11 +225,11 @@ export default {
       // 取得成員離開聊天室訊息
       console.log("userLeave: ", data);
     },
-    beforeDestroy() {
-      // 離開聊天室
-      this.$socket.disconnect();
-      console.log("離開聊天室");
-    },
+  },
+  beforeDestroy() {
+    // 離開聊天室
+    this.$socket.disconnect();
+    console.log("離開聊天室");
   },
 };
 </script> 
