@@ -105,15 +105,15 @@ export default {
     // 一進入聊天室畫面，取得上線用戶資料
     console.log("currentUser: ", this.currentUser);
 
-    // const payload = {
-    //   id: this.currentUser.id,
-    //   name:this.currentUser.name,
-    //   account: this.currentUser.account,
-    //   avatar: this.currentUser.avatar
-    // }
-
-    this.$socket.emit("newUser", this.currentUser.id);
-    console.log(this.$socket.emit("newUser", this.currentUser.id));
+    const payload = {
+      id: this.currentUser.id, 
+      name:this.currentUser.name,
+      account: this.currentUser.account,
+      avatar: this.currentUser.avatar
+    }
+    
+    this.$socket.emit("newUser", payload);
+    console.log(this.$socket.emit("newUser", payload));
 
   },
   methods: {
@@ -128,15 +128,17 @@ export default {
       console.log("connect");
       // console.log("newUser: ", newUser);
     },
-    newUser(data) {
+    newUser(data){
       console.log("newUser", data);
     },
-    userJoin(data) {
+    userJoin(data){
       console.log("userJoin: ", data);
+
     },
-    onlineUser(data) {
+    onlineUser(data){
       console.log("onlineUser: ", data);
-    },
+
+    }
   },
   destroyed() {
     // socket.off("connect");
