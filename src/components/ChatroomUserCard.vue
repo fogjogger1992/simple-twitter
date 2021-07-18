@@ -52,16 +52,16 @@ export default {
     return {};
   },
   watch: {
-    user: {
-      handler: function (newValue) {
-        this.user = {
-          ...this.user,
-          ...newValue,
-        };
-      },
-      deep: true,
-      immediate: true,
-    },
+    // user: {
+    //   handler: function (newValue) {
+    //     this.user = {
+    //       ...this.user,
+    //       ...newValue,
+    //     };
+    //   },
+    //   deep: true,
+    //   immediate: true,
+    // },
   },
   methods: {},
 };
