@@ -98,6 +98,8 @@ export default {
   },
   async created() {
     this.fetchOnlineUsers();
+    // 同時與聊天室連線
+    this.$socket.connect();
     // 一進入聊天室，顯示user上線，載入歷史訊息
     const payload = {
       id: this.currentUser.id,
@@ -153,16 +155,10 @@ export default {
       console.log("userLeave: ", data);
     },
   },
-  // beforeDestroy() {
-  //   // 離開聊天室
-  //   this.$socket.emit("disconnect");
-  //   console.log("離開聊天室");
-  // },
-  beforeRouteLeave(to, from, next) {
-    console.log("App beforeRouterLeave.");
-    this.$socket.emit("disconnect");
-      console.log("離開聊天室");
-    next();
+  beforeDestroy() {
+    // 離開聊天室
+    this.$socket.disconnect()
+    console.log("離開聊天室");
   },
 };
 </script> 

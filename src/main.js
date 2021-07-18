@@ -14,8 +14,8 @@ Vue.use(new VueSocketIO({
     withCredentials: true,
     vuex: {
         store,
-        actionPrefix: 'SOCKET_',
-        mutationPrefix: 'SOCKET_'
+        // actionPrefix: 'SOCKET_',
+        // mutationPrefix: 'SOCKET_'
     },
 }))
 
