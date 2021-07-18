@@ -123,18 +123,18 @@ export default {
     ChatroomUserCard,
     ChatroomMessage,
   },
-  computed: {
-    ...mapState(["currentUser"]),
-  },
   async created() {
-    // 一進入聊天室，顯示user上線
+    this.fetchOnlineUsers();
+    // 同時與聊天室連線
+    this.$socket.connect();
+    // 一進入聊天室，顯示user上線，載入歷史訊息
     const payload = {
       id: this.currentUser.id,
       name: this.currentUser.name,
       account: this.currentUser.account,
       avatar: this.currentUser.avatar,
     };
-    console.log(this.$socket.emit("newUser", payload));
+    this.$socket.emit("newUser", payload);
   },
   mounted: function () {},
   methods: {
@@ -217,11 +217,15 @@ export default {
       this.$nextTick(() => {
         this.scrollToBottom();
       });
+    userLeave(data) {
+      // 取得成員離開聊天室訊息
+      console.log("userLeave: ", data);
     },
   },
-  destroyed() {
+  beforeDestroy() {
     // 離開聊天室
-    console.log(this.$socket.emit("disconnect"));
+    this.$socket.disconnect()
+    console.log("離開聊天室");
   },
 };
 </script> 

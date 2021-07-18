@@ -5,6 +5,8 @@ import SignIn from '../views/SignIn.vue'
 import HomeTopUsers from '@/views/HomeTopUsers.vue'
 import Admin from '@/views/Admin.vue'
 import store from './../store'
+// import VueSocketIO from "vue-socket.io";
+// import SocketIO from "socket.io-client";
 
 Vue.use(VueRouter)
 
@@ -152,6 +154,21 @@ const routes = [
         path: '/chatroom',
         name: 'chatroom',
         component: () => import('../views/Chatroom.vue'),
+      //   beforeEnter (to, from, next) {
+      //     if (!Vue.prototype.$socket) { 
+      //       Vue.use(new VueSocketIO({
+      //         debug: true,
+      //         connection: SocketIO('http://localhost:3000'),
+      //         withCredentials: true,
+      //         vuex: {
+      //             store,
+      //             actionPrefix: 'SOCKET_',
+      //             mutationPrefix: 'SOCKET_'
+      //         },
+      //     }))
+      //     }
+      //     next()
+      //  }
       },
       {
         path: '/message',
