@@ -96,21 +96,16 @@ export default {
     ChatroomUserCard,
     ChatroomMessage,
   },
-  computed: {
-    ...mapState(["currentUser"]),
-  },
   async created() {
     this.fetchOnlineUsers();
-
-    // 一進入聊天室，顯示user上線
+    // 一進入聊天室，顯示user上線，載入歷史訊息
     const payload = {
-      id: this.currentUser.id, 
-      name:this.currentUser.name,
+      id: this.currentUser.id,
+      name: this.currentUser.name,
       account: this.currentUser.account,
-      avatar: this.currentUser.avatar
-    }
-    console.log(this.$socket.emit("newUser", payload));
-
+      avatar: this.currentUser.avatar,
+    };
+    this.$socket.emit("newUser", payload);
   },
   methods: {
     // TODO: modify after integrate api
@@ -118,47 +113,56 @@ export default {
       const { onlineUsers } = dummyData;
       this.onlineUsers = onlineUsers;
     },
-    sendMessage(){
-      console.log("傳入的訊息： ", this.message);
-
+    sendMessage() {
       const payload = {
         senderId: this.currentUser.id,
         receiverId: null,
         content: this.message,
-        isPublic: true
-      }
-
-      console.log(this.$socket.emit("sendMessage", payload))
-      this.message = ""
-
-    }
+        isPublic: true,
+      };
+      this.$socket.emit("sendMessage", payload);
+      this.message = "";
+    },
+  },
+  computed: {
+    ...mapState(["currentUser"]),
   },
   sockets: {
-    connect() {
-      console.log("connect");
-    },
-    newUser(data){
+    newUser(data) {
+      // 取得新加入使用者資料
       console.log("newUser: ", data);
     },
-    userJoin(data){
-      console.log("userJoin: ", data);
-    },
-    onlineUser(data){
+    onlineUser(data) {
       // 取得上線用戶資料
       console.log("onlineUser: ", data);
-
-
     },
-    historyMessages(data){
+    userJoin(data) {
+      // 取得新用戶加入資訊
+      console.log("userJoin: ", data);
+    },
+    historyMessages(data) {
+      // 取得歷史聊天記錄
       console.log("historyMessages: ", data);
     },
-    async newMessage(data){
+    newMessage(data) {
+      // 新送出的聊天訊息
       console.log("newMessage: ", data);
-    }
+    },
+    userLeave(data) {
+      // 取得成員離開聊天室訊息
+      console.log("userLeave: ", data);
+    },
   },
-  destroyed() {
-    // 離開聊天室
-    console.log(this.$socket.emit("disconnect"))
+  // beforeDestroy() {
+  //   // 離開聊天室
+  //   this.$socket.emit("disconnect");
+  //   console.log("離開聊天室");
+  // },
+  beforeRouteLeave(to, from, next) {
+    console.log("App beforeRouterLeave.");
+    this.$socket.emit("disconnect");
+      console.log("離開聊天室");
+    next();
   },
 };
 </script> 
