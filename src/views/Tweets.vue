@@ -46,7 +46,7 @@ import NewTweetCard from "../components/NewTweetCard.vue";
 import TweetCard from "../components/TweetCard.vue";
 import tweetsAPI from "../apis/tweets";
 import { Toast } from "./../utils/helpers";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "Tweets",
@@ -68,6 +68,7 @@ export default {
   methods: {
     async fetchTweets() {
       try {
+        this.setShowOverlayLoading(null, { root: true });
         const response = await tweetsAPI.getTweets();
         this.tweets = response.data;
       } catch (error) {
@@ -77,10 +78,14 @@ export default {
           title: "無法取得推文，請稍後再試",
         });
       }
+     this.setShowOverlayLoading(null, { root: true });
     },
     afterCreateTweet() {
       this.fetchTweets();
     },
+    ...mapMutations({
+      setShowOverlayLoading: "setShowOverlayLoading",
+    }),
   },
 };
 </script> 
