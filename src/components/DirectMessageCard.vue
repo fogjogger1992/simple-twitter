@@ -3,7 +3,7 @@
     @click.prevent.stop=""
     flat
     tile
-    class="pa-3"
+    class="pa-3 directmessagecard"
     style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
   >
     <v-row no-gutters class="pa-0 align-center" style="flex-wrap: nowrap">
@@ -55,6 +55,12 @@
     </v-row>
   </v-card>
 </template>
+
+<style scoped>
+.directmessagecard:focus {
+  border-right: 3px solid #ff6602;
+}
+</style>
 
 <script>
 export default {
