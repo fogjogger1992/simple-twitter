@@ -20,6 +20,7 @@
             >
               <v-list-item-icon class="mr-4">
                 <v-icon v-text="item.icon"></v-icon>
+                <v-badge v-if="item.new" color="primary" dot overlap></v-badge>
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title v-text="item.text"></v-list-item-title>
@@ -92,16 +93,37 @@ export default {
 
       selectedItem: 0,
       items: [
-        { text: "首頁", icon: "mdi-home-variant-outline", link: "/tweets" },
-        { text: "通知", icon: "mdi-bell-outline", link: "/notification" },
-        { text: "公開聊天室", icon: "mdi-email-outline", link: "/chatroom" },
-        { text: "私人訊息", icon: "mdi-email-outline", link: "/message" },
+        {
+          text: "首頁",
+          icon: "mdi-home-variant-outline",
+          link: "/tweets",
+          new: false,
+        },
+        {
+          text: "通知",
+          icon: "mdi-bell-outline",
+          link: "/notification",
+          new: false,
+        },
+        {
+          text: "公開聊天室",
+          icon: "mdi-email-outline",
+          link: "/chatroom",
+          new: false,
+        },
+        {
+          text: "私人訊息",
+          icon: "mdi-email-outline",
+          link: "/message",
+          new: false,
+        },
         {
           text: "個人資料",
           icon: "mdi-account-outline",
           link: "/users/" + this.currentUser.id,
+          new: false,
         },
-        { text: "設定", icon: "mdi-cog-outline", link: "/setting" },
+        { text: "設定", icon: "mdi-cog-outline", link: "/setting", new: false },
       ],
     };
   },
