@@ -123,6 +123,9 @@ export default {
     ChatroomUserCard,
     ChatroomMessage,
   },
+  computed: {
+    ...mapState(["currentUser"]),
+  },
   async created() {
     this.fetchOnlineUsers();
     // 同時與聊天室連線
@@ -217,15 +220,16 @@ export default {
       this.$nextTick(() => {
         this.scrollToBottom();
       });
+    },
     userLeave(data) {
       // 取得成員離開聊天室訊息
       console.log("userLeave: ", data);
     },
-  },
-  beforeDestroy() {
-    // 離開聊天室
-    this.$socket.disconnect()
-    console.log("離開聊天室");
+    beforeDestroy() {
+      // 離開聊天室
+      this.$socket.disconnect();
+      console.log("離開聊天室");
+    },
   },
 };
 </script> 
