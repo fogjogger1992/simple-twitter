@@ -3,61 +3,27 @@
     <v-row no-gutters>
 
       <v-col cols="12" md="4" class="ma-0 px-0 d-flex flex-column userlistcol">
-        <v-card
-          tile
-          flat
-          class="pa-3 align-center"
-          style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
-          >上線使用者 ({{ onlineUsers.length }})</v-card
-        >
+        <v-card tile flat class="pa-3 align-center" style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">上線使用者 ({{ onlineUsers.length }})</v-card>
         <!-- online user list -->
         <div class="onlineuserlist">
           <ChatroomUserCard v-for="user in onlineUsers" :key="user.id" :user="user" :currentUser="currentUser" />
         </div>
       </v-col>
       <v-col cols="12" md="8" class="ma-0 px-0 d-flex flex-column chatroomcol">
-        <v-card
-          tile
-          flat
-          class="pa-3 align-center"
-          style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
-          >公開聊天室</v-card
-        >
+        <v-card tile flat class="pa-3 align-center" style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">公開聊天室</v-card>
         <!-- chatroom -->
         <div class="chatroom">
           <ChatroomMessage />
         </div>
         <v-spacer></v-spacer>
         <!-- input -->
-        <v-card
-          tile
-          flat
-          class="pa-3 align-center"
-          style="border-top: thin solid rgba(0, 0, 0, 0.12)"
-        >
+        <v-card tile flat class="pa-3 align-center" style="border-top: thin solid rgba(0, 0, 0, 0.12)">
           <v-row class="pa-0 ma-0">
             <v-col cols="11" class="pa-0 ma-0 align-self-center">
-              <v-textarea
-                v-model="message"
-                class="pa-0 ma-0"
-                hide-details
-                rounded
-                filled
-                auto-grow
-                rows="1"
-                label="輸入訊息..."
-              ></v-textarea>
+              <v-textarea v-model="message" class="pa-0 ma-0" hide-details rounded filled auto-grow rows="1" label="輸入訊息..."></v-textarea>
             </v-col>
-            <v-col
-              cols="1"
-              class="py-0 ma-0 px-2 align-self-center d-flex justify-center"
-            >
-              <v-icon
-                @click.prevent.stop=""
-                color="primary"
-                style="font-size: 25px"
-                >far fa-paper-plane</v-icon
-              >
+            <v-col cols="1" class="py-0 ma-0 px-2 align-self-center d-flex justify-center">
+              <v-icon @click.prevent.stop="sendMessage" color="primary" style="font-size: 25px">far fa-paper-plane</v-icon>
             </v-col>
           </v-row>
         </v-card>
@@ -93,7 +59,6 @@
 import ChatroomUserCard from "../components/ChatroomUserCard.vue";
 import ChatroomMessage from "../components/ChatroomMessage.vue";
 import { mapState } from "vuex";
-// import { socket, publicNamespace, privateNamespace } from "@/socket";
 
 // TODO: remove after integrating api
 const dummyData = {
@@ -134,36 +99,18 @@ export default {
   computed: {
     ...mapState(["currentUser"]),
   },
-  sockets: {
-    connect: function () {
-      console.log("socket connected");
-    },
-    customEmit: function () {
-      console.log(
-        'this method was fired by the socket server. eg: io.emit("customEmit", data)'
-      );
-    },
-  },
-  created() {
+  async created() {
     this.fetchOnlineUsers();
-    // io.on('connect', onConnect);
-    // this.$socket.emit('newUser');
-    // socket.connect();
 
-    // socket 設定
-    // const msg = {};
-    // msg.socketId = publicNamespace.id;
-    // msg.content = "Hi for test.";
-    // msg.isPublic = true;
-    // publicNamespace.emit("sendMessage", msg);
+    // 一進入聊天室，顯示user上線
+    const payload = {
+      id: this.currentUser.id, 
+      name:this.currentUser.name,
+      account: this.currentUser.account,
+      avatar: this.currentUser.avatar
+    }
+    console.log(this.$socket.emit("newUser", payload));
 
-    // socket.emit("newUser");
-    // socket.on("connect", () => {
-    //   console.log(socket);
-    // console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-    // });
-    // socket.auth = { email };
-    // socket.connect();
   },
   methods: {
     // TODO: modify after integrate api
@@ -171,9 +118,47 @@ export default {
       const { onlineUsers } = dummyData;
       this.onlineUsers = onlineUsers;
     },
+    sendMessage(){
+      console.log("傳入的訊息： ", this.message);
+
+      const payload = {
+        senderId: this.currentUser.id,
+        receiverId: null,
+        content: this.message,
+        isPublic: true
+      }
+
+      console.log(this.$socket.emit("sendMessage", payload))
+      this.message = ""
+
+    }
+  },
+  sockets: {
+    connect() {
+      console.log("connect");
+    },
+    newUser(data){
+      console.log("newUser: ", data);
+    },
+    userJoin(data){
+      console.log("userJoin: ", data);
+    },
+    onlineUser(data){
+      // 取得上線用戶資料
+      console.log("onlineUser: ", data);
+
+
+    },
+    historyMessages(data){
+      console.log("historyMessages: ", data);
+    },
+    async newMessage(data){
+      console.log("newMessage: ", data);
+    }
   },
   destroyed() {
-    // socket.off("connect");
+    // 離開聊天室
+    console.log(this.$socket.emit("disconnect"))
   },
 };
 </script> 
