@@ -11,7 +11,7 @@
       <v-col cols="2" class="ma-0 pa-0" style="min-width: 50px">
         <!-- <router-link :to="{ name: 'user', params: { id: user.id } }"> -->
         <v-avatar>
-          <v-img src="https://i.pravatar.cc/150?img=22"></v-img>
+          <v-img src="https://i.pravatar.cc/150?img=15"></v-img>
           <!-- <v-img :src="user.avatar | emptyImage" :alt="user.name"></v-img> -->
         </v-avatar>
         <!-- </router-link> -->

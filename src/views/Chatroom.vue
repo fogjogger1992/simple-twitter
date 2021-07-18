@@ -103,7 +103,6 @@
 <script>
 import ChatroomUserCard from "../components/ChatroomUserCard.vue";
 import ChatroomMessage from "../components/ChatroomMessage.vue";
-// import OnlineOfflineNotification from "../components/OnlineOfflineNotification.vue";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
 
@@ -123,7 +122,6 @@ export default {
   components: {
     ChatroomUserCard,
     ChatroomMessage,
-    // OnlineOfflineNotification,
   },
   computed: {
     ...mapState(["currentUser"]),

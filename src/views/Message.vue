@@ -34,13 +34,13 @@
           style="border-bottom: thin solid rgba(0, 0, 0, 0.12); height: 52px"
         >
           <!-- name -->
-          <h3 style="line-height: 1">user1</h3>
+          <h3 style="line-height: 1">name</h3>
           <!-- account -->
           <p
             class="caption grey--text font-weight-normal my-0 pa-0"
             style="line-height: 1.1"
           >
-            @user1
+            @account
           </p>
         </v-card>
         <!-- chatroom -->
