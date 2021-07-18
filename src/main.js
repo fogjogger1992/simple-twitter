@@ -10,7 +10,7 @@ Vue.config.productionTip = false
 
 Vue.use(new VueSocketIO({
     debug: true,
-    connection: SocketIO('http://localhost:3000'),
+    connection: SocketIO('https://simple-twitter-api-demo.herokuapp.com/api'),
     withCredentials: true,
     vuex: {
         store,
