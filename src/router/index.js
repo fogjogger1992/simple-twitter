@@ -2,9 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import NotFound from '../views/NotFound.vue'
 import SignIn from '../views/SignIn.vue'
-import Home from '@/views/Home.vue'
+import HomeTopUsers from '@/views/HomeTopUsers.vue'
 import Admin from '@/views/Admin.vue'
 import store from './../store'
+// import VueSocketIO from "vue-socket.io";
+// import SocketIO from "socket.io-client";
 
 Vue.use(VueRouter)
 
@@ -45,11 +47,6 @@ const routes = [
     component: () => import('../views/SignUp.vue'),
   },
   {
-    path: '/setting',
-    name: 'account-setting',
-    component: () => import('../views/Setting.vue'),
-  },
-  {
     path: '/admin/signin',
     name: 'admin-sign-in',
     component: () => import('../views/AdminSignIn.vue'),
@@ -85,61 +82,103 @@ const routes = [
     ],
   },
   {
-    path: '/tweets',
-    name: 'home',
-    component: Home,
-    beforeEnter: authorizeIsNormal,
+    path: '/',
+    name: 'home-side-nav-bar',
+    component: () => import('../views/HomeSideNavBar.vue'),
     children: [
       {
-        name: 'tweets',
-        path: '/',
-        component: () => import('../views/Tweets.vue'),
-      },
-      {
-        name: 'tweet',
-        path: ':id',
-        component: () => import('../views/Tweet.vue'),
-      },
-      {
-        path: '/users',
-        name: 'user',
-        redirect: '/users/:id',
-        component: () => import('../views/User.vue'),
+        path: '/tweets',
+        name: 'home-top-users',
+        component: HomeTopUsers,
+        beforeEnter: authorizeIsNormal,
         children: [
           {
-            name: 'user-profile',
+            name: 'tweets',
+            path: '/',
+            component: () => import('../views/Tweets.vue'),
+          },
+          {
+            name: 'tweet',
             path: ':id',
-            redirect: '/users/:id/tweets',
-            component: () => import('../views/UserProfile.vue'),
+            component: () => import('../views/Tweet.vue'),
+          },
+          {
+            name: 'notification',
+            path: '/notification',
+            component: () => import('../views/Notification.vue'),
+          },
+          {
+            path: '/users',
+            name: 'user',
+            redirect: '/users/:id',
+            component: () => import('../views/User.vue'),
             children: [
               {
-                name: 'user-tweets',
-                path: 'tweets',
-                component: () => import('@/views/UserTweets.vue'),
+                name: 'user-profile',
+                path: ':id',
+                redirect: '/users/:id/tweets',
+                component: () => import('../views/UserProfile.vue'),
+                children: [
+                  {
+                    name: 'user-tweets',
+                    path: 'tweets',
+                    component: () => import('@/views/UserTweets.vue'),
+                  },
+                  {
+                    name: 'user-replies',
+                    path: 'replies',
+                    component: () => import('@/views/UserReplies.vue'),
+                  },
+                  {
+                    name: 'user-likes',
+                    path: 'likes',
+                    component: () => import('@/views/UserLikes.vue'),
+                  },
+                ],
               },
               {
-                name: 'user-replies',
-                path: 'replies',
-                component: () => import('@/views/UserReplies.vue'),
+                name: 'user-follower',
+                path: ':id/follower',
+                component: () => import('../views/UserFollower.vue'),
               },
               {
-                name: 'user-likes',
-                path: 'likes',
-                component: () => import('@/views/UserLikes.vue'),
+                name: 'user-following',
+                path: ':id/following',
+                component: () => import('../views/UserFollowing.vue'),
               },
             ],
           },
-          {
-            name: 'user-follower',
-            path: ':id/follower',
-            component: () => import('../views/UserFollower.vue'),
-          },
-          {
-            name: 'user-following',
-            path: ':id/following',
-            component: () => import('../views/UserFollowing.vue'),
-          },
         ],
+      },
+      {
+        path: '/chatroom',
+        name: 'chatroom',
+        component: () => import('../views/Chatroom.vue'),
+      //   beforeEnter (to, from, next) {
+      //     if (!Vue.prototype.$socket) { 
+      //       Vue.use(new VueSocketIO({
+      //         debug: true,
+      //         connection: SocketIO('http://localhost:3000'),
+      //         withCredentials: true,
+      //         vuex: {
+      //             store,
+      //             actionPrefix: 'SOCKET_',
+      //             mutationPrefix: 'SOCKET_'
+      //         },
+      //     }))
+      //     }
+      //     next()
+      //  }
+      },
+      {
+        path: '/message',
+        name: 'message',
+        component: () => import('../views/Message.vue'),
+      },
+      {
+        path: '/setting',
+        name: 'account-setting',
+        component: () => import('../views/Setting.vue'),
       },
     ],
   },
