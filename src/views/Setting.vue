@@ -81,7 +81,7 @@
 <script>
 import AlertErr from "@/components/AlertErr";
 import usersAPI from "../apis/users";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapMutations } from "vuex";
 import { Toast } from "../utils/helpers";
 
 export default {
@@ -116,12 +116,15 @@ export default {
   async created() {
     try {
       // 取登入使用者資訊
+      this.setShowOverlayLoading(null, { root: true });
       await this.fetchCurrentUser();
+      this.setShowOverlayLoading(null, { root: true });
       this.id = this.currentUser.id;
       this.name = this.currentUser.name;
       this.account = this.currentUser.account;
       this.email = this.currentUser.email;
     } catch (error) {
+      this.setShowOverlayLoading(null, { root: true });
       console.log("error", error);
       console.error("can not fetch user information");
     }
@@ -167,6 +170,9 @@ export default {
     },
     ...mapActions({
       fetchCurrentUser: "fetchCurrentUser",
+    }),
+    ...mapMutations({
+      setShowOverlayLoading: "setShowOverlayLoading",
     }),
   },
   computed: {
