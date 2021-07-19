@@ -158,12 +158,12 @@ const routes = [
       //     if (!Vue.prototype.$socket) { 
       //       Vue.use(new VueSocketIO({
       //         debug: true,
-      //         connection: SocketIO('http://localhost:3000'),
+      //         connection: SocketIO('https://simple-twitter-api-demo.herokuapp.com/'),
       //         withCredentials: true,
       //         vuex: {
       //             store,
-      //             actionPrefix: 'SOCKET_',
-      //             mutationPrefix: 'SOCKET_'
+      //             // actionPrefix: 'SOCKET_',
+      //             // mutationPrefix: 'SOCKET_'
       //         },
       //     }))
       //     }
