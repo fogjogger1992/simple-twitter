@@ -228,7 +228,8 @@ export default {
   },
   beforeDestroy() {
     // 離開聊天室
-    this.$socket.disconnect();
+    // this.$socket.disconnect();
+    this.$socket.emit('leavingChatroom')
     console.log("離開聊天室");
   },
 };
